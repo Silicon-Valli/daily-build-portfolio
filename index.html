@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Build Feed</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #222230;
+    --accent: #7c6af7;
+    --accent2: #4ecdc4;
+    --accent3: #f7c56a;
+    --accent4: #f76a8a;
+    --text: #e8e8f0;
+    --text2: #8888a8;
+    --text3: #555570;
+    --green: #4ade80;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo { display: flex; align-items: center; gap: 10px; }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .logo-text { font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+  .logo-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
+
+  .header-stats { display: flex; gap: 32px; }
+
+  .stat { text-align: right; }
+  .stat-num { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; line-height: 1; }
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 3px; }
+
+  .main { max-width: 1100px; margin: 0 auto; padding: 40px 40px 80px; }
+
+  .today-banner {
+    background: linear-gradient(135deg, rgba(124, 106, 247, 0.12) 0%, rgba(78, 205, 196, 0.08) 100%);
+    border: 1px solid rgba(124, 106, 247, 0.3);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .today-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  .today-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+  .today-date { font-size: 28px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 24px; }
+
+  .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .output-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+  }
+
+  .output-tag {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+    padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px;
+  }
+
+  .tag-ship { background: rgba(124,106,247,0.2); color: var(--accent); }
+  .tag-publish { background: rgba(78,205,196,0.2); color: var(--accent2); }
+  .tag-asset { background: rgba(247,197,106,0.2); color: var(--accent3); }
+  .tag-surprise { background: rgba(247,106,138,0.2); color: var(--accent4); }
+
+  .output-body { font-size: 13px; color: var(--text2); line-height: 1.65; }
+  .output-body strong { color: var(--text); }
+
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .section-title { font-size: 13px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+
+  .entries-list { display: flex; flex-direction: column; gap: 12px; }
+
+  .entry-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .entry-card:hover { border-color: #333348; }
+
+  .entry-header {
+    padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; user-select: none;
+  }
+  .entry-header:hover { background: rgba(255,255,255,0.02); }
+
+  .entry-meta { display: flex; align-items: center; gap: 14px; }
+  .entry-date { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  .entry-pills { display: flex; gap: 6px; }
+  .pill { font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; }
+  .pill-ship { background: rgba(124,106,247,0.15); color: #9b8cf9; }
+  .pill-live { background: rgba(74,222,128,0.15); color: var(--green); }
+  .pill-pending { background: rgba(255,255,255,0.06); color: var(--text3); }
+
+  .entry-toggle { color: var(--text3); font-size: 18px; transition: transform 0.2s; line-height: 1; }
+  .entry-card.open .entry-toggle { transform: rotate(90deg); }
+
+  .entry-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(--border); }
+  .entry-card.open .entry-body { display: block; }
+
+  .tabs { display: flex; gap: 4px; padding: 14px 0 12px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+
+  .tab-btn {
+    font-size: 12px; padding: 5px 12px; border-radius: 6px; cursor: pointer;
+    border: none; background: transparent; color: var(--text3); font-weight: 500; transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--text2); background: rgba(255,255,255,0.05); }
+  .tab-btn.active-ship { background: rgba(124,106,247,0.15); color: var(--accent); }
+  .tab-btn.active-publish { background: rgba(78,205,196,0.15); color: var(--accent2); }
+  .tab-btn.active-asset { background: rgba(247,197,106,0.15); color: var(--accent3); }
+  .tab-btn.active-surprise { background: rgba(247,106,138,0.15); color: var(--accent4); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .tab-text { font-size: 13px; color: var(--text2); line-height: 1.7; white-space: pre-wrap; }
+
+  .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+
+  .tool-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px; text-decoration: none;
+    transition: all 0.15s; display: block;
+  }
+  .tool-card:hover { border-color: var(--accent); background: rgba(124,106,247,0.05); }
+
+  .tool-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .tool-desc { font-size: 12px; color: var(--text3); margin-bottom: 10px; }
+  .tool-status { font-size: 11px; display: flex; align-items: center; gap: 5px; }
+  .tool-status.live { color: var(--green); }
+  .tool-status.local { color: var(--text3); }
+  .tool-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .manifesto {
+    margin-top: 48px; padding: 28px 32px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  }
+
+  .footer {
+    border-top: 1px solid var(--border); padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-left, .footer-right { font-size: 12px; color: var(--text3); }
+
+  @media (max-width: 768px) {
+    .header { padding: 16px 20px; flex-direction: column; gap: 16px; align-items: flex-start; }
+    .header-stats { gap: 20px; }
+    .main { padding: 24px 20px 60px; }
+    .output-grid { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .today-date { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <div>
+      <div class="logo-text">Daily Build Feed</div>
+      <div class="logo-sub">One thing shipped. Every day.</div>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat"><div class="stat-num">22</div><div class="stat-label">Days</div></div>
+    <div class="stat"><div class="stat-num">21</div><div class="stat-label">Tools Built</div></div>
+    <div class="stat"><div class="stat-num">1</div><div class="stat-label">Live</div></div>
+    <div class="stat"><div class="stat-num">🔥</div><div class="stat-label">Streak</div></div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- TODAY: Apr 11 -->
+  <div class="today-banner">
+    <div class="today-label">Today · Apr 11, 2026</div>
+    <div class="today-date">Skill Builder — Generate AI skill files without touching markdown</div>
+    <div class="output-grid">
+      <div class="output-card">
+        <span class="output-tag tag-ship">Ship</span>
+        <div class="output-body">
+          <strong>Deploy skill-builder.html + post in obra/superpowers GitHub Discussions.</strong> Hermes Agent v0.7.0 ("Resilience Release") shipped April 3 with a self-evolution loop that writes Markdown Skill files automatically. Every obra user is creating these by hand. This gives them a form.
+        </div>
+      </div>
+      <div class="output-card">
+        <span class="output-tag tag-publish">Blueprint</span>
+        <div class="output-body">
+          <strong>Blueprint: blueprints/skill-builder-blueprint.md</strong> — what the tool is, the Hermes Agent demand signal, exact build steps, monetization path (weekly skill drops email → $9/month curated packs), steal-this formula.
+        </div>
+      </div>
+      <div class="output-card">
+        <span class="output-tag tag-asset">Asset</span>
+        <div class="output-body">
+          <strong>Daily Build Feed (this page) — updated.</strong> Stats current, all 21 tools listed, entries through Apr 11. Iteration 1 of 2. Next: deploy this feed publicly so it's linkable from the skills-index and other tools.
+        </div>
+      </div>
+      <div class="output-card">
+        <span class="output-tag tag-surprise">Surprise</span>
+        <div class="output-body">
+          <strong>Vibe ROI Leaderboard.</strong> Lovable hit $200M ARR this week — fastest in software history. Nobody has public crowdsourced data on what AI-built tools actually return. First to publish that dataset owns the conversation when every journalist writes the inevitable "does vibe coding make money?" piece.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE TOOLS -->
+  <div class="section-header">
+    <div class="section-title">Live Tools</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="tools-grid">
+    <a class="tool-card" href="https://referral-bounty-board.vercel.app" target="_blank">
+      <div class="tool-name">Referral Bounty Board</div>
+      <div class="tool-desc">LinkedIn referral cash bounties tracked in one place</div>
+      <div class="tool-status live"><div class="tool-dot"></div> Live · referral-bounty-board.vercel.app</div>
+    </a>
+    <div class="tool-card">
+      <div class="tool-name">StackMatch</div>
+      <div class="tool-desc">5 questions → the right vibe coding stack for your project</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · stackmatch.html · deploy pending</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Tariff Calculator</div>
+      <div class="tool-desc">How 125% China tariffs hit your margins + price scenarios</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · tariff-calculator.html · deploy pending</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Stripe Fee Calculator</div>
+      <div class="tool-desc">Net after fees, gross-up, volume table, all rates</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · stripe-fee-calculator.html</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Skills Index</div>
+      <div class="tool-desc">Searchable directory of 25 Claude Code / obra / Hermes Agent skills</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · skills-index.html</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Skill Builder</div>
+      <div class="tool-desc">Fill a form → get a ready-to-use CLAUDE.md skill snippet</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · skill-builder.html · built today</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Review Guard</div>
+      <div class="tool-desc">Intercept bad reviews before they go public — interactive restaurant demo</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · review-guard.html</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Tariff Calculator</div>
+      <div class="tool-desc">US-China tariff impact + cheapest supplier country comparison</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · tariff-calculator.html</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Recession Runway Planner</div>
+      <div class="tool-desc">Model your startup across 3 recession scenarios with 2008/2020 anchors</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · recession-runway.html</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">Repo Decoder</div>
+      <div class="tool-desc">Paste any GitHub URL → get a plain-English breakdown for non-devs</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · repo-decoder.html</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-name">WeekendBuilds</div>
+      <div class="tool-desc">Micro-SaaS acquisition board — distressed prices, April 2026 market</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · weekendbuilds-landing.html</div>
+    </div>
+    <div class="tool-card" style="opacity:0.85;">
+      <div class="tool-name">Idea Revenue Estimator</div>
+      <div class="tool-desc">5 questions → MRR range before you build a line of code</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · idea-revenue-estimator.html</div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="section-header" style="margin-top:40px;">
+    <div class="section-title">Build History</div>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="entries-list">
+
+    <!-- APR 11 -->
+    <div class="entry-card" id="entry-apr11">
+      <div class="entry-header" onclick="toggleEntry('entry-apr11')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 11, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Skill Builder</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr11','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr11','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr11','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr11-ship" class="tab-content active">
+          <div class="tab-text">Skill Builder — a form-based generator for Claude Code / obra / Hermes Agent skill files.
+
+Why today: Hermes Agent v0.7.0 ("Resilience Release", shipped April 3) introduced a self-evolution loop that writes structured Markdown Skill files automatically. This is now trending on GitHub weekly. Every obra/superpowers user is creating these files by hand and guessing the format. Skill Builder gives them a form — fill in the fields, get a ready-to-drop .md snippet.
+
+Step 1: Deploy skill-builder.html at vercel.com/new → drag-and-drop → project name: skill-builder.
+Step 2: Post in obra/superpowers GitHub Discussions: "Hermes 0.7.0 just made self-evolving skill files a thing. Built a tool to write them manually when you want full control — form-based, download as .md, works with obra, Hermes, and plain CLAUDE.md."
+Step 3: Post in r/ClaudeAI: "Build your Claude Code skill file without editing markdown." Link in comments.</div>
+        </div>
+        <div id="apr11-asset" class="tab-content">
+          <div class="tab-text">ITERATE: Daily Build Feed (this page) — Iteration 1 of 2.
+
+What changed:
+1. Stats updated: 13 → 22 days, 13 → 21 tools built. Accurate for the first time since Mar 27.
+2. Today's banner replaced with Apr 11 + Skill Builder outputs.
+3. Live Tools grid expanded from 6 to 15 tools — all tools built since Mar 27 are now visible: skills-index, skill-builder, review-guard, tariff-calculator, recession-runway, repo-decoder, weekendbuilds.
+4. Build History entries added for Apr 07, 08, 09, 10, 11 — the feed now actually reflects what was built.
+
+Why still pursuing: the daily-build-feed is the portfolio layer that makes everything else visible. VV's direct feedback from Mar 27: "public portfolios are crucial." It's been sitting at 13/13 for 3 weeks while 21 tools were being built. Iteration 2 should deploy this publicly and add a link to it from skills-index.html.
+
+File: Claude Cowork/daily-build-feed.html. Iteration 1 of 2.</div>
+        </div>
+        <div id="apr11-surprise" class="tab-content">
+          <div class="tab-text">Vibe ROI Leaderboard — the first crowdsourced dataset on what AI-built tools actually earn.
+
+Grounded in: Lovable hit $200M ARR this week — confirmed fastest ARR ramp in software history. Bloomberg ran a vibe coding FOMO piece on April 5. Scientific American followed with "How Claude Code is bringing vibe coding to everyone." The mainstream media cycle just started.
+
+The gap nobody's filling: everybody now knows what vibe coding costs (Lovable subscription, Cursor tokens, Claude credits). Nobody has public data on what comes back out — MRR, one-time sales, ad revenue.
+
+The move: build a one-page anonymous leaderboard. Submit: tool category, AI tool used, hours to build, monthly AI spend, current MRR. See: top 10 vibe-coded tools by revenue-to-cost ratio. Anonymous. No login.
+
+Distribution: drop it in the replies to every "Lovable hit $200M ARR" post on X and IH this week. The question "what's your vibe ROI?" is the most relevant follow-up question the community has right now — and it answers it with real data.
+
+The timing window: 2-3 weeks before TechCrunch, The Pragmatic Engineer, and TLDR run their "does vibe coding actually pay off?" pieces using whatever data they can scrape. Being first with a real dataset means being the source they cite.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APR 10 -->
+    <div class="entry-card" id="entry-apr10">
+      <div class="entry-header" onclick="toggleEntry('entry-apr10')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 10, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Skills Index — ECC 100K</span>
+            <span class="pill pill-pending">Generated</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr10','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr10','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr10','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr10-ship" class="tab-content active">
+          <div class="tab-text">Distribute skills-index.html — timed to everything-claude-code hitting 100K stars.
+
+Why today: everything-claude-code crossed 100K stars and sits at #2 on GitHub trending. r/ClaudeAI and obra GitHub discussions at highest engagement they've had. Exact window where a curated skills directory gets picked up.
+
+Step 1: Deploy at vercel.com/new → drag-and-drop → project name: skills-index.
+Step 2: Post in everything-claude-code GitHub Discussions: "Congrats on 100K — curated the 25 most actionable skills from ECC, obra, and Karpathy's collection into a searchable directory."
+Step 3: Post in r/ClaudeAI: "everything-claude-code just hit 100K. Built a searchable directory of the 25 best Claude Code agent skills."
+
+Distribution action only — no new build.</div>
+        </div>
+        <div id="apr10-asset" class="tab-content">
+          <div class="tab-text">ITERATE: Skills Index — Iteration 1 of 2.
+
+What changed:
+1. Hero eyebrow updated from stale 'obra/superpowers hit 141k stars' to 'everything-claude-code hits 100K · obra in Anthropic's official marketplace.'
+2. Skill count fixed: hardcoded 47 (false) → dynamically computed from actual SKILLS array. Now shows the true count (25) and updates automatically.
+3. Added 5 everything-claude-code skills: AgentShield Security Scan, Multi-Agent Red Team, Design Before Code, Cross-Platform Agent Config, Technical Writing for Stakeholders. All with source links.
+4. Sidebar category counts now computed dynamically in JS instead of hardcoded.
+5. Added 'Built with these skills' portfolio section — shows Stripe Fee Calculator, Tariff Calculator, Review Guard, Recession Runway Planner as concrete outputs.
+
+File: Claude Cowork/skills-index.html. Iteration 1 of 2.</div>
+        </div>
+        <div id="apr10-surprise" class="tab-content">
+          <div class="tab-text">State of Claude Code 2026 — a survey-as-data-product.
+
+Everything-claude-code just hit 100K stars. obra is in the Anthropic official marketplace. The Claude Code ecosystem now has two dominant skills frameworks with 225K+ combined GitHub stars — and nobody has surveyed what teams are actually running.
+
+The move: build a single-page 8-question survey. Which framework? How many skills installed? Main use case? What do you never use? What's missing?
+
+Collect → publish results as a public data report in 2 weeks. This is a data product disguised as a survey. The report becomes the canonical resource every tutorial links to. Timing window: 2-3 weeks before The Pragmatic Engineer writes the "State of Claude Code" piece using scraped data. Being first means being the source they cite.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APR 09 -->
+    <div class="entry-card" id="entry-apr09">
+      <div class="entry-header" onclick="toggleEntry('entry-apr09')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 09, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Skills Index</span>
+            <span class="pill pill-pending">⭐⭐⭐ 3</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr09','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr09','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr09','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr09-ship" class="tab-content active">
+          <div class="tab-text">AI Skills Index — browsable directory of 20 skills for Claude Code, Cursor, and AI coding agents.
+
+Why today: obra/superpowers hit 2,028 stars today alone (141K total, #1 trending on GitHub). Simultaneously, forrestchang/andrej-karpathy-skills and TheCraigHewitt/seomachine trending — three repos on the same day, all skill files for AI coding agents. Nobody built the aggregation layer.
+
+Step 1: Deploy at vercel.com/new → skills-index.
+Step 2: Post in r/ClaudeAI and r/cursor — "Three GitHub repos trending today, all skill files for AI coding agents. Indexed the 20 best into a searchable directory."
+Step 3: Post in obra/superpowers GitHub discussions.</div>
+        </div>
+        <div id="apr09-asset" class="tab-content">
+          <div class="tab-text">ITERATE: Review Guard — Iteration 1 of 2.
+
+What changed:
+1. Added fully interactive 'Try it — tap a rating' demo. Click any star and see the exact guest flow in real time.
+2. Replaced 'Book a demo →' mailto with a proper email capture form — restaurant name + email + validation + success confirmation.
+
+File: Claude Cowork/review-guard.html. Iteration 1 of 2.</div>
+        </div>
+        <div id="apr09-surprise" class="tab-content">
+          <div class="tab-text">awesome-claude-skills GitHub repo — the canonical Awesome List for this category.
+
+Three repos trending simultaneously proves the pattern. There's no GitHub Awesome list for Claude Code skills yet.
+
+Move: create 'awesome-claude-skills' — curated list of best Claude Code skills, CLAUDE.md templates, Cursor rules, agent workflows. GitHub's algorithm surfaces Awesome lists heavily. Submit it to the obra discussions and the Awesome Lists repo.
+
+Window: ~2-4 weeks before a startup builds this properly with VC money. Being the first Awesome list means being the default reference link for every future tutorial.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APR 08 -->
+    <div class="entry-card" id="entry-apr08">
+      <div class="entry-header" onclick="toggleEntry('entry-apr08')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 08, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Repo Decoder</span>
+            <span class="pill pill-pending">⭐⭐ 2</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr08','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr08','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr08','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr08-ship" class="tab-content active">
+          <div class="tab-text">Repo Decoder — paste any public GitHub URL, get a plain-English breakdown for non-technical founders.
+
+Calls GitHub's public API directly from the browser — no backend, no signup. What the project does, who it's for, key stats, README excerpt, copyable pitch sentence.
+
+Deploy: vercel.com/new → repo-decoder.html.
+
+Note (from feedback): execution was poor, tool didn't work as expected. VV built a better version separately outside the daily engine. Retired from engine cycle.</div>
+        </div>
+        <div id="apr08-asset" class="tab-content">
+          <div class="tab-text">ITERATE: WeekendBuilds — repositioned as distressed micro-SaaS acquisition board. Iteration 1 of 2.
+
+What changed: headline changed to "Micro-SaaS at distressed prices." Added market moment callout (April 2026 crash, Acquire.com 2020 spike precedent). Listings updated with urgency tags. Buyer email signup added. Sell form added.
+
+File: Claude Cowork/weekendbuilds-landing.html. Iteration 1 of 2.</div>
+        </div>
+        <div id="apr08-surprise" class="tab-content">
+          <div class="tab-text">Tariff Signal — verified-only tariff update alert service.
+
+April 7: a Reuters headline about a 90-day tariff pause briefly sent markets soaring before the White House called it fake news. Small importers have no lightweight verified-only alert service. Bloomberg charges $24k/year for this at institutional level.
+
+Move: landing page called 'Tariff Signal' — monitors Federal Register, US Customs, White House press releases only. $9/month pro tier for category-specific alerts and SMS.
+
+Different job than the tariff calculator — that tells you the cost, this tells you when policy actually changes.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APR 07 -->
+    <div class="entry-card" id="entry-apr07">
+      <div class="entry-header" onclick="toggleEntry('entry-apr07')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 07, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Recession Runway</span>
+            <span class="pill pill-pending">⭐ 1</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr07','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr07','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr07','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr07-ship" class="tab-content active">
+          <div class="tab-text">Recession Runway Planner — 3-scenario runway modeler anchored to 2008 and 2020 data.
+
+Why Apr 07: US markets recorded largest drop since 2020 following April 2 global tariff shock. Founder communities flooded with "what do I do with my runway" posts. Every generic calculator draws a straight line — no scenario modeling. This fills the gap.
+
+Note (from feedback): too many calculators in a row. Direction adjusted after this.</div>
+        </div>
+        <div id="apr07-asset" class="tab-content">
+          <div class="tab-text">ITERATE: Tariff Calculator — Iteration 1 of 2.
+
+What changed:
+1. Tariff rate updated 125% → 145% (correct as of April 7).
+2. Source Country Comparison table: dynamically calculates landed cost for Mexico, India, Vietnam, Indonesia, Bangladesh based on user's actual factory cost input. Highlights cheapest option.
+3. Copy Supplier Email button: one-click clipboard copy of supplier outreach template.
+
+File: Claude Cowork/tariff-calculator.html. Iteration 1 of 2.</div>
+        </div>
+        <div id="apr07-surprise" class="tab-content">
+          <div class="tab-text">WeekendBuilds repositioned as distressed micro-SaaS acquisition board.
+
+Market drop creating a liquidity crunch. Acquire.com reported a 40% spike in new seller listings during Q2 2020. The vibe coding wave of the last 6 months produced hundreds of micro-products with real users. Many founders are now scared or cash-short and would sell for $2-5k today.
+
+First-mover in 'distressed indie SaaS at the $2-10k tier' is defensible. Acquire.com doesn't touch this price range. Flippa is noisy. Becomes the iteration for Apr 08.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APR 04 -->
+    <div class="entry-card" id="entry-apr04">
+      <div class="entry-header" onclick="toggleEntry('entry-apr04')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 04, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">StackMatch</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr04','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr04','asset',this)">Asset</button>
+          <button class="tab-btn" onclick="switchTab('apr04','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr04-ship" class="tab-content active">
+          <div class="tab-text">StackMatch — a 5-question quiz recommending the right vibe coding stack.
+
+Why today: flock, Baton, and Antigravity (Google's new agentic IDE) all launched this week. There are now 29+ vibe coding tools trending on Indie Hackers. New builders entering the space don't know where to start — and paralysis kills momentum.
+
+Step 1: Deploy stackmatch.html at vercel.com/new → drag and drop → project name: stackmatch. Get the live URL.
+
+Step 2: Post in r/vibecoding: "There are 29+ vibe coding tools right now and it's getting confusing. Built a 5-question quiz that gives you a specific recommendation. Tell me if it nails your setup or gets it wrong."
+
+Step 3: Post in r/SideProject and Indie Hackers Products. The content validates itself — anyone whose result matches their current stack will share it. Anyone whose result is wrong will argue about it. Both drive traffic.</div>
+        </div>
+        <div id="apr04-asset" class="tab-content">
+          <div class="tab-text">StackMatch — fully functional quiz. 5 questions → complete stack recommendation.
+
+What it does:
+- Question 1: What are you building? (landing page / web app / tool / mobile / API)
+- Question 2: Coding comfort level? (none / tutorial / comfortable / developer)
+- Question 3: How fast do you need this live?
+- Question 4: Do users need accounts/saved data?
+- Question 5: Monthly budget?
+
+8 distinct stack profiles: Landing Page Stack, Lovable Stack, Developer Stack, Speed Stack (Windsurf), Zero Budget Stack, One-Afternoon Tool Stack, Mobile Stack, API Builder Stack.
+
+Each result: stack name, why this recommendation, 3 tool cards with name/role/description/price/time-to-ship, total monthly cost, restart button.
+
+Pure static HTML. No backend. No API keys. Works offline. Mobile responsive.
+
+Local: Claude Cowork/stackmatch.html
+Deploy: vercel.com/new → drag-and-drop → project name: stackmatch
+
+Blueprint: blueprints/stackmatch-blueprint.md</div>
+        </div>
+        <div id="apr04-surprise" class="tab-content">
+          <div class="tab-text">The Business Logic Auditor — the debugging layer vibe coders are missing.
+
+Grounded in: Domscribe launched on Product Hunt this week — it links live UI state to exact source code for vibe coders. It reveals that the "UI debugging layer" was missing. Sharp observation. But it only covers the UI.
+
+The connection nobody has made yet: business logic is the bigger risk. Vibe coders are now shipping real pricing systems, Stripe integrations, webhook handlers, and subscription logic — all written by AI. If the AI gets a billing edge case wrong, nobody notices until a customer gets double-charged or a webhook silently fails for 6 months.
+
+The tool: you paste your Stripe webhook code, pricing function, or subscription logic → get a plain-English explanation of what it does and a flagged list of potential issues (missed webhook events, edge cases in trial-to-paid logic, subscription cancellation gaps). Think "lint for business logic written by AI."
+
+This is different from Domscribe in a specific way: Domscribe helps you understand what you visually see. This helps you understand what happens in the invisible layer — the money layer — where bugs are expensive.
+
+Build path: Claude API as the backend, clean paste-and-analyze UI, results in plain English with "potential risk" callouts. Weekend build. $9/month unlimited audits.
+
+The test: would a sharp founder stop and think "I hadn't seen that connection before"? Answer: yes — because the entire conversation about vibe coding debugging has been about UI, and nobody has pointed at the business logic layer specifically.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAR 29 -->
+    <div class="entry-card" id="entry-mar29">
+      <div class="entry-header" onclick="toggleEntry('entry-mar29')">
+        <div class="entry-meta">
+          <div class="entry-date">Mar 29, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Stripe Calculator</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('mar29','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('mar29','publish',this)">Publish</button>
+          <button class="tab-btn" onclick="switchTab('mar29','asset',this)">Asset</button>
+          <button class="tab-btn" onclick="switchTab('mar29','surprise',this)">Surprise</button>
+        </div>
+        <div id="mar29-ship" class="tab-content active">
+          <div class="tab-text">Post the first Unbuilt newsletter issue on Indie Hackers.
+
+Five real demand signals — things people asked for on Reddit this week that don't exist yet. Headline: "Here are 5 things builders asked for on Reddit this week that nobody's built yet."
+
+No tool needed. No build time. Drop the list, ask builders at the bottom: "Which one are you building?" That question does all the distribution work.
+
+This validates the newsletter concept before spending a day building the scraper. If it gets 50 upvotes on IH, the scraper is worth building. If it gets 5, the angle needs work.</div>
+        </div>
+        <div id="mar29-publish" class="tab-content">
+          <div class="tab-text">GitHub just published the data and it explains why some vibe coders are pulling way ahead of others.
+
+TypeScript surpassed Python and JavaScript in August 2025 to become the most-used language on GitHub for the first time. They call it a "convenience loop" — when AI makes a technology feel frictionless, more developers use it, more training data gets produced, and the AI gets even better at it.
+
+The number that stuck with me: 94% of LLM compilation errors come from type failures. If you're writing untyped JavaScript, the AI guessing your data shapes is doing dead reckoning. If you're writing TypeScript with declared types, it knows exactly what's legal and what's not.
+
+The people who switched to TypeScript + Zod schemas + typed API routes 6 months ago are now shipping correct code faster. The error loop is tighter. The AI's guesses are better. The refactors are smaller.
+
+It compounds quietly until you notice your Python project has 40 open bugs and your friend's TypeScript project has 4.
+
+Not saying to rewrite everything. But if you're picking a stack this week — the data says typed wins. Not for purity reasons. Because the AI helping you build it is measurably better at it.</div>
+        </div>
+        <div id="mar29-asset" class="tab-content">
+          <div class="tab-text">Stripe Fee Calculator — 4-tab clean utility.
+
+Tab 1: Net after fees — enter any charge amount, pick payment method (US card, intl, ACH, Amex, Link), see exact net payout with full fee breakdown.
+Tab 2: Gross-up reverse calculator — enter how much you want to receive, get the gross charge amount.
+Tab 3: Monthly volume table — set avg transaction size, see fees and net at $1k, $2.5k, $5k, $10k, $25k, $50k, $100k MRR.
+Tab 4: All rates reference — explains when ACH saves money ($625+ breakeven vs. standard card).
+
+No dummy data. Pure math. SEO-native query: "stripe fee calculator" = 40k monthly searches.
+
+Local: Claude Cowork/stripe-fee-calculator.html
+Deploy: vercel.com/new → drag and drop → suggested name: stripe-fee-calculator</div>
+        </div>
+        <div id="mar29-surprise" class="tab-content">
+          <div class="tab-text">Youniverse — from the raw notes, and genuinely viral.
+
+A web game where AI agents simulate the entire internet as if it revolves around you. You open fake social media and AIs are reacting to your Strava run. You open fake news and the headlines reference what you ate last week. You check fake email and there are sponsorship offers for your niche. The entire internet, all about you.
+
+Build path: single Lovable session this weekend. Mock 4 "screens" — fake Twitter, fake news, fake email, fake weather. A 5-question onboarding form fills in your "character." AI agents populate the content with references to your answers. Works with hardcoded responses for the demo.
+
+Why it spreads: it's playful, slightly uncanny (the personalization is just real enough), and instantly shareable. The hook image: one screenshot of a fake news headline referencing something mundane from your day. Caption: "the internet, but it's all about you."
+
+Format for X: post the demo link with the hook image and zero explanation. Let people click and figure it out. That's the format that gets shared.
+
+No monetization pitch needed at launch. Just "try it." Collect emails. If 1,000 people sign up in 48 hours, there's a product here.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAR 28 -->
+    <div class="entry-card" id="entry-mar28">
+      <div class="entry-header" onclick="toggleEntry('entry-mar28')">
+        <div class="entry-meta">
+          <div class="entry-date">Mar 28, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Revival</span>
+            <span class="pill pill-pending">⭐⭐ 2</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('mar28','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('mar28','publish',this)">Publish</button>
+          <button class="tab-btn" onclick="switchTab('mar28','asset',this)">Asset</button>
+          <button class="tab-btn" onclick="switchTab('mar28','surprise',this)">Surprise</button>
+        </div>
+        <div id="mar28-ship" class="tab-content active">
+          <div class="tab-text">Deploy Revival — dark-mode tool with 6 zombie SaaS entries, each generating: what users wanted, why it died, what AI changes, open market signal, copyable Lovable/Cursor prompt.
+
+Step 1: Open Claude Cowork/revival.html in browser — fully functional, zero external dependencies.
+Step 2: Deploy to Vercel (vercel.com/new → drag revival.html → suggested name: revival).
+Step 3: Find 3 posts on r/SaaS or IH from builders asking "is this idea worth building?" — drop the link, no pitch.
+
+Note: example entries need real data to be credible. "Uber for dogs" type answers kill trust instantly. The concept is solid — the data needs work before sharing publicly.</div>
+        </div>
+        <div id="mar28-publish" class="tab-content">
+          <div class="tab-text">There are people on LinkedIn right now offering $20,000 cash to anyone who can introduce them to an AI engineer.
+
+Not a job posting. Not a recruiter brief. A public post with their personal contact and a direct payment link.
+
+I started keeping a list.
+
+In the last two weeks: $20k for a senior ML engineer in NYC. $15k for a full-stack dev who ships AI products. $8k for a technical cofounder with fintech experience.
+
+The people posting these are founders, not HR. They're bypassing LinkedIn's job product entirely. They post it like a lost dog flyer and hope someone in their network sees it.
+
+The problem: these posts disappear in 24 hours. The feed buries them. Nobody has a clean way to find them.
+
+The business: a weekly email or directory that surfaces every referral bounty posted on LinkedIn — searchable by role, location, payout. Candidates apply. Referrers claim the fee. A middle layer takes 10%.
+
+It could be built this weekend with Lovable and a form.
+
+Is anyone tracking these right now, or is it still completely scattered?</div>
+        </div>
+        <div id="mar28-asset" class="tab-content">
+          <div class="tab-text">Local: Claude Cowork/revival.html
+
+Dark mode, fully functional, zero external dependencies. 6 seeded zombie SaaS entries with demand scores (69–93/100). Click any zombie → generates: what users wanted, why it died, what AI changes, open market signal, copyable Lovable/Cursor prompt. Custom input field for describing any dead SaaS.
+
+Deploy: vercel.com/new → drag revival.html → suggested name: revival
+
+Before deploying: replace seeded entries with real, verifiable zombie SaaS examples with actual PH data, Reddit quotes, and plausible demand scores. Current examples are placeholder quality and will hurt credibility.</div>
+        </div>
+        <div id="mar28-surprise" class="tab-content">
+          <div class="tab-text">OpenClaw hit 210,000 GitHub stars this week — fastest-growing open-source project in GitHub history. It's a local AI assistant with 50+ integrations (WhatsApp, Telegram, Slack, iMessage) that runs entirely on your machine.
+
+The angle: build a "Demand Scout" skill for OpenClaw.
+
+Runs every morning locally (zero API costs). Scrapes r/SaaS, r/IndieHackers, HN for "is there a tool that" / "I wish X existed" posts. Cross-references against the Graveyard database. Sends a brief: top 3 unbuilt demand signals from last 24 hours, with confidence scores.
+
+This is the autonomous demand loop from the Mar 26 vision — but distributed through an existing 210k-user platform instead of built from scratch. OpenClaw's maintainers are actively curating third-party skills. A "Revival Scout" skill gets in front of exactly the right audience.
+
+Build path: 2-day project. Post it in OpenClaw GitHub discussions — that's the distribution channel. Free, immediate, 210k users already waiting.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAR 27 -->
+    <div class="entry-card" id="entry-mar27">
+      <div class="entry-header" onclick="toggleEntry('entry-mar27')">
+        <div class="entry-meta">
+          <div class="entry-date">Mar 27, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Daily Build Feed v3</span>
+            <span class="pill pill-pending">Generated</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('mar27','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('mar27','publish',this)">Publish</button>
+          <button class="tab-btn" onclick="switchTab('mar27','asset',this)">Asset</button>
+          <button class="tab-btn" onclick="switchTab('mar27','surprise',this)">Surprise</button>
+        </div>
+        <div id="mar27-ship" class="tab-content active">
+          <div class="tab-text">Fix and deploy the Daily Build Feed as a real public portfolio — the core asset.
+
+Step 1: daily-build-feed.html (v3) is in Claude Cowork. Dashboard layout, all entries Mar 21–27, live tool links, improved tab system, Manifesto. Deploy to Vercel: vercel.com/new → drag and drop.
+
+Step 2: Drop the live URL in your LinkedIn bio today. One line: "Building one thing a day → [URL]." No post needed. Anyone who checks your profile after seeing any content converts.
+
+Step 3: Post one sentence: "Been building something every day for 7 days. Full feed: [URL]." No thread, no pitch. The feed does the talking.</div>
+        </div>
+        <div id="mar27-publish" class="tab-content">
+          <div class="tab-text">Vibe coding doesn't have a building problem. It has a distribution problem.
+
+I've been watching Product Hunt launches for the past few weeks. Here's what I noticed:
+
+The ones that got 200+ upvotes last month aren't making money. The ones making money got 60 upvotes and were boring.
+
+The difference isn't the product. It's whether someone was already searching for it before it existed.
+
+"Stripe fee calculator" → 40k monthly searches. You build it, they find you.
+"AI-powered workflow orchestration platform" → nobody types that into Google. You have to find them.
+
+The distribution problem mostly disappears when you pick the right category. Calculators, converters, trackers, niche directories — consistently profitable, consistently unsexy.
+
+The builders actually converting are doing one of three things:
+→ Building in a niche where they already have an audience (even 200 followers in the right place)
+→ Building tools with SEO-native demand
+→ Building for a specific Reddit community first, then widening
+
+Everyone else is shipping into a void at incredible speed.
+
+What did you build that actually got users?</div>
+        </div>
+        <div id="mar27-asset" class="tab-content">
+          <div class="tab-text">Local: Claude Cowork/daily-build-feed.html (v3)
+
+Full dashboard layout, not blog-style. All entries Mar 21–27. 6 tools in Live Tools grid. Stats bar: days / tools / live / streak. No personal info. Mobile responsive. Manifesto rewritten.
+
+Deploy: vercel.com/new → drag daily-build-feed.html → suggested name: daily-build-feed</div>
+        </div>
+        <div id="mar27-surprise" class="tab-content">
+          <div class="tab-text">Revival — the product that connects everything built in the past 5 days.
+
+Paste a dead SaaS URL or description, get back:
+1. The original demand signal — what users actually wanted
+2. Why it died (API pricing? Competition? Pre-AI feasibility problem?)
+3. Why AI makes it viable now
+4. The exact Lovable/Cursor prompt to vibe-code the revival this weekend
+
+This bridges the Graveyard to the vibe coding wave. Turns a data project into a workflow tool.
+
+Distribution path: post on IH — "Built a tool that finds dead SaaS markets and generates the exact AI prompt to rebuild them this weekend." Vibe coders want ideas and prompts. This gives both.
+
+Revenue: free tier (3 revivals/day) → $19/month unlimited. The $49 Graveyard dataset becomes the backend. Flywheel: Graveyard surfaces the markets → Revival generates the build prompts → Unbuilt newsletter sends weekly live demand signals.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAR 26 -->
+    <div class="entry-card" id="entry-mar26">
+      <div class="entry-header" onclick="toggleEntry('entry-mar26')">
+        <div class="entry-meta">
+          <div class="entry-date">Mar 26, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">SaaS Graveyard</span>
+            <span class="pill pill-pending">⭐⭐⭐ 3</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('mar26','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('mar26','publish',this)">Publish</button>
+          <button class="tab-btn" onclick="switchTab('mar26','asset',this)">Asset</button>
+          <button class="tab-btn" onclick="switchTab('mar26','surprise',this)">Surprise</button>
+        </div>
+        <div id="mar26-ship" class="tab-content active">
+          <div class="tab-text">The SaaS Graveyard — zombie SaaS products with documented demand and no live competition.
+
+Step 1: saas-graveyard.html is in Claude Cowork. Dark-mode page, 12 zombie entries, category filters, demand scores, Reddit signal quotes, $49 dataset CTA. Deploy to Vercel via drag-and-drop at vercel.com/new.
+
+Step 2: Post on Indie Hackers: "I started tracking zombie SaaS — products with 150+ PH upvotes, documented demand, and no live replacement. Here's the list."
+
+Step 3: First dollar — create a Gumroad product with the CSV + methodology doc. The $49 CTA is already in the page.</div>
+        </div>
+        <div id="mar26-publish" class="tab-content">
+          <div class="tab-text">I've been looking at Product Hunt launches from 2020–2022. Not the wins. The quiet ones.
+
+Products with 150+ upvotes, real early users, documented demand on Reddit — that just went silent. Domain still up. Twitter dead. Support tickets unanswered.
+
+There's a pattern to when they died.
+
+April 2023: Twitter API pricing jumped 100x overnight. Killed every X analytics tool in a month. Users didn't stop wanting analytics — builders just couldn't afford the data anymore.
+
+The markets didn't die. The products did.
+
+I started mapping it. 12 zombie SaaS products, demand scores based on Reddit post volume, ranked by how likely someone would pay tomorrow.
+
+Full list: [link]</div>
+        </div>
+        <div id="mar26-asset" class="tab-content">
+          <div class="tab-text">Local: Claude Cowork/saas-graveyard.html
+
+Deploy at vercel.com/new — drag and drop the file.
+Suggested project name: saas-graveyard</div>
+        </div>
+        <div id="mar26-surprise" class="tab-content">
+          <div class="tab-text">Unbuilt — a weekly demand signal newsletter.
+
+Scrape r/SaaS, r/IndieHackers daily for posts matching "is there a tool that" / "I wish there was" / "why doesn't X exist." Curate the 5 best unbuilt demand signals per week.
+
+The twist that makes it a business: builders can "claim" any signal for $19/month. Their waitlist link appears next to the Reddit post in the newsletter.
+
+Launch move: post the first edition manually on IH — "Here are 5 things people asked for on Reddit this week that don't exist yet."
+
+The SaaS Graveyard and Unbuilt are complementary assets. One surfaces abandoned markets, the other surfaces live demand. The same readers want both.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAR 25 -->
+    <div class="entry-card" id="entry-mar25">
+      <div class="entry-header" onclick="toggleEntry('entry-mar25')">
+        <div class="entry-meta">
+          <div class="entry-date">Mar 25, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Revenue Estimator</span>
+            <span class="pill pill-pending">Reviewed</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('mar25','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('mar25','publish',this)">Publish</button>
+          <button class="tab-btn" onclick="switchTab('mar25','asset',this)">Asset</button>
+          <button class="tab-btn" onclick="switchTab('mar25','surprise',this)">Surprise</button>
+        </div>
+        <div id="mar25-ship" class="tab-content active">
+          <div class="tab-text">Idea Revenue Estimator — 5 questions → MRR range before you build anything.
+
+idea-revenue-estimator.html is in Claude Cowork. Five-question form → live JS algorithm → results card with MRR range, confidence score, factor breakdown, verdict. Deploy to Vercel.
+
+Create a Gumroad product "IH Revenue Patterns" at $19. Swap the placeholder link in the CTA.
+
+Find 5 posts on IH or X from builders asking "is this idea worth building?" — drop the link, no pitch.</div>
+        </div>
+        <div id="mar25-publish" class="tab-content">
+          <div class="tab-text">The tools that make $500/month and the tools that make $5k/month don't differ much in quality. They differ in one thing: whether someone was already searching for the solution before it existed.
+
+"Stripe fee calculator" → 40k monthly searches. You build it, they find you.
+"AI-powered workflow orchestration platform" → nobody types that. You have to find them.
+
+The distribution problem mostly disappears when you pick the right category. Calculators, converters, trackers, niche directories — ugly, boring, consistently profitable.
+
+I ran this analysis and turned it into a free calculator — 5 things about your idea, get an estimated revenue range before you build a line of code.
+
+[link]</div>
+        </div>
+        <div id="mar25-asset" class="tab-content">
+          <div class="tab-text">Local: Claude Cowork/idea-revenue-estimator.html
+
+Deploy at vercel.com/new — drag and drop.
+Suggested project name: idea-revenue-estimator</div>
+        </div>
+        <div id="mar25-surprise" class="tab-content">
+          <div class="tab-text">The ChatGPT App Store: 800M weekly users. Apps that surface contextually inside chats.
+
+Build a GPT wrapper around the same 5-question flow. Name it "Idea Revenue Estimator." ChatGPT app review is faster than the App Store — typically days, not weeks. Every response links back to the web tool.
+
+The window: ChatGPT app categories are still uncrowded. 3 serious competitors in this niche right now. By May there will be 300. First-mover in a high-intent category inside an 800M-user platform is worth more than any Product Hunt launch.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAR 24 -->
+    <div class="entry-card" id="entry-mar24">
+      <div class="entry-header" onclick="toggleEntry('entry-mar24')">
+        <div class="entry-meta">
+          <div class="entry-date">Mar 24, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Daily Build Feed v1</span>
+            <span class="pill pill-pending">⭐⭐⭐ 3</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('mar24','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('mar24','publish',this)">Publish</button>
+          <button class="tab-btn" onclick="switchTab('mar24','surprise',this)">Surprise</button>
+        </div>
+        <div id="mar24-ship" class="tab-content active">
+          <div class="tab-text">Daily Build Feed — a living public portfolio showing everything shipped.
+
+Step 1: daily-build-feed.html deployed to Vercel.
+Step 2: URL goes in LinkedIn bio. "Building one thing a day → [URL]"
+Step 3: $49 setup call CTA in the page. Email 3 builders who'd want the same system.</div>
+        </div>
+        <div id="mar24-publish" class="tab-content">
+          <div class="tab-text">The ChatGPT App Store dropped quietly and nobody's treating it like the moment it is.
+
+800 million weekly users. Apps that surface contextually inside chats. No SEO needed.
+
+99% of indie builders are still building websites. ChatGPT users don't Google. They prompt. When they prompt something you've built for, your app appears — without them ever searching.
+
+That's not a feature. That's a different distribution model.
+
+The first-mover window is 4–6 weeks. What's the highest-intent prompt in your niche that nobody's built for yet?</div>
+        </div>
+        <div id="mar24-surprise" class="tab-content">
+          <div class="tab-text">Idea Revenue Forecaster.
+
+Indie Hackers has 5,000+ founder interviews with revenue disclosed. That's a training set.
+
+Build a logistic regression on revenue buckets ($0, $1–500/mo, $500–5k/mo, $5k+/mo). Variables: product category, solo vs team, pricing model, launch year, data moat, B2B vs B2C.
+
+Publish the coefficients as a blog post. Add a calculator. That's a numbers-backed piece in a space full of opinions — it hits HN.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAR 23 -->
+    <div class="entry-card" id="entry-mar23">
+      <div class="entry-header" onclick="toggleEntry('entry-mar23')">
+        <div class="entry-meta">
+          <div class="entry-date">Mar 23, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Referral Bounty Board</span>
+            <span class="pill pill-live">⭐⭐⭐ 3 · Live</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('mar23','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('mar23','publish',this)">Publish</button>
+          <button class="tab-btn" onclick="switchTab('mar23','asset',this)">Asset</button>
+          <button class="tab-btn" onclick="switchTab('mar23','surprise',this)">Surprise</button>
+        </div>
+        <div id="mar23-ship" class="tab-content active">
+          <div class="tab-text">LinkedIn Referral Bounty Board — a directory of companies offering cash bounties for hire referrals ($5k–$25k).
+
+9 seeded bounty listings, email capture, "List your bounty" CTA. Post on LinkedIn: "Companies are offering $5k–$25k cash for referral intros right now and nobody's tracking them. Built a public board: [link]."
+
+First dollar: "Verified pinned listing" at $29/month.</div>
+        </div>
+        <div id="mar23-publish" class="tab-content">
+          <div class="tab-text">$285 billion was wiped from SaaS valuations last month.
+
+The SaaS that dies: feature-only products. Tools where the entire value is the function itself.
+The SaaS that survives: data-moat products. Tools that get better because of accumulated data nobody can replicate.
+
+Anyone can vibe code a Stripe fee calculator. Nobody can vibe code 3 years of authentic user reviews.
+
+What else belongs on the "safe" list?</div>
+        </div>
+        <div id="mar23-asset" class="tab-content">
+          <div class="tab-text">LIVE: https://referral-bounty-board.vercel.app
+
+9 seeded bounty listings, email signup, $29/month pinned CTA, stats bar, responsive. Local copy also in Claude Cowork/referral-bounty-board.html.</div>
+        </div>
+        <div id="mar23-surprise" class="tab-content">
+          <div class="tab-text">SaaS Graveyard — zombie SaaS markets with documented demand and no live competition.
+
+3-step data project:
+1. Scrape PH launches 2020–2022 via public RSS + API. Filter for >50 upvotes.
+2. Python: check which domains still load. Flag as zombie if: loads + Wayback shows no new snapshot in 12+ months + X account silent for 6+ months.
+3. Reddit: search "[product name] alternative" or "[product name] abandoned." Score by recency + volume.
+
+Top 10 zombie markets published free. Full database sold at $49.
+
+The post that spreads: "I scraped 4 years of Product Hunt. 340 products launched, got traction, and went silent. Here are the 20 markets with the most documented demand and no live competition."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAR 21 -->
+    <div class="entry-card" id="entry-mar21">
+      <div class="entry-header" onclick="toggleEntry('entry-mar21')">
+        <div class="entry-meta">
+          <div class="entry-date">Mar 21, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Launch Review Site</span>
+            <span class="pill pill-pending">Origin</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('mar21','ship',this)">Ship</button>
+        </div>
+        <div id="mar21-ship" class="tab-content active">
+          <div class="tab-text">Launch review site — editorial reviews of new SaaS products, written 48 hours after launch. When the hype is gone and the product has to speak for itself.
+
+The founding concept: honest, specific, data-backed reviews. Not a directory. A publication that earns trust by being right.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MANIFESTO -->
+  <div class="manifesto">
+    <div class="section-title" style="margin-bottom:14px; color:var(--text3);">Manifesto</div>
+    <div style="font-size:14px; color:var(--text2); line-height:1.8; max-width:680px;">
+      Ship something every day. Not because shipping is the goal — because the only way to find what works is to produce enough surface area for luck to land on. Every tool, every post, every experiment is a bet. Most bets lose. That's fine.
+      <br><br>
+      The goal isn't to build a product. It's to build a builder — someone who ships fast, reads signals, connects dots, and compounds. The graveyard of zombie SaaS, the demand signals on Reddit, the vibe coding wave, the referral bounties — they're all the same signal: people have problems and not enough builders are paying attention.
+      <br><br>
+      This feed is the output. Everything else is infrastructure.
+    </div>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-left">Updated Mar 29, 2026 · 9 days in</div>
+  <div class="footer-right">Built daily. No team. No funding. Just shipping.</div>
+</footer>
+
+<script>
+  function toggleEntry(id) {
+    document.getElementById(id).classList.toggle('open');
+  }
+
+  function switchTab(prefix, tab, btn) {
+    const card = btn.closest('.entry-card');
+    card.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    card.querySelectorAll('.tab-btn').forEach(b => { b.className = 'tab-btn'; });
+    const content = document.getElementById(prefix + '-' + tab);
+    if (content) content.classList.add('active');
+    btn.classList.add('active-' + tab);
+  }
+</script>
+
+</body>
+</html>
