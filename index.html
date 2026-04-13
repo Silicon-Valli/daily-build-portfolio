@@ -390,7 +390,7 @@
     </div>
   </div>
   <div class="header-stats">
-    <div class="stat"><div class="stat-num">23</div><div class="stat-label">Days</div></div>
+    <div class="stat"><div class="stat-num">24</div><div class="stat-label">Days</div></div>
     <div class="stat"><div class="stat-num">23</div><div class="stat-label">Tools Built</div></div>
     <div class="stat"><div class="stat-num">5</div><div class="stat-label">Live</div></div>
     <div class="stat"><div class="stat-num">🔥</div><div class="stat-label">Streak</div></div>
@@ -400,7 +400,7 @@
 <section class="hero">
   <div class="hero-badge">
     <span class="hero-badge-dot"></span>
-    Day 23 · Streak active
+    Day 24 · Streak active
   </div>
   <h1 class="hero-headline">One tool shipped.<br><span>Every day.</span></h1>
   <p class="hero-sub">A live log of what gets built, why it was worth building, and what the engine learned. No filler. No vaporware.</p>
@@ -430,34 +430,34 @@
 
 <main class="main">
 
-  <!-- TODAY: Apr 12 -->
+  <!-- TODAY: Apr 13 -->
   <div id="today">
   <div class="today-banner">
-    <div class="today-label">Today · Apr 12, 2026</div>
-    <div class="today-date">Daily Build Letter — turning the engine into a subscribable newsletter</div>
+    <div class="today-label">Today · Apr 13, 2026</div>
+    <div class="today-date">Vibe Trust Score distribution — riding the trust gap wave</div>
     <div class="output-grid">
       <div class="output-card">
         <span class="output-tag tag-ship">Ship</span>
         <div class="output-body">
-          <strong>The Daily Build Letter</strong> — newsletter landing page with email capture. Turns the daily engine output into a subscribable product. 22 tools built and no centralized email list until now.
+          <strong>Distribute Vibe Trust Score</strong> — timed to Naval's "Vibe Coding Is the New Product Management" tweet and the Fortune "trust is the bottleneck" article. 84% of devs use AI tools, only 29% trust the output. The tool answers that gap directly.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-publish">Blueprint</span>
         <div class="output-body">
-          <strong>Blueprint: blueprints/daily-build-letter-blueprint.md</strong> — build-log-as-newsletter formula, demand signal, build steps, monetization path from free to $9/month premium.
+          <strong>No new build today</strong> — Ship is a distribution action for vibe-trust-score.html, not a net-new build.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-asset">Asset</span>
         <div class="output-body">
-          <strong>Vibe Trust Score — Iteration 1 of 2.</strong> Updated with Georgia Tech CVE data (35 in March 2026), credibility sources banner, email capture on results page. Timed to NBC News and security conversation peaking.
+          <strong>Referral Bounty Board — Iteration 1 of 2.</strong> Added weekly digest email capture, skill-match filter tags, shareable bounty URLs with Web Share API, deep-link params. YouLinc's April 9 launch validates the referral platform category.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-surprise">Surprise</span>
         <div class="output-body">
-          <strong>Managed Agent Security Audit.</strong> Anthropic launched Managed Agents ($0.08/session-hour) on Apr 8. Same week, Georgia Tech shows Claude Code responsible for 27 of 74 tracked CVEs. The gap: no pre-deployment security scan for agents. $49/scan productized service.
+          <strong>AI Code Quality Dashboard.</strong> Claudoscope tracks Claude Code session costs. Nobody tracks quality per session. PR incidents up 23.5% while throughput up 20%. First company to build "Lighthouse for AI-generated code" captures the trust layer of a $6.6B market.
         </div>
       </div>
     </div>
@@ -536,6 +536,65 @@
   </div>
 
   <div class="entries-list">
+
+    <!-- APR 13 -->
+    <div class="entry-card" id="entry-apr13">
+      <div class="entry-header" onclick="toggleEntry('entry-apr13')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 13, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Vibe Trust Score Distribution</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr13','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr13','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr13','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr13-ship" class="tab-content active">
+          <div class="tab-text">Distribute Vibe Trust Score — timed to Naval's viral "Vibe Coding Is the New Product Management" tweet and Fortune's "trust is the real bottleneck" article (April 2).
+
+The trust gap is the story right now: 84% of developers use AI coding tools, only 29% trust the output (Stack Overflow Feb 2026). PR incidents up 23.5% while throughput is up 20%. Everyone's vibe coding but nobody has a way to check whether the output is ready to ship.
+
+Step 1: Deploy vibe-trust-score.html at vercel.com/new → project name: vibe-trust-score.
+Step 2: Post in r/webdev and r/SideProject: "84% of devs use AI coding tools. 29% trust the output. Built a 10-question audit that scores whether your vibe-coded app is ready for users. Free, no signup."
+Step 3: Quote-tweet Naval's post: "So who's checking whether the product management is any good? Built a trust score that audits vibe-coded apps in 2 minutes."
+
+File: Claude Cowork/vibe-trust-score.html</div>
+        </div>
+        <div id="apr13-asset" class="tab-content">
+          <div class="tab-text">ITERATE: Referral Bounty Board — Iteration 1 of 2. First time this file has been touched since the initial build (0 prior iterations).
+
+What changed:
+1. Weekly Bounty Digest email signup — gradient section with email capture, success state. "Get the 5 highest-value bounties in your inbox every Monday."
+2. Skill-match filter tags — 8 skill categories (Engineering, ML/AI, Sales, Design, Ops, Finance, DevRel, Product). Select your network's strengths, the board highlights matching bounties.
+3. Shareable bounty URLs — each card has a Share button using Web Share API on mobile, clipboard copy on desktop. Generates a deep link with ?bounty= param that pre-filters on load.
+4. Subscriber count added to stats bar (social proof).
+5. Updated date from Mar 31 to Apr 13, 2026.
+
+Why still pursuing: YouLinc just launched (April 9, 2026) as "the world's first referral partner generation platform" on LinkedIn — validates that referral monetization is a category people are building companies around. The Bounty Board is the only deployed tool in the portfolio (referral-bounty-board.vercel.app) and has 0 iterations until now. The improvements make it stickier: email capture creates a reachable audience, shareable URLs create distribution loops.
+
+Iteration 1 of 2. File: Claude Cowork/referral-bounty-board.html</div>
+        </div>
+        <div id="apr13-surprise" class="tab-content">
+          <div class="tab-text">AI Code Quality Dashboard — the Lighthouse for vibe-coded apps.
+
+The signal: Claudoscope launched on Product Hunt this month — a macOS menu bar app that tracks Claude Code session costs and browsable history. It has 19 config health rules and credential leak scanning. Simultaneously, Stack Overflow reported the developer AI trust gap (84% use, 29% trust), and Fortune ran "In the Age of Vibe Coding, Trust Is the Real Bottleneck" on April 2.
+
+The connection: Claudoscope solved cost visibility. Nobody has solved quality visibility. PR count per author is up 20% year-over-year while incidents per PR are up 23.5% (GitClear data). Code duplication is up 4x with AI. The industry is flying blind on output quality while tracking spend to the penny.
+
+The move: build a "Vibe Lint" — a tool where you paste a GitHub repo URL or code snippet and get a quality report card. Categories: security patterns, code duplication score, dependency risk, error handling coverage, test coverage estimation. Score it 0–100 like Lighthouse. The audit becomes the shareable artifact (embed a badge in your README: "Vibe Score: 87/100").
+
+This is distinct from the Vibe Trust Score (self-assessment quiz) — this would be automated analysis of actual code. And it's complementary to Claudoscope (they track what you spent, you track what you got).
+
+Timing: 87% of Fortune 500 companies now use vibe coding tools. The first "quality layer" product captures a position that compounds with every new AI coding tool launch. Grounded in: Claudoscope PH launch (April 2026), Stack Overflow trust gap data (Feb 2026), Fortune article (April 2, 2026), GitClear code quality metrics.</div>
+        </div>
+      </div>
+    </div>
 
     <!-- APR 12 -->
     <div class="entry-card" id="entry-apr12">
