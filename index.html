@@ -390,8 +390,8 @@
     </div>
   </div>
   <div class="header-stats">
-    <div class="stat"><div class="stat-num">25</div><div class="stat-label">Days</div></div>
-    <div class="stat"><div class="stat-num">24</div><div class="stat-label">Tools Built</div></div>
+    <div class="stat"><div class="stat-num">26</div><div class="stat-label">Days</div></div>
+    <div class="stat"><div class="stat-num">25</div><div class="stat-label">Tools Built</div></div>
     <div class="stat"><div class="stat-num">5</div><div class="stat-label">Live</div></div>
     <div class="stat"><div class="stat-num">🔥</div><div class="stat-label">Streak</div></div>
   </div>
@@ -430,34 +430,34 @@
 
 <main class="main">
 
-  <!-- TODAY: Apr 14 -->
+  <!-- TODAY: Apr 15 -->
   <div id="today">
   <div class="today-banner">
-    <div class="today-label">Today · Apr 14, 2026</div>
-    <div class="today-date">Portfolio distribution — a school district saved $250K by vibe coding their own tools</div>
+    <div class="today-label">Today · Apr 15, 2026</div>
+    <div class="today-date">Platform Tax Calculator — Apple just kicked a vibe coding app off the App Store. Twice.</div>
     <div class="output-grid">
       <div class="output-card">
         <span class="output-tag tag-ship">Ship</span>
         <div class="output-body">
-          <strong>Distribute the portfolio</strong> — timed to Peninsula School District saving $250K by vibe coding SaaS replacements (K-12 Dive, April 13) and "Vibe Coding Just Killed the $150k Programmer" trending on Medium. The portfolio is the proof point.
+          <strong>Platform Tax Calculator</strong> — compare what app stores actually cost you vs. the open web. Timed to Apple removing "Anything" for the second time (TechCrunch, April 14).
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-publish">Blueprint</span>
         <div class="output-body">
-          <strong>No new build today</strong> — Ship is a distribution action. No blueprint generated.
+          <strong>platform-tax-calculator-blueprint.md</strong> — the "platform controversy → cost calculator" formula, applied to Apple's App Store enforcement.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-asset">Asset</span>
         <div class="output-body">
-          <strong>Daily Build Letter — Iteration 1 of 2.</strong> Added Peninsula $250K story as social proof, "Who this is for" targeting section, portfolio link, updated stats to 24 tools / 16 blueprints, expanded recent builds list with 7 entries.
+          <strong>Youniverse — Iteration 1 of 2.</strong> Added Wiki page + conspiracy theory "Files" tabs, 10-post randomized feed pool with refresh, more absurd/creative content, regenerate buttons on each tab.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-surprise">Surprise</span>
         <div class="output-body">
-          <strong>SaaS Vulnerability Index.</strong> Gartner's first AI agent report (April 13): 40% of deployments will fail. Meanwhile a school district replaces 4 SaaS tools by vibe coding. Nobody has ranked which SaaS categories are most vulnerable to vibe-code replacement. That ranking is a monetizable data product.
+          <strong>Vibe Code Insurance Score.</strong> Georgia Tech documented 56 CVEs from AI code in Q1 2026 + Apple removing apps over code quality. Insurance carriers will price cyber liability differently based on how code was generated. First-mover on the scoring framework owns the reference.
         </div>
       </div>
     </div>
@@ -575,6 +575,11 @@
       <div class="tool-desc">Landing page template for validating ideas through preorders</div>
       <div class="tool-status local"><div class="tool-dot"></div> Local · preorder-landing.html</div>
     </div>
+    <div class="tool-card">
+      <div class="tool-name">Platform Tax Calculator</div>
+      <div class="tool-desc">Compare what app stores actually cost you vs. deploying to the open web</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · platform-tax-calculator.html</div>
+    </div>
   </div>
 
   </div><!-- /today -->
@@ -587,6 +592,70 @@
 
   <div class="entries-list">
 
+    <!-- APR 15 -->
+    <div class="entry-card" id="entry-apr15">
+      <div class="entry-header" onclick="toggleEntry('entry-apr15')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 15, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Platform Tax Calculator</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr15','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr15','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr15','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr15-ship" class="tab-content active">
+          <div class="tab-text">Platform Tax Calculator — compare what app stores actually cost you vs. the open web.
+
+Apple removed the vibe coding app "Anything" from the App Store for the second time on April 14 (TechCrunch, 9to5Mac). The Anything team says "the number of people who can build apps is about to go from millions to everyone."
+
+The question every indie builder is asking right now: do I even need the App Store? This calculator answers it with exact numbers. Input your revenue, app type, and developer size. Get instant breakdowns for Apple App Store, Google Play, and open web (Vercel + Stripe).
+
+Step 1: Deploy platform-tax-calculator.html to Vercel.
+Step 2: Post in the HN thread about Anything's removal: "Apple just kicked a vibe coding app off the App Store. Here's what the App Store actually costs you vs. deploying to the open web."
+Step 3: Post in r/webdev and r/SideProject with the same framing. Cross-post to r/iOSProgramming.
+
+File: Claude Cowork/platform-tax-calculator.html
+Blueprint: Claude Cowork/blueprints/platform-tax-calculator-blueprint.md</div>
+        </div>
+        <div id="apr15-asset" class="tab-content">
+          <div class="tab-text">ITERATE: Youniverse — Iteration 1 of 2. First time this file has been iterated (VV's Mar 30 feedback: "basic, predictable, could be more original/creative — something to build on").
+
+What changed:
+1. Two new tabs: "Wiki" (your full Wikipedia page with infobox, references, controversy section) and "Files" (conspiracy theories about you — classified documents, timeline theories, frequency patterns).
+2. Feed expanded from 5 fixed posts to a randomized pool of 10 with 6 shown per load. Posts are now much weirder — VC funding rounds based on your hobby, Joe Rogan clips about your lunch, astrology warnings, Goodreads bestseller about you.
+3. News expanded from 4 to a pool of 7 — now includes UN General Assembly debates, The Onion treating your activities as real news, leaked algorithm documents.
+4. "Refresh feed" / "More headlines" / "Dig deeper" regenerate buttons on Feed, News, and Files tabs — every visit produces different content.
+5. Content is significantly more absurd and unpredictable — addressing VV's feedback that the original was too predictable from inputs.
+
+Why still pursuing: Youniverse is the only viral/shareable entertainment tool in the portfolio. Everything else is a utility. Viral tools drive the most unprompted traffic. The original concept was sound but the execution was too safe. This iteration makes the output surprising enough that people screenshot and share individual posts.
+
+Iteration 1 of 2. File: Claude Cowork/youniverse.html</div>
+        </div>
+        <div id="apr15-surprise" class="tab-content">
+          <div class="tab-text">Vibe Code Insurance Score — the financial consequence layer nobody has built.
+
+Two signals from the last 48 hours: Apple removed the Anything vibe coding app for the second time, citing code quality and review standards (TechCrunch, April 14). Same day, Georgia Tech published "Bad Vibes" — documenting 56 CVEs from AI-generated code in Q1 2026, up from 18 in all of H2 2025. March 2026 alone had 35 CVEs, more than all of 2025 combined.
+
+The connection nobody has made: cyber insurance carriers will price liability differently based on how code was generated. The data now exists to justify it. Georgia Tech's CVE breakdown by tool, OWASP violation rates (45% for AI code per Veracode), Apple's enforcement actions — these are exactly the risk factors insurance underwriters use.
+
+The move: build a "Vibe Code Insurance Score" — input your app's tech stack, how it was built (AI-assisted vs. fully vibe-coded), what data it handles, which AI tool generated the code. Get a risk score that predicts your cyber insurance premium impact. Scoring model based on Georgia Tech CVE data, Veracode OWASP rates, and data sensitivity tiers.
+
+Why this matters: the cyber insurance market is $16B+ in 2026. If carriers start differentiating premiums based on AI code generation methods — which this data says they should — every startup needs to know their score. First-mover on this scoring framework becomes the reference tool that carriers and startups both link to.
+
+Distinct from Vibe Trust Score (self-assessment quiz about your development process) and the "Vibe Lint" concept from Apr 13 (automated code scanner). This is about the financial consequence — what your vibe coding habits cost you in insurance premiums.
+
+Grounded in: Apple removes Anything app (TechCrunch, April 14), Georgia Tech "Bad Vibes" research (research.gatech.edu, April 13), Veracode 2026 OWASP data (45% violation rate), NBC News vibe coding security coverage (April 2026).</div>
+        </div>
+      </div>
+    </div>
+
     <!-- APR 14 -->
     <div class="entry-card" id="entry-apr14">
       <div class="entry-header" onclick="toggleEntry('entry-apr14')">
@@ -594,7 +663,7 @@
           <div class="entry-date">Apr 14, 2026</div>
           <div class="entry-pills">
             <span class="pill pill-ship">Portfolio Distribution</span>
-            <span class="pill pill-pending">Today</span>
+            <span class="pill pill-pending">Generated</span>
           </div>
         </div>
         <div class="entry-toggle">›</div>
