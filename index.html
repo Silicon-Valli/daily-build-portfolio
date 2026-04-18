@@ -390,8 +390,8 @@
     </div>
   </div>
   <div class="header-stats">
-    <div class="stat"><div class="stat-num">27</div><div class="stat-label">Days</div></div>
-    <div class="stat"><div class="stat-num">25</div><div class="stat-label">Tools Built</div></div>
+    <div class="stat"><div class="stat-num">28</div><div class="stat-label">Days</div></div>
+    <div class="stat"><div class="stat-num">26</div><div class="stat-label">Tools Built</div></div>
     <div class="stat"><div class="stat-num">5</div><div class="stat-label">Live</div></div>
     <div class="stat"><div class="stat-num">🔥</div><div class="stat-label">Streak</div></div>
   </div>
@@ -430,34 +430,34 @@
 
 <main class="main">
 
-  <!-- TODAY: Apr 17 -->
+  <!-- TODAY: Apr 18 -->
   <div id="today">
   <div class="today-banner">
-    <div class="today-label">Today · Apr 17, 2026</div>
-    <div class="today-date">SWE-bench hit 100%. GPT-5.4 launched. 84% use AI, 29% trust it. The trust gap is the story.</div>
+    <div class="today-label">Today · Apr 18, 2026</div>
+    <div class="today-date">Vibe coding backlash peaks. Builders pivot from "build more" to "sell what you built." Cold outreach is the gap.</div>
     <div class="output-grid">
       <div class="output-card">
         <span class="output-tag tag-ship">Ship</span>
         <div class="output-body">
-          <strong>Portfolio distribution</strong> — ride the GPT-5.4 / Gemini 3.1 Ultra / SWE-bench 100% news cycle. Post in r/artificial, r/ChatGPT, r/webdev with "AI coding benchmarks hit 100%. Here's what one person shipped with AI tools — 25 apps in 27 days."
+          <strong>Cold Message Grader</strong> — paste any cold email, DM, or LinkedIn message. Instant score across 8 dimensions with specific fixes. No signup, client-side, shareable URLs.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-publish">Blueprint</span>
         <div class="output-body">
-          No new build today — Ship is a distribution action for the portfolio.
+          Blueprint: blueprints/cold-message-grader-blueprint.md — the "score-before-you-send" pattern applied to outreach.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-asset">Asset</span>
         <div class="output-body">
-          <strong>Vibe Trust Score — Iteration 1 of 2.</strong> Updated data (56 CVEs Q1 2026, 84%/29% trust gap), added benchmark comparison bar, "Fix this first" priority section, X/Twitter share button.
+          <strong>Stripe Fee Calculator — Iteration 1 of 2.</strong> Added annual fee projection, ACH savings comparison, copy-breakdown button, email capture for rate change alerts, portfolio link.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-surprise">Surprise</span>
         <div class="output-body">
-          <strong>AI Verification Layer as a product category.</strong> SWE-bench 100% + 43% of AI code needs debugging in production. The gap between "AI can pass every benchmark" and "nobody trusts the output" is about to become a standalone market.
+          <strong>MCP servers are the stealth app store.</strong> Apple removed Anything twice. Meanwhile MCP hit 10K servers + 97M SDK downloads. AI agents discover tools through MCP, not app stores. The "MCP App Store" is the distribution layer of agent-native software.
         </div>
       </div>
     </div>
@@ -590,6 +590,11 @@
       <div class="tool-desc">Visual map of your Notion workspace structure</div>
       <div class="tool-status local"><div class="tool-dot"></div> Local · notion-map.html</div>
     </div>
+    <div class="tool-card">
+      <div class="tool-name">Cold Message Grader</div>
+      <div class="tool-desc">Score your cold email, DM, or LinkedIn message across 8 dimensions before sending</div>
+      <div class="tool-status local"><div class="tool-dot"></div> Local · cold-message-grader.html</div>
+    </div>
   </div>
 
   </div><!-- /today -->
@@ -602,6 +607,55 @@
 
   <div class="entries-list">
 
+    <!-- APR 18 -->
+    <div class="entry-card" id="entry-apr18">
+      <div class="entry-header" onclick="toggleEntry('entry-apr18')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 18, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Cold Message Grader</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr18','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr18','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr18','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr18-ship" class="tab-content active">
+          <div class="tab-text">Cold Message Grader — a new tool for the portfolio. Paste any cold email, DM, or LinkedIn message and get an instant score across 8 dimensions: length, personalization, value prop, CTA clarity, spam risk, reading level, opening line, and conciseness. Platform-specific scoring (Email, LinkedIn, X DM, Reddit, Slack). Shareable URLs with encoded messages. Email capture for weekly outreach teardowns.
+
+Why today: the vibe coding backlash is peaking — "Vibe Coding Is Over" on Medium, Amazon's 6.3M order loss, Anything kicked from App Store twice. Builders are shifting from "build more" to "sell what you've built." The #1 skill gap for technical builders pivoting to distribution is cold outreach. The portfolio had 25 utility/calculator tools and zero outreach/sales tools. This fills the gap.
+
+File: Claude Cowork/cold-message-grader.html
+Deploy: vercel.com/new → drag and drop → 2 minutes.</div>
+        </div>
+        <div id="apr18-asset" class="tab-content">
+          <div class="tab-text">Stripe Fee Calculator — Iteration 1 of 2. First time iterated (0 prior iterations).
+
+What changed: (1) Annual fee projection showing yearly Stripe costs at 100 charges/month. (2) ACH savings comparison — shows exactly how much you'd save switching from cards to ACH. (3) "Copy breakdown" clipboard button for pasting into invoices or docs. (4) Email capture for Stripe rate change notifications. (5) Portfolio link in footer connecting to the broader build ecosystem.
+
+Why still pursuing: "Stripe fee calculator" has consistent search volume, the tool is already deployed at sv-stripe-fees.vercel.app, and Stripe is the default payment processor for every indie builder in the portfolio's audience. The annual projection and ACH savings make the tool more decision-useful — not just "what's the fee" but "what should I do about it."
+
+Iteration 1 of 2. File: Claude Cowork/stripe-fee-calculator.html</div>
+        </div>
+        <div id="apr18-surprise" class="tab-content">
+          <div class="tab-text">MCP Servers Are the Stealth App Store.
+
+Apple removed the vibe coding app "Anything" from the App Store for the second time (April 14). The developers are fighting back. Meanwhile, MCP (Model Context Protocol) just crossed 10,000 active servers and 97 million monthly SDK downloads. OpenAI, Google, Microsoft, Cloudflare all adopted it. The Linux Foundation governs it now.
+
+The connection nobody's making: for AI-native products, distribution is migrating from "submit to App Store, pay 30%, wait for review" to "publish an MCP server, get discovered by AI agents." Agents don't browse app stores. They connect to MCP servers, authenticate, execute, and move on. No review process, no platform tax, no approval delays.
+
+The move: build the "MCP App Store" — a curated, searchable directory of MCP servers with trust scores, pricing transparency, and one-click setup. mcp.so exists as a basic listing but has no curation, no reviews, no trust layer. First-mover who adds quality signals to this directory captures the distribution infrastructure of agent-native software.
+
+Grounded in: Apple removes Anything (TechCrunch, April 14-15), MCP 10K servers / 97M SDK downloads (The New Stack, March 2026), "Is MCP the new App Store?" (Tech for Product blog), Qualys MCP shadow IT report (March 2026), Linux Foundation adoption (December 2025).</div>
+        </div>
+      </div>
+    </div>
+
     <!-- APR 17 -->
     <div class="entry-card" id="entry-apr17">
       <div class="entry-header" onclick="toggleEntry('entry-apr17')">
@@ -609,7 +663,7 @@
           <div class="entry-date">Apr 17, 2026</div>
           <div class="entry-pills">
             <span class="pill pill-ship">Portfolio Distribution</span>
-            <span class="pill pill-pending">Today</span>
+            <span class="pill pill-generated">Generated</span>
           </div>
         </div>
         <div class="entry-toggle">›</div>
