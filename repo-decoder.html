@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Repo Decoder — Turn any GitHub repo into a plain-English breakdown</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-mark {
+      width: 28px; height: 28px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: #0d1117; font-weight: bold;
+    }
+    .logo-text { font-size: 15px; font-weight: 600; }
+    .logo-text span { color: var(--muted); font-weight: 400; }
+    .header-tag {
+      font-size: 12px; color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 4px 10px; border-radius: 100px;
+    }
+
+    .hero {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 64px 24px 48px;
+    }
+    h1 {
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    h1 span { color: var(--accent); }
+    .tagline {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .url-input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 14px;
+      padding: 13px 16px;
+      outline: none;
+      font-family: 'Courier New', monospace;
+      transition: border-color 0.15s;
+    }
+    .url-input:focus { border-color: var(--accent); }
+    .url-input::placeholder { color: var(--muted); }
+    .decode-btn {
+      background: var(--accent);
+      color: #0d1117;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .decode-btn:hover { opacity: 0.88; }
+    .decode-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .examples {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+    .ex-label { margin-right: 6px; }
+    .ex-link {
+      color: var(--accent);
+      cursor: pointer;
+      margin-right: 14px;
+      text-decoration: none;
+    }
+    .ex-link:hover { text-decoration: underline; }
+
+    /* State indicators */
+    .error-box {
+      background: rgba(248,81,73,0.08);
+      border: 1px solid rgba(248,81,73,0.25);
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: #f85149;
+      font-size: 14px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .loading {
+      text-align: center;
+      padding: 48px;
+      color: var(--muted);
+      display: none;
+    }
+    .dots span {
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin: 0 4px;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.2s; }
+    .dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,80%,100%{opacity:0.15} 40%{opacity:1} }
+
+    /* Results */
+    #result { display: none; }
+    .result-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      margin-bottom: 14px;
+    }
+    .result-section:first-child { margin-top: 0; }
+
+    .repo-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .repo-name-link {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .repo-name-link:hover { text-decoration: underline; }
+    .visibility-badge {
+      font-size: 11px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 3px 10px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .repo-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .stat-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 13px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .stat-chip .icon { font-size: 12px; }
+
+    .topics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .topic-tag {
+      background: rgba(88,166,255,0.08);
+      color: var(--accent);
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid rgba(88,166,255,0.18);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .plain-text {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text);
+    }
+    .readme-block {
+      border-left: 2px solid var(--border);
+      padding-left: 16px;
+      margin-top: 14px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #c9d1d9;
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .audience-chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .audience-chip::before {
+      content: "→ ";
+      color: var(--accent);
+    }
+
+    .pitch-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 14px;
+      word-break: break-word;
+    }
+    .copy-btn {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 11px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+    footer {
+      text-align: center;
+      padding: 40px 24px 48px;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 14px 16px; }
+      .hero { padding: 40px 16px 32px; }
+      .input-row { flex-direction: column; }
+      .decode-btn { width: 100%; padding: 14px; }
+      .result-section { padding: 18px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">R</div>
+    <div class="logo-text">Repo<span>Decoder</span></div>
+  </div>
+  <span class="header-tag">Public GitHub repos only</span>
+</header>
+
+<div class="hero">
+  <h1>Paste a GitHub URL.<br>Get a <span>plain-English breakdown.</span></h1>
+  <p class="tagline">For non-technical founders, PMs, and builders who need to understand a repo without reading 3,000 lines of README. Calls GitHub's public API — live data, no signup.</p>
+
+  <div class="input-row">
+    <input
+      class="url-input"
+      id="repoUrl"
+      type="text"
+      placeholder="https://github.com/owner/repo-name"
+    />
+    <button class="decode-btn" id="decodeBtn" onclick="decodeRepo()">Decode →</button>
+  </div>
+
+  <div class="examples">
+    <span class="ex-label">Try:</span>
+    <span class="ex-link" onclick="setExample('https://github.com/supabase/supabase')">supabase</span>
+    <span class="ex-link" onclick="setExample('https://github.com/langchain-ai/langchain')">langchain</span>
+    <span class="ex-link" onclick="setExample('https://github.com/vercel/next.js')">next.js</span>
+    <span class="ex-link" onclick="setExample('https://github.com/ggerganov/llama.cpp')">llama.cpp</span>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="loading" id="loading">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <p style="margin-top:14px;font-size:14px;">Fetching from GitHub…</p>
+  </div>
+
+  <div id="result"></div>
+</div>
+
+<footer>Built for founders who don't read Git. Uses the public GitHub API — no auth, no tracking.</footer>
+
+<script>
+  // Helpers
+  function setExample(url) {
+    document.getElementById('repoUrl').value = url;
+    decodeRepo();
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.style.display = 'block';
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('decodeBtn').disabled = false;
+  }
+
+  function parseGithubUrl(url) {
+    const match = url.trim().match(/github\.com\/([^/\s]+)\/([^/\s?#]+)/);
+    if (!match) return null;
+    return { owner: match[1], repo: match[2].replace(/\.git$/, '') };
+  }
+
+  function fmt(n) {
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return String(n);
+  }
+
+  function ago(dateStr) {
+    const days = Math.floor((Date.now() - new Date(dateStr)) / 86400000);
+    if (days === 0) return 'today';
+    if (days === 1) return 'yesterday';
+    if (days < 30) return `${days}d ago`;
+    if (days < 365) return `${Math.floor(days / 30)}mo ago`;
+    return `${Math.floor(days / 365)}yr ago`;
+  }
+
+  function extractReadmeText(base64) {
+    try {
+      const raw = atob(base64.replace(/\n/g, ''));
+      const lines = raw.split('\n');
+      const good = [];
+      let inCode = false;
+      for (const line of lines) {
+        if (line.startsWith('```')) { inCode = !inCode; continue; }
+        if (inCode) continue;
+        if (/^#{1,3}\s/.test(line)) continue;
+        if (/!\[|<img|<a |<div|<p |<table/.test(line)) continue;
+        if (/\[!\[/.test(line)) continue; // badge
+        if (line.trim().length < 30) continue;
+        good.push(line.trim());
+        if (good.length >= 3) break;
+      }
+      const text = good.join(' ').substring(0, 500);
+      return text ? text + '…' : '';
+    } catch { return ''; }
+  }
+
+  function inferAudience(desc, topics, lang) {
+    const src = (desc + ' ' + topics.join(' ')).toLowerCase();
+    const found = [];
+    if (/\bcli\b|command.?line|terminal/.test(src)) found.push('developers who work in the terminal');
+    if (/\bapi\b|rest\b|graphql|sdk\b/.test(src)) found.push('backend engineers building APIs');
+    if (/\bui\b|component|front.?end|react|vue|svelte/.test(src)) found.push('frontend developers');
+    if (/agent|automation|workflow|n8n/.test(src)) found.push('founders automating repetitive work');
+    if (/\bdata\b|analytic|sql|postgres|database/.test(src)) found.push('data-driven product teams');
+    if (/\bai\b|\bllm\b|gpt|claude|openai|model|embeddings/.test(src)) found.push('AI builders and product teams');
+    if (/deploy|devops|infra|cloud|docker|k8s/.test(src)) found.push('infrastructure engineers');
+    if (/saas|startup|monetiz/.test(src)) found.push('indie founders and SaaS builders');
+    if (found.length === 0) {
+      if (lang) found.push(`${lang} developers`);
+      found.push('technical builders');
+    }
+    return found.slice(0, 3);
+  }
+
+  async function decodeRepo() {
+    const urlRaw = document.getElementById('repoUrl').value.trim();
+    if (!urlRaw) return;
+
+    const parsed = parseGithubUrl(urlRaw);
+    if (!parsed) {
+      showError("That doesn't look like a GitHub URL. Try: https://github.com/owner/repo-name");
+      return;
+    }
+
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('result').innerHTML = '';
+    document.getElementById('errorBox').style.display = 'none';
+    document.getElementById('decodeBtn').disabled = true;
+
+    try {
+      const [repoRes, readmeRes] = await Promise.allSettled([
+        fetch(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}`),
+        fetch(`https://api.github.com/repos/${parsed.owner}/${parsed.repo}/readme`)
+      ]);
+
+      if (repoRes.status === 'rejected' || !repoRes.value.ok) {
+        const status = repoRes.value?.status;
+        if (status === 404) showError("Repo not found. Only public GitHub repos work here.");
+        else if (status === 403) showError("GitHub rate limit hit. Wait a minute and try again.");
+        else showError("Couldn't reach GitHub. Check your connection and try again.");
+        return;
+      }
+
+      const repo = await repoRes.value.json();
+      let readmeExcerpt = '';
+      if (readmeRes.status === 'fulfilled' && readmeRes.value.ok) {
+        const rd = await readmeRes.value.json();
+        readmeExcerpt = extractReadmeText(rd.content || '');
+      }
+
+      renderResult(repo, readmeExcerpt);
+
+    } catch (err) {
+      showError("Something went wrong. Make sure this is a public GitHub repo URL.");
+    } finally {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('decodeBtn').disabled = false;
+    }
+  }
+
+  function renderResult(repo, readmeExcerpt) {
+    const audience = inferAudience(repo.description || '', repo.topics || [], repo.language);
+
+    const pitch = [
+      `${repo.name} — ${repo.description || 'no description provided'}.`,
+      `${fmt(repo.stargazers_count)} GitHub stars.`,
+      repo.language ? `Written in ${repo.language}.` : '',
+      `Last updated ${ago(repo.updated_at)}.`,
+      readmeExcerpt ? readmeExcerpt.substring(0, 220) + '…' : ''
+    ].filter(Boolean).join(' ');
+
+    const topicsHtml = (repo.topics || []).slice(0, 10).map(
+      t => `<span class="topic-tag">${t}</span>`
+    ).join('');
+
+    const audienceHtml = audience.map(
+      a => `<div class="audience-chip">${a}</div>`
+    ).join('');
+
+    const html = `
+      <!-- Header card -->
+      <div class="result-section">
+        <div class="repo-top">
+          <a class="repo-name-link" href="${repo.html_url}" target="_blank" rel="noopener">${repo.full_name}</a>
+          <span class="visibility-badge">${repo.private ? 'private' : 'public'}</span>
+        </div>
+        <p class="repo-desc">${repo.description || '<em style="opacity:0.5">No description provided by the repo author.</em>'}</p>
+        <div class="stats">
+          <div class="stat-chip"><span class="icon">⭐</span> ${fmt(repo.stargazers_count)} stars</div>
+          <div class="stat-chip"><span class="icon">🍴</span> ${fmt(repo.forks_count)} forks</div>
+          <div class="stat-chip"><span class="icon">👁</span> ${fmt(repo.watchers_count)} watching</div>
+          ${repo.language ? `<div class="stat-chip"><span class="icon">⬡</span> ${repo.language}</div>` : ''}
+          <div class="stat-chip"><span class="icon">🕐</span> Updated ${ago(repo.updated_at)}</div>
+          ${repo.open_issues_count ? `<div class="stat-chip"><span class="icon">●</span> ${fmt(repo.open_issues_count)} open issues</div>` : ''}
+        </div>
+        ${topicsHtml ? `<div class="topics">${topicsHtml}</div>` : ''}
+      </div>
+
+      <!-- What it does -->
+      ${readmeExcerpt ? `
+      <div class="result-section">
+        <div class="section-label">What it actually does (from README)</div>
+        <div class="plain-text">
+          ${repo.description ? `<p style="margin-bottom:12px">${repo.description}</p>` : ''}
+          <div class="readme-block">${readmeExcerpt}</div>
+        </div>
+      </div>` : ''}
+
+      <!-- Who it's for -->
+      <div class="result-section">
+        <div class="section-label">Who it's built for</div>
+        <p class="plain-text" style="color:var(--muted);margin-bottom:0">Based on the description, topics, and language:</p>
+        <div class="audience-grid">${audienceHtml}</div>
+      </div>
+
+      <!-- Copy pitch -->
+      <div class="result-section">
+        <div class="section-label">Plain-English pitch (copy &amp; paste anywhere)</div>
+        <div class="pitch-box" id="pitchText">${pitch}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+          <button class="copy-btn" id="copyBtn" onclick="copyPitch()">Copy pitch</button>
+          <button class="copy-btn" id="tweetBtn" onclick="tweetPitch('${repo.full_name}')" style="background:#1d9bf0;color:#fff;border-color:#1d9bf0">Tweet this repo</button>
+          <button class="copy-btn" id="shareBtn" onclick="copyShareUrl('${repo.full_name}')">Copy share link</button>
+        </div>
+      </div>
+
+      <!-- Email capture -->
+      <div class="result-section" style="background:linear-gradient(145deg,#161b22,#1d242e);border:1px solid #30363d">
+        <div class="section-label">Get 3 decoded trending repos every Monday</div>
+        <p class="plain-text" style="color:var(--muted);margin-bottom:14px;font-size:14px">
+          The most-starred repos of the week, pre-decoded into plain English. No spam — just the signal.
+        </p>
+        <form id="emailForm" onsubmit="captureEmail(event)" style="display:flex;gap:10px;flex-wrap:wrap">
+          <input type="email" id="emailInput" required placeholder="you@domain.com"
+            style="flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;padding:11px 14px;outline:none" />
+          <button type="submit" class="copy-btn" style="background:var(--accent);color:#0d1117;border-color:var(--accent)">Subscribe</button>
+        </form>
+        <p id="emailMsg" style="font-size:13px;color:var(--green);margin-top:10px;display:none">
+          ✓ You're on the list. First issue drops next Monday.
+        </p>
+      </div>
+    `;
+
+    const el = document.getElementById('result');
+    el.innerHTML = html;
+    el.style.display = 'block';
+  }
+
+  function tweetPitch(fullName) {
+    const pitchText = document.getElementById('pitchText').textContent;
+    const shareUrl = `${window.location.origin}${window.location.pathname}?repo=${encodeURIComponent(fullName)}`;
+    const tweetText = `${pitchText.substring(0, 200)}...\n\nDecoded with Repo Decoder:`;
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`;
+    window.open(url, '_blank', 'noopener');
+  }
+
+  function copyShareUrl(fullName) {
+    const shareUrl = `${window.location.origin}${window.location.pathname}?repo=${encodeURIComponent(fullName)}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      const btn = document.getElementById('shareBtn');
+      const prev = btn.textContent;
+      btn.textContent = '✓ Link copied';
+      setTimeout(() => btn.textContent = prev, 2000);
+    });
+  }
+
+  function captureEmail(e) {
+    e.preventDefault();
+    const email = document.getElementById('emailInput').value;
+    // Store locally — VV can hook up a real endpoint later
+    try {
+      const list = JSON.parse(localStorage.getItem('repo-decoder-emails') || '[]');
+      if (!list.includes(email)) list.push(email);
+      localStorage.setItem('repo-decoder-emails', JSON.stringify(list));
+    } catch {}
+    document.getElementById('emailForm').style.display = 'none';
+    document.getElementById('emailMsg').style.display = 'block';
+  }
+
+  function copyPitch() {
+    const text = document.getElementById('pitchText').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ Copied to clipboard';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy pitch';
+        btn.classList.remove('copied');
+      }, 2200);
+    }).catch(() => {
+      // fallback
+      const el = document.getElementById('pitchText');
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+    });
+  }
+
+  // Enter key support + share URL auto-load
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('repoUrl').addEventListener('keydown', e => {
+      if (e.key === 'Enter') decodeRepo();
+    });
+
+    // Auto-load if ?repo=owner/name is in the URL
+    const params = new URLSearchParams(window.location.search);
+    const sharedRepo = params.get('repo');
+    if (sharedRepo && /^[^/]+\/[^/]+$/.test(sharedRepo)) {
+      const fullUrl = `https://github.com/${sharedRepo}`;
+      document.getElementById('repoUrl').value = fullUrl;
+      decodeRepo();
+    }
+  });
+</script>
+</body>
+</html>

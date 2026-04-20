@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blueprint Vault — 12 shipped web apps, every blueprint for $9</title>
+  <meta name="description" content="12 working web apps. 12 blueprints. What they are, the demand signal, exact build steps, monetization paths. $9 lifetime access." />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0a0d12;
+      --surface: #12161d;
+      --surface-2: #1a1f29;
+      --border: #232a36;
+      --text: #e8eef6;
+      --muted: #8792a3;
+      --accent: #ffd166;
+      --accent-2: #6cc7ff;
+      --green: #4ade80;
+      --lock: #5b6678;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 0;
+      background: rgba(10,13,18,0.8);
+      backdrop-filter: blur(8px);
+      position: sticky; top: 0; z-index: 10;
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+    .logo-mark {
+      width: 28px; height: 28px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; color: #0a0d12; font-weight: 800;
+    }
+    .nav-cta {
+      background: var(--accent);
+      color: #0a0d12;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .nav-cta:hover { filter: brightness(1.08); }
+
+    /* Hero */
+    .hero { padding: 72px 0 56px; text-align: center; }
+    .badge {
+      display: inline-block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 22px;
+      letter-spacing: 0.3px;
+    }
+    .badge .dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-right: 7px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    h1 {
+      font-size: clamp(32px, 5.5vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    h1 .highlight { color: var(--accent); }
+    .tagline {
+      color: var(--muted);
+      font-size: clamp(16px, 2.2vw, 18px);
+      max-width: 560px;
+      margin: 0 auto 36px;
+    }
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .cta-primary {
+      background: var(--accent);
+      color: #0a0d12;
+      border: none;
+      border-radius: 10px;
+      padding: 16px 32px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cta-primary:hover { transform: translateY(-1px); filter: brightness(1.08); }
+    .cta-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 24px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .trust { color: var(--muted); font-size: 13px; }
+
+    /* Proof bar */
+    .proof {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 40px 0 60px;
+    }
+    .proof-cell {
+      background: var(--surface);
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .proof-num {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent-2);
+      letter-spacing: -0.02em;
+    }
+    .proof-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+    @media (max-width: 600px) {
+      .proof { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Section */
+    .section { padding: 48px 0; }
+    .section-head {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .section-head h2 {
+      font-size: clamp(24px, 3.2vw, 30px);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+    .section-head p {
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto;
+      font-size: 15px;
+    }
+
+    /* Vault grid */
+    .vault {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .bp-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      transition: border-color 0.15s;
+      position: relative;
+    }
+    .bp-card:hover { border-color: #3a4455; }
+    .bp-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+    .bp-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .bp-chip {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 100px;
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      font-weight: 500;
+    }
+    .bp-chip.free {
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--green);
+      border-color: rgba(74, 222, 128, 0.3);
+    }
+    .bp-chip.locked {
+      background: rgba(91, 102, 120, 0.15);
+      color: var(--lock);
+      border-color: rgba(91, 102, 120, 0.3);
+    }
+    .bp-one-liner {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .bp-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .bp-meta span::before { content: '·'; margin-right: 6px; opacity: 0.6; }
+    .bp-meta span:first-child::before { content: ''; margin-right: 0; }
+
+    .bp-preview {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .bp-preview h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .bp-preview p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+    .bp-preview ol {
+      padding-left: 22px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .bp-preview ol li { margin-bottom: 6px; }
+
+    /* Free preview expanded content */
+    .free-expanded {
+      display: block;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .free-section { margin-bottom: 22px; }
+    .free-section h5 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    .free-section p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .free-section ol, .free-section ul {
+      padding-left: 22px;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .free-section ol li, .free-section ul li { margin-bottom: 8px; }
+    .free-section code {
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--accent-2);
+    }
+
+    .locked-content {
+      position: relative;
+      overflow: hidden;
+      max-height: 140px;
+    }
+    .locked-blur {
+      filter: blur(6px);
+      opacity: 0.5;
+      user-select: none;
+      pointer-events: none;
+    }
+    .lock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, transparent 0%, var(--surface) 90%);
+    }
+    .lock-cta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* Pricing */
+    .pricing-wrap { padding: 64px 0; }
+    .price-card {
+      max-width: 480px;
+      margin: 0 auto;
+      background: linear-gradient(160deg, var(--surface), var(--surface-2));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      text-align: center;
+      position: relative;
+    }
+    .price-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 16px;
+      padding: 1px;
+      background: linear-gradient(135deg, var(--accent), transparent 40%, var(--accent-2));
+      -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+      mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .price-tier { font-size: 13px; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+    .price-amount { font-size: 56px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+    .price-amount .dollar { font-size: 34px; vertical-align: super; margin-right: 2px; color: var(--muted); }
+    .price-sub { color: var(--muted); margin: 10px 0 26px; font-size: 14px; }
+    .price-features {
+      text-align: left;
+      margin: 24px 0 28px;
+      padding: 20px;
+      background: var(--bg);
+      border-radius: 10px;
+    }
+    .price-features li {
+      list-style: none;
+      padding: 6px 0;
+      font-size: 14px;
+      display: flex;
+      gap: 10px;
+    }
+    .price-features li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Email capture */
+    .email-wrap {
+      max-width: 500px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+    }
+    .email-wrap h3 { font-size: 18px; margin-bottom: 8px; }
+    .email-wrap p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+    .email-form { display: flex; gap: 8px; flex-wrap: wrap; }
+    .email-form input {
+      flex: 1;
+      min-width: 200px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+    .email-form input:focus { border-color: var(--accent-2); }
+    .email-form button {
+      background: var(--accent);
+      color: #0a0d12;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .email-success {
+      display: none;
+      color: var(--green);
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    /* FAQ */
+    .faq-list { max-width: 640px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 0;
+    }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-q::after {
+      content: '+';
+      color: var(--muted);
+      font-size: 22px;
+      font-weight: 300;
+    }
+    .faq-item.open .faq-q::after { content: '−'; }
+    .faq-a {
+      display: none;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-top: 12px;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 0 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 60px;
+    }
+    footer a { color: var(--accent-2); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .hero { padding: 48px 0 32px; }
+      .bp-card { padding: 18px; }
+      .bp-top { flex-direction: column; gap: 10px; }
+      .price-card { padding: 28px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="nav">
+      <div class="logo">
+        <div class="logo-mark">BV</div>
+        <span>Blueprint Vault</span>
+      </div>
+      <a href="#pricing" class="nav-cta">Get all 12 for $9 →</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="badge"><span class="dot"></span>12 apps shipped · 1 free preview · $9 for the rest</div>
+    <h1>Every blueprint I've shipped.<br><span class="highlight">For the price of lunch.</span></h1>
+    <p class="tagline">
+      12 working web apps, each with a blueprint explaining what it is, the demand signal that justified it,
+      the exact build steps, and how to monetize it. One is free. The rest unlock for $9.
+    </p>
+    <div class="cta-row">
+      <a href="#pricing" class="cta-primary">Unlock all 12 — $9 →</a>
+      <a href="#free-preview" class="cta-secondary">Read the free one first</a>
+    </div>
+    <p class="trust">Lifetime access. No subscription. Updates free.</p>
+
+    <div class="proof">
+      <div class="proof-cell">
+        <div class="proof-num">12</div>
+        <div class="proof-label">Blueprints</div>
+      </div>
+      <div class="proof-cell">
+        <div class="proof-num">27</div>
+        <div class="proof-label">Apps shipped</div>
+      </div>
+      <div class="proof-cell">
+        <div class="proof-num">30</div>
+        <div class="proof-label">Days building</div>
+      </div>
+      <div class="proof-cell">
+        <div class="proof-num">$9</div>
+        <div class="proof-label">One time</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>What's inside the vault</h2>
+      <p>Each blueprint is a standalone doc. Copy the steps, change the idea, ship your own version.</p>
+    </div>
+
+    <div class="vault">
+
+      <!-- FREE: Repo Decoder -->
+      <div class="bp-card" id="free-preview">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Repo Decoder</div>
+          </div>
+          <span class="bp-chip free">FREE PREVIEW</span>
+        </div>
+        <p class="bp-one-liner">
+          Paste any GitHub URL, get a plain-English breakdown. What it does, who it's for, key stats, and a copyable pitch.
+          No backend, no API key, calls GitHub's public API.
+        </p>
+        <div class="bp-meta">
+          <span>Stack: single-file HTML</span>
+          <span>~4 hours</span>
+          <span>Monetization: email list + $9/mo digest</span>
+        </div>
+
+        <div class="free-expanded">
+          <div class="free-section">
+            <h5>The demand signal</h5>
+            <p>
+              Vibe coding put GitHub at the center of how builders discover tools. But GitHub is built for developers.
+              Non-technical founders, PMs, and investors constantly hit repos they can't parse. "What does this actually do?"
+              is a real question that wastes real time. Current workflow: read 3,000 lines of README or skip entirely.
+            </p>
+          </div>
+
+          <div class="free-section">
+            <h5>Exact build steps</h5>
+            <ol>
+              <li><strong>Single HTML file.</strong> No build step, deploys to Vercel by drag-and-drop.</li>
+              <li><strong>Input parsing:</strong> regex <code>github.com/([^/]+)/([^/\s?#]+)</code>, strip <code>.git</code> suffix.</li>
+              <li><strong>Two parallel API calls</strong> via <code>Promise.allSettled</code>:
+                <code>GET /repos/{owner}/{repo}</code> and <code>GET /repos/{owner}/{repo}/readme</code>.</li>
+              <li><strong>README parsing:</strong> decode base64 with <code>atob()</code>, strip code blocks, headings,
+                image/badge lines, HTML tags. Take first 2-3 clean paragraphs, cap at 500 chars.</li>
+              <li><strong>Audience inference:</strong> regex patterns against description + topics to classify target users.</li>
+              <li><strong>Render:</strong> four cards — header with stats, "What it does", "Who it's for", copyable pitch.</li>
+              <li><strong>Error states:</strong> 404, 403 (rate limit), network fail. All inline, never break the page.</li>
+              <li><strong>Share URL routing:</strong> <code>?repo=owner/name</code> auto-loads on page open. Makes every decoded repo shareable.</li>
+            </ol>
+          </div>
+
+          <div class="free-section">
+            <h5>Monetization path</h5>
+            <p>
+              <strong>Immediate (free):</strong> post in r/SideProject and r/vibecoding. People share repo links with
+              their teams using the generated pitch text — built-in distribution.
+            </p>
+            <p>
+              <strong>Short-term:</strong> email capture after 3 uses. Grow a list of non-technical founders who
+              regularly evaluate GitHub repos.
+            </p>
+            <p>
+              <strong>Medium-term:</strong> "Repo Radar" — weekly $9/mo digest of the 10 most-starred repos from the
+              past 7 days, each with the plain-English breakdown auto-generated.
+            </p>
+            <p>
+              <strong>Longer-term:</strong> B2B angle. "Repo audit" for procurement/security teams evaluating
+              open-source dependencies. $49/mo per team.
+            </p>
+          </div>
+
+          <div class="free-section">
+            <h5>Steal this pattern</h5>
+            <p>The formula: <strong>public API + context-stripping + non-technical output.</strong></p>
+            <ul>
+              <li><strong>Arxiv Decoder</strong> — paste an arXiv URL, get a plain-English breakdown.</li>
+              <li><strong>npm Decoder</strong> — paste an npm package URL, get "what this does, who uses it, how healthy it is."</li>
+              <li><strong>App Store Decoder</strong> — paste an App Store URL, get competitive analysis for PMs.</li>
+              <li><strong>Patent Decoder</strong> — paste a Google Patents URL, get the core claim in plain English.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Locked blueprints -->
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">AI Tax Tracker</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          A tracker for what you're paying across AI subscriptions (Claude, ChatGPT, Cursor, Replit, Vercel, etc.)
+          with breakdown by category and monthly burn. For builders who lost track of how much they spend on AI.
+        </p>
+        <div class="bp-meta">
+          <span>Single-file HTML</span>
+          <span>localStorage persistence</span>
+          <span>Monetization: email + affiliate</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">Full demand signal analysis · exact build steps including data structure, UI components, charting library choice, export format · monetization paths including affiliate angles and enterprise expansion · steal-this adjacent pattern variations...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Cold Message Grader</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          Paste a cold email or DM, get a score plus specific rewrites. For founders doing outbound who
+          want feedback without waiting for a coach or course.
+        </p>
+        <div class="bp-meta">
+          <span>Claude API</span>
+          <span>Rubric-based scoring</span>
+          <span>Monetization: usage caps</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">Full demand signal from sales communities · prompt engineering specifics that drive consistent scoring · rubric construction and dimension weighting · monetization via tiered usage and B2B sales team angle...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Daily Build Letter</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          A minimalist newsletter landing page pattern. Single headline, single promise, single input. Built
+          for makers doing "build in public" who want their audience to follow along by email.
+        </p>
+        <div class="bp-meta">
+          <span>Landing pattern</span>
+          <span>Mailchimp / ConvertKit embed</span>
+          <span>Monetization: list → products</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">The copy framework that converts build-in-public audiences · technical setup for embed + capture + follow-up · integration with build ecosystems · steal-this variations for different creator niches...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">EU De Minimis Calculator</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          Calculate if a small-value import into the EU qualifies for the de minimis threshold exemption.
+          For cross-border e-commerce, solo Etsy-style sellers, and anyone importing under €150.
+        </p>
+        <div class="bp-meta">
+          <span>Pure JS calculator</span>
+          <span>Country rule dataset</span>
+          <span>Monetization: API tier</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">Current regulatory state including 2026 shifts · data source for country-level rules · UX for handling edge cases (gifts, samples, multiple items) · monetization via API access to logistics companies...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Platform Tax Calculator</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          See what you actually keep after Stripe, App Store, Gumroad, Patreon, and Apple's fees. Enter your
+          gross, pick your stack, see the net. Good for pricing decisions before you commit to a platform.
+        </p>
+        <div class="bp-meta">
+          <span>Comparison tool</span>
+          <span>Updated fee data</span>
+          <span>Monetization: affiliate</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">Platform fee data sources that stay current · the comparison UX that drives decisions · how to structure it for affiliate or referral revenue · which adjacent tools share the audience...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Recession Runway</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          A runway calculator that stress-tests your startup's burn under recession scenarios. Adjustable
+          revenue drop, hiring freeze toggle, fundraise delay. Answers: "How long do we really have?"
+        </p>
+        <div class="bp-meta">
+          <span>Interactive calc</span>
+          <span>Scenario toggles</span>
+          <span>Monetization: founder tools bundle</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">Why this matters in the current cycle · the scenario modeling approach that stays honest without being alarmist · visualization choices · monetization via the "founder tools" bundle pattern...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Skill Builder</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          A wizard for building Claude Agent skills from scratch. Input what you want the skill to do, get
+          a scaffolded SKILL.md file plus supporting structure. For people who want custom Claude behavior.
+        </p>
+        <div class="bp-meta">
+          <span>Claude API</span>
+          <span>Skill format scaffolding</span>
+          <span>Monetization: advanced templates</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">The SKILL.md anatomy that makes Claude trigger reliably · prompt patterns for scaffolding · monetization via premium skill libraries · how to position for the emerging Claude skill ecosystem...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Skills Index</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          A directory of existing Claude skills with search and descriptions. Discoverable index of what's
+          already been built so users don't reinvent the wheel. SEO play around a new category.
+        </p>
+        <div class="bp-meta">
+          <span>Static site + search</span>
+          <span>Growing index</span>
+          <span>Monetization: sponsored slots</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">Why directories work in a new category before Google indexes it properly · scraping/curation pipeline · sponsored slot revenue model · network effects once it's the "Product Hunt for skills"...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Stackmatch</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          Answer 6 questions about your project, get a recommended stack. Pulls from the actual defaults
+          experienced builders would pick, not a random mix of trendy tools. Built for indie hackers starting fresh.
+        </p>
+        <div class="bp-meta">
+          <span>Decision tree</span>
+          <span>Curated recommendations</span>
+          <span>Monetization: affiliate</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">The opinionated logic tree that drives the recommendation · how to make it feel consultative rather than listicle · affiliate revenue from hosting/DB partners · premium "review my stack" tier...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Tariff Calculator</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          Calculate import tariffs on goods from China, Mexico, Vietnam, and the EU into the US based on
+          current 2026 tariff schedules. For small importers who can't afford a customs broker.
+        </p>
+        <div class="bp-meta">
+          <span>Data-driven calc</span>
+          <span>HS code lookup</span>
+          <span>Monetization: pro tier + API</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">Tariff data sources and update cadence · HS code UX that non-experts can actually use · legal disclaimer strategy · monetization via pro tier for logistics companies...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
+            <div class="bp-title">Vibe Trust Score</div>
+          </div>
+          <span class="bp-chip locked">🔒 LOCKED</span>
+        </div>
+        <p class="bp-one-liner">
+          Rate a website or app based on trust signals: domain age, SSL, privacy policy presence, social
+          proof, contact info. For anyone evaluating whether a "vibe-coded" MVP is legit.
+        </p>
+        <div class="bp-meta">
+          <span>URL input + heuristics</span>
+          <span>Scoring framework</span>
+          <span>Monetization: B2B audit tier</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">The trust heuristic framework that actually correlates with scam patterns · data source choices for each signal · B2B expansion for procurement teams · adjacent patterns for other evaluation contexts...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="pricing-wrap" id="pricing">
+  <div class="container">
+    <div class="section-head">
+      <h2>One price. Everything inside.</h2>
+      <p>Lifetime access to all 12 blueprints. New blueprints added free for early buyers.</p>
+    </div>
+
+    <div class="price-card">
+      <div class="price-tier">Founder Price · Limited</div>
+      <div class="price-amount"><span class="dollar">$</span>9</div>
+      <div class="price-sub">One-time payment. No subscription.</div>
+
+      <ul class="price-features">
+        <li>All 12 blueprints (full text, not blurred)</li>
+        <li>Every future blueprint added — free forever</li>
+        <li>Exact build steps, not vague summaries</li>
+        <li>Monetization paths for each one</li>
+        <li>"Steal this" variations you can ship</li>
+        <li>Downloadable as a ZIP of markdown files</li>
+      </ul>
+
+      <!-- Swap this href with your Stripe Payment Link or Gumroad URL -->
+      <a href="https://buy.stripe.com/REPLACE_ME" class="cta-primary" style="width:100%;justify-content:center;padding:18px">
+        Unlock the vault — $9 →
+      </a>
+
+      <p class="trust" style="margin-top:16px">Stripe checkout · instant delivery · 7-day refund</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="email-wrap">
+      <h3>Not ready to buy?</h3>
+      <p>Get the free blueprint above plus one new blueprint a month in your inbox. No $9 required.</p>
+      <form class="email-form" id="emailForm" onsubmit="submitEmail(event)">
+        <input type="email" required placeholder="you@domain.com" id="emailField" />
+        <button type="submit">Join free</button>
+      </form>
+      <div class="email-success" id="emailSuccess">✓ You're in. Check your inbox in a minute.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Questions</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Who is this for?</div>
+        <div class="faq-a">
+          Indie builders who want to ship real products but keep getting stuck on "what to build." Each blueprint
+          gives you a validated demand signal, the build path, and a monetization angle. Copy it, change it,
+          ship it as your own.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Are these ideas free to use commercially?</div>
+        <div class="faq-a">
+          Yes. You can build anything described in any blueprint, sell it, charge for it, rebrand it. Ideas
+          aren't copyrightable. The blueprints give you the structure — the execution is yours.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Why only $9?</div>
+        <div class="faq-a">
+          Two reasons. First, it's the lowest price at which I can stop second-guessing if people actually want
+          this. Second, the goal is distribution — I want builders to use these, not gatekeep them. Price goes
+          up after the first 100 buyers.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How do I access after payment?</div>
+        <div class="faq-a">
+          After Stripe checkout you'll get an email with a download link to the blueprints as markdown files,
+          plus access to a private page where new blueprints show up automatically.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What if I don't like them?</div>
+        <div class="faq-a">
+          7-day refund, no questions asked. Email me and I'll send the $9 back same day.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Built as part of the Daily Build Engine · 27 apps in 30 days ·
+    <a href="https://daily-build-portfolio.vercel.app">see the full portfolio</a>
+  </div>
+</footer>
+
+<script>
+  function submitEmail(e) {
+    e.preventDefault();
+    const email = document.getElementById('emailField').value;
+    try {
+      const list = JSON.parse(localStorage.getItem('bv-emails') || '[]');
+      if (!list.includes(email)) list.push(email);
+      localStorage.setItem('bv-emails', JSON.stringify(list));
+    } catch {}
+    document.getElementById('emailForm').style.display = 'none';
+    document.getElementById('emailSuccess').style.display = 'block';
+  }
+
+  // Smooth scroll for #pricing link
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href === '#' || href.length <= 1) return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
