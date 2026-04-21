@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Blueprint Vault — 12 shipped web apps, every blueprint for $9</title>
-  <meta name="description" content="12 working web apps. 12 blueprints. What they are, the demand signal, exact build steps, monetization paths. $9 lifetime access." />
+  <title>Blueprint Vault — 13 shipped web apps, every blueprint for $9</title>
+  <meta name="description" content="13 working web apps. 13 blueprints. What they are, the demand signal, exact build steps, monetization paths. $9 lifetime access." />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -167,6 +167,40 @@
       .proof { grid-template-columns: repeat(2, 1fr); }
     }
 
+    /* Mobile sticky CTA */
+    .mobile-cta {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(10, 13, 18, 0.96);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      z-index: 50;
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.3);
+    }
+    .mobile-cta a {
+      display: block;
+      background: var(--accent);
+      color: #0a0d12;
+      text-align: center;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+    }
+    .mobile-cta .mcta-sub {
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+      margin-top: 6px;
+    }
+    @media (max-width: 640px) {
+      .mobile-cta { display: block; }
+      footer { padding-bottom: 96px !important; }
+    }
+
     /* Section */
     .section { padding: 48px 0; }
     .section-head {
@@ -232,6 +266,19 @@
       background: rgba(91, 102, 120, 0.15);
       color: var(--lock);
       border-color: rgba(91, 102, 120, 0.3);
+    }
+    .bp-chip.new {
+      background: rgba(108, 199, 255, 0.12);
+      color: var(--accent-2);
+      border-color: rgba(108, 199, 255, 0.35);
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+    .bp-chip-group {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+      align-items: center;
     }
     .bp-one-liner {
       color: var(--muted);
@@ -495,36 +542,36 @@
         <div class="logo-mark">BV</div>
         <span>Blueprint Vault</span>
       </div>
-      <a href="#pricing" class="nav-cta">Get all 12 for $9 →</a>
+      <a href="#pricing" class="nav-cta">Get all 13 for $9 →</a>
     </div>
   </div>
 </header>
 
 <section class="hero">
   <div class="container">
-    <div class="badge"><span class="dot"></span>12 apps shipped · 1 free preview · $9 for the rest</div>
+    <div class="badge"><span class="dot"></span>13 apps shipped · 1 free preview · $9 for the rest · Agent Ledger just added</div>
     <h1>Every blueprint I've shipped.<br><span class="highlight">For the price of lunch.</span></h1>
     <p class="tagline">
-      12 working web apps, each with a blueprint explaining what it is, the demand signal that justified it,
+      13 working web apps, each with a blueprint explaining what it is, the demand signal that justified it,
       the exact build steps, and how to monetize it. One is free. The rest unlock for $9.
     </p>
     <div class="cta-row">
-      <a href="#pricing" class="cta-primary">Unlock all 12 — $9 →</a>
+      <a href="#pricing" class="cta-primary">Unlock all 13 — $9 →</a>
       <a href="#free-preview" class="cta-secondary">Read the free one first</a>
     </div>
     <p class="trust">Lifetime access. No subscription. Updates free.</p>
 
     <div class="proof">
       <div class="proof-cell">
-        <div class="proof-num">12</div>
+        <div class="proof-num">13</div>
         <div class="proof-label">Blueprints</div>
       </div>
       <div class="proof-cell">
-        <div class="proof-num">27</div>
+        <div class="proof-num">29</div>
         <div class="proof-label">Apps shipped</div>
       </div>
       <div class="proof-cell">
-        <div class="proof-num">30</div>
+        <div class="proof-num">31</div>
         <div class="proof-label">Days building</div>
       </div>
       <div class="proof-cell">
@@ -625,6 +672,32 @@
       <div class="bp-card">
         <div class="bp-top">
           <div>
+            <div class="bp-title">Agent Ledger</div>
+          </div>
+          <div class="bp-chip-group">
+            <span class="bp-chip new">✨ NEW</span>
+            <span class="bp-chip locked">🔒 LOCKED</span>
+          </div>
+        </div>
+        <p class="bp-one-liner">
+          The audit layer for AI agent spending. When an agent burns $200 on duplicate API calls or hits a crypto vendor nobody approved, you see it. Shipped 13 days after agent banking went live.
+        </p>
+        <div class="bp-meta">
+          <span>Single-file HTML + CSV audit</span>
+          <span>Seeded 4-agent demo</span>
+          <span>Monetization: waitlist → $29/mo team</span>
+        </div>
+        <div class="locked-content">
+          <p class="locked-blur" style="margin-top:14px">Full demand signal from the Meow/Bank-of-Bots launch window · heuristic detection rules that flag duplicate calls, off-hours spend, unauthorized vendors · CSV parsing choices and per-agent grouping logic · waitlist-to-paid conversion path with pricing rationale · the "Unknown-Agent-7712" pattern for shadow-agent discovery...</p>
+          <div class="lock-overlay">
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-top">
+          <div>
             <div class="bp-title">AI Tax Tracker</div>
           </div>
           <span class="bp-chip locked">🔒 LOCKED</span>
@@ -641,7 +714,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">Full demand signal analysis · exact build steps including data structure, UI components, charting library choice, export format · monetization paths including affiliate angles and enterprise expansion · steal-this adjacent pattern variations...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -665,7 +738,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">Full demand signal from sales communities · prompt engineering specifics that drive consistent scoring · rubric construction and dimension weighting · monetization via tiered usage and B2B sales team angle...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -689,7 +762,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">The copy framework that converts build-in-public audiences · technical setup for embed + capture + follow-up · integration with build ecosystems · steal-this variations for different creator niches...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -713,7 +786,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">Current regulatory state including 2026 shifts · data source for country-level rules · UX for handling edge cases (gifts, samples, multiple items) · monetization via API access to logistics companies...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -737,7 +810,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">Platform fee data sources that stay current · the comparison UX that drives decisions · how to structure it for affiliate or referral revenue · which adjacent tools share the audience...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -761,7 +834,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">Why this matters in the current cycle · the scenario modeling approach that stays honest without being alarmist · visualization choices · monetization via the "founder tools" bundle pattern...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -785,7 +858,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">The SKILL.md anatomy that makes Claude trigger reliably · prompt patterns for scaffolding · monetization via premium skill libraries · how to position for the emerging Claude skill ecosystem...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -809,7 +882,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">Why directories work in a new category before Google indexes it properly · scraping/curation pipeline · sponsored slot revenue model · network effects once it's the "Product Hunt for skills"...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -833,7 +906,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">The opinionated logic tree that drives the recommendation · how to make it feel consultative rather than listicle · affiliate revenue from hosting/DB partners · premium "review my stack" tier...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -857,7 +930,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">Tariff data sources and update cadence · HS code UX that non-experts can actually use · legal disclaimer strategy · monetization via pro tier for logistics companies...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -881,7 +954,7 @@
         <div class="locked-content">
           <p class="locked-blur" style="margin-top:14px">The trust heuristic framework that actually correlates with scam patterns · data source choices for each signal · B2B expansion for procurement teams · adjacent patterns for other evaluation contexts...</p>
           <div class="lock-overlay">
-            <a href="#pricing" class="lock-cta">🔓 Unlock all 12 — $9</a>
+            <a href="#pricing" class="lock-cta">🔓 Unlock all 13 — $9</a>
           </div>
         </div>
       </div>
@@ -894,7 +967,7 @@
   <div class="container">
     <div class="section-head">
       <h2>One price. Everything inside.</h2>
-      <p>Lifetime access to all 12 blueprints. New blueprints added free for early buyers.</p>
+      <p>Lifetime access to all 13 blueprints. New blueprints added free for early buyers.</p>
     </div>
 
     <div class="price-card">
@@ -903,7 +976,7 @@
       <div class="price-sub">One-time payment. No subscription.</div>
 
       <ul class="price-features">
-        <li>All 12 blueprints (full text, not blurred)</li>
+        <li>All 13 blueprints (full text, not blurred)</li>
         <li>Every future blueprint added — free forever</li>
         <li>Exact build steps, not vague summaries</li>
         <li>Monetization paths for each one</li>
@@ -983,7 +1056,7 @@
 
 <footer>
   <div class="container">
-    Built as part of the Daily Build Engine · 27 apps in 30 days ·
+    Built as part of the Daily Build Engine · 29 apps in 31 days ·
     <a href="https://daily-build-portfolio.vercel.app">see the full portfolio</a>
   </div>
 </footer>
@@ -1014,6 +1087,11 @@
     });
   });
 </script>
+
+<div class="mobile-cta">
+  <a href="#pricing">🔓 Unlock all 13 blueprints — $9</a>
+  <div class="mcta-sub">Lifetime access · new blueprints free · 7-day refund</div>
+</div>
 
 </body>
 </html>
