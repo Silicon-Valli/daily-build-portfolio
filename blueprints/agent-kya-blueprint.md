@@ -1,6 +1,6 @@
 # Agent KYA — Open spec for verifying AI agent identity
 
-**Live:** https://agent-kya.vercel.app
+**Live:** https://daily-build-portfolio.vercel.app/agent-kya.html
 **Repo:** https://github.com/Silicon-Valli/daily-build-portfolio
 **Built:** April 22, 2026 · single HTML file, no build step
 
@@ -55,7 +55,7 @@ The fastest path to first dollar: publish the spec, get one or two real adopters
 
 ## What ships next
 
-- A `/.well-known/kya.json` validator endpoint at agent-kya.vercel.app/validate
+- A `/.well-known/kya.json` validator endpoint at daily-build-portfolio.vercel.app/agent-kya.html/validate
 - A reference implementation in TypeScript (npm package: `@agent-kya/spec`)
 - Outreach to MetaComp suggesting their commercial product list which version of the open spec it's compatible with
-- A directory at agent-kya.vercel.app/registry where adopters can list themselves
+- A directory at daily-build-portfolio.vercel.app/agent-kya.html/registry where adopters can list themselves
