@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent KYA — the open identity spec for AI agents that move money</title>
+<meta name="description" content="MetaComp shipped a KYA framework for finance on April 21. Here's the open-community version: a portable JSON spec defining who an AI agent is, what it can do, and who answers when it goes wrong. Free. Public domain. Adopt it." />
+<meta property="og:title" content="Agent KYA — open identity spec for AI agents" />
+<meta property="og:description" content="One JSON file per agent. Identity, principal, scope, spend limits, escalation. The spec your audit tools, banks, and SaaS vendors can all read." />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a10;
+    --surface: #12131c;
+    --surface-2: #181a26;
+    --border: #24263330;
+    --border-strong: #2b2e3c;
+    --text: #ecf0f7;
+    --muted: #8b95a8;
+    --muted-2: #5b6478;
+    --accent: #5eead4;
+    --accent-soft: #5eead422;
+    --accent-2: #818cf8;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --ok: #4ade80;
+  }
+  html, body { background: var(--bg); color: var(--text); }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    border-bottom: 1px solid var(--border-strong);
+    background: rgba(10,10,16,0.85);
+    backdrop-filter: blur(10px);
+    padding: 14px 0;
+  }
+  .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; color: #0a0a10; font-size: 13px;
+  }
+  .nav-tag { font-size: 11px; color: var(--muted); border: 1px solid var(--border-strong); padding: 4px 8px; border-radius: 100px; }
+
+  /* HERO */
+  .hero { padding: 72px 0 48px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--accent); font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 20px;
+  }
+  .hero-eyebrow::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  h1 {
+    font-size: 52px; line-height: 1.1; font-weight: 800;
+    letter-spacing: -0.025em; margin-bottom: 18px;
+  }
+  h1 span { background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero-sub { font-size: 19px; color: var(--muted); max-width: 720px; }
+  .hero-actions { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: #0a0a10;
+    padding: 12px 22px; border-radius: 8px;
+    font-weight: 700; font-size: 14px;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--accent-soft); }
+  .btn-secondary {
+    background: transparent; color: var(--text);
+    padding: 12px 22px; border-radius: 8px;
+    font-weight: 600; font-size: 14px;
+    text-decoration: none; border: 1px solid var(--border-strong);
+    cursor: pointer;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* CONTEXT BAR */
+  .context-bar {
+    margin-top: 56px;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .context-bar strong { color: var(--text); }
+
+  /* SECTIONS */
+  section { padding: 56px 0; border-top: 1px solid var(--border); }
+  .section-label {
+    font-size: 11px; color: var(--muted-2); text-transform: uppercase;
+    letter-spacing: 0.08em; font-weight: 700; margin-bottom: 12px;
+  }
+  h2 { font-size: 32px; line-height: 1.2; font-weight: 700; margin-bottom: 14px; letter-spacing: -0.015em; }
+  .section-sub { color: var(--muted); font-size: 16px; max-width: 700px; margin-bottom: 32px; }
+
+  /* SPEC FIELDS */
+  .spec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .spec-field {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .spec-key {
+    display: inline-block;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 13px; color: var(--accent);
+    background: var(--accent-soft);
+    padding: 3px 8px; border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  .spec-name { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+  .spec-desc { color: var(--muted); font-size: 13px; }
+
+  /* JSON BLOCK */
+  .json-block {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 24px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .json-key { color: var(--accent); }
+  .json-str { color: #fbbf24; }
+  .json-num { color: #f9a8d4; }
+  .json-comment { color: var(--muted-2); font-style: italic; }
+  .copy-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .copy-btn {
+    background: var(--surface-2); color: var(--text);
+    border: 1px solid var(--border-strong);
+    padding: 6px 12px; border-radius: 6px;
+    font-size: 12px; cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .copy-btn:hover { border-color: var(--accent); }
+  .copy-btn.copied { background: var(--accent); color: #0a0a10; border-color: var(--accent); }
+
+  /* AGENT CARDS */
+  .agent-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+  .agent-card {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 20px;
+    transition: border-color 0.15s;
+  }
+  .agent-card:hover { border-color: var(--accent); }
+  .agent-card-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .agent-card-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .agent-card-role { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+  .agent-card-meta { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .agent-card-meta strong { color: var(--text); font-weight: 600; }
+  .agent-card-cta { margin-top: 12px; font-size: 12px; color: var(--accent); cursor: pointer; }
+
+  /* ADOPT */
+  .adopt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .adopt-card {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 22px;
+  }
+  .adopt-num { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 13px; margin-bottom: 8px; }
+  .adopt-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+  .adopt-body { color: var(--muted); font-size: 14px; }
+
+  /* WHY BLOCK */
+  .why-block {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 28px;
+  }
+  .why-block p { color: var(--muted); margin-bottom: 12px; }
+  .why-block p:last-child { margin-bottom: 0; }
+  .why-block strong { color: var(--text); }
+
+  /* FAQ */
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+  }
+  .faq-q { font-weight: 600; font-size: 15px; cursor: pointer; display: flex; justify-content: space-between; }
+  .faq-q::after { content: "+"; color: var(--accent); font-size: 20px; }
+  .faq-q.open::after { content: "−"; }
+  .faq-a { color: var(--muted); font-size: 14px; padding-top: 10px; display: none; }
+  .faq-a.open { display: block; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+    color: var(--muted-2);
+    font-size: 13px;
+    text-align: center;
+  }
+  footer a { color: var(--muted); text-decoration: underline; }
+
+  @media (max-width: 720px) {
+    h1 { font-size: 36px; }
+    .hero { padding: 48px 0 32px; }
+    .spec-grid, .agent-cards, .adopt-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <div class="brand-mark">⌘</div>
+      <span>Agent KYA</span>
+      <span class="nav-tag">v0.1 · public draft</span>
+    </div>
+    <a href="#adopt" class="btn-secondary" style="padding: 8px 14px; font-size: 13px;">Adopt</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Open spec · published Apr 22, 2026</div>
+    <h1>The open identity spec<br>for <span>AI agents that move money.</span></h1>
+    <p class="hero-sub">One JSON file per agent. Identity, principal, scope, spend limits, escalation. The spec your audit tools, banks, and SaaS vendors can all read — and refuse to serve when it's missing.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="copySpec()">Copy the spec</button>
+      <a href="#example" class="btn-secondary">See an example</a>
+    </div>
+    <div class="context-bar">
+      <strong>Why this exists, and why now.</strong> MetaComp launched StableX KYA for regulated finance on April 21 — the first commercial Know-Your-Agent framework. Useful, closed, finance-only. This is the open-community version: a portable JSON spec anyone can adopt today, free, no signup, no contract. Drafted in 24 hours after the MetaComp launch because the standard shouldn't be one company's product.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">The fields</div>
+    <h2>Seven fields. That's the whole spec.</h2>
+    <p class="section-sub">Every field has one job: answer a question a bank, audit tool, or SaaS vendor will ask the moment your agent shows up at their door. Anything more is bloat. Anything less and the next person at the door has to guess.</p>
+    <div class="spec-grid">
+      <div class="spec-field">
+        <span class="spec-key">agent_id</span>
+        <div class="spec-name">Who is this?</div>
+        <div class="spec-desc">A stable, globally unique identifier. UUID v4 or a reverse-DNS string. Never reused.</div>
+      </div>
+      <div class="spec-field">
+        <span class="spec-key">principal</span>
+        <div class="spec-name">Who owns the consequences?</div>
+        <div class="spec-desc">The legal entity (person or LLC) liable for what the agent does. EIN or government ID. The buck stops here.</div>
+      </div>
+      <div class="spec-field">
+        <span class="spec-key">scope</span>
+        <div class="spec-name">What can it do?</div>
+        <div class="spec-desc">A list of allowed action verbs: <code>send_payment</code>, <code>open_subscription</code>, <code>read_data</code>, etc. Whitelist, not blacklist.</div>
+      </div>
+      <div class="spec-field">
+        <span class="spec-key">vendor_allowlist</span>
+        <div class="spec-name">Where can it spend?</div>
+        <div class="spec-desc">Domains the agent is allowed to transact with. Empty array means "anywhere" — explicit, not implicit.</div>
+      </div>
+      <div class="spec-field">
+        <span class="spec-key">limits</span>
+        <div class="spec-name">How much, how fast?</div>
+        <div class="spec-desc">Per-transaction, per-day, and per-month dollar caps. Crossing any one triggers <code>escalation</code>.</div>
+      </div>
+      <div class="spec-field">
+        <span class="spec-key">escalation</span>
+        <div class="spec-name">Who answers when something's off?</div>
+        <div class="spec-desc">Webhook URL or email for any flagged action. The human-in-the-loop endpoint, named explicitly.</div>
+      </div>
+      <div class="spec-field">
+        <span class="spec-key">attestation</span>
+        <div class="spec-name">Who signed off on this?</div>
+        <div class="spec-desc">Signature from the principal's keypair plus an ISO timestamp. Lets a verifier prove the spec wasn't tampered with.</div>
+      </div>
+      <div class="spec-field">
+        <span class="spec-key">version</span>
+        <div class="spec-name">Which spec is this?</div>
+        <div class="spec-desc">Always <code>"0.1"</code> for now. Tools that read KYA files check this first.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="example">
+  <div class="wrap">
+    <div class="section-label">A real example</div>
+    <h2>Here's what a filled KYA file looks like.</h2>
+    <p class="section-sub">This is OutreachBot — the cold-email agent from the Agent Ledger demo. Eight fields, signed by a principal, scoped to one job. Copy it, change the values, ship it.</p>
+    <div class="json-block" id="jsonBlock">
+      <div class="copy-row">
+        <span class="json-comment">// outreachbot.kya.json</span>
+        <button class="copy-btn" onclick="copySpec()" id="copyBtn">Copy</button>
+      </div>
+<pre>{
+  <span class="json-key">"version"</span>: <span class="json-str">"0.1"</span>,
+  <span class="json-key">"agent_id"</span>: <span class="json-str">"agent.outreach.001"</span>,
+  <span class="json-key">"principal"</span>: {
+    <span class="json-key">"legal_name"</span>: <span class="json-str">"Acme Build Co LLC"</span>,
+    <span class="json-key">"jurisdiction"</span>: <span class="json-str">"US-DE"</span>,
+    <span class="json-key">"ein"</span>: <span class="json-str">"88-1234567"</span>
+  },
+  <span class="json-key">"scope"</span>: [<span class="json-str">"send_payment"</span>, <span class="json-str">"open_subscription"</span>, <span class="json-str">"read_data"</span>],
+  <span class="json-key">"vendor_allowlist"</span>: [
+    <span class="json-str">"apollo.io"</span>,
+    <span class="json-str">"smartlead.ai"</span>,
+    <span class="json-str">"clearout.io"</span>,
+    <span class="json-str">"instantly.ai"</span>
+  ],
+  <span class="json-key">"limits"</span>: {
+    <span class="json-key">"per_transaction_usd"</span>: <span class="json-num">100</span>,
+    <span class="json-key">"per_day_usd"</span>: <span class="json-num">200</span>,
+    <span class="json-key">"per_month_usd"</span>: <span class="json-num">2500</span>
+  },
+  <span class="json-key">"escalation"</span>: {
+    <span class="json-key">"webhook"</span>: <span class="json-str">"https://acme.co/agent-alerts"</span>,
+    <span class="json-key">"email"</span>: <span class="json-str">"ops@acme.co"</span>
+  },
+  <span class="json-key">"attestation"</span>: {
+    <span class="json-key">"signed_by"</span>: <span class="json-str">"vv@acme.co"</span>,
+    <span class="json-key">"signed_at"</span>: <span class="json-str">"2026-04-22T08:00:00Z"</span>,
+    <span class="json-key">"signature"</span>: <span class="json-str">"sha256:9c2f...e114"</span>
+  }
+}</pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">Three sample agents</div>
+    <h2>What the spec looks like across roles.</h2>
+    <p class="section-sub">Same shape, very different scopes. A research agent shouldn't be able to do what an outreach agent does, and neither should be able to do what a deploy agent does.</p>
+    <div class="agent-cards">
+      <div class="agent-card">
+        <div class="agent-card-name"><span class="agent-card-dot" style="background:#5eead4"></span>ResearchBot</div>
+        <div class="agent-card-role">Market research · web data agent</div>
+        <div class="agent-card-meta"><strong>scope:</strong> read_data only</div>
+        <div class="agent-card-meta"><strong>vendors:</strong> perplexity.ai, apify.com, exa.ai, firecrawl.dev</div>
+        <div class="agent-card-meta"><strong>limits:</strong> $20 / txn, $100 / day, $500 / mo</div>
+        <div class="agent-card-cta" onclick="copyAgentSpec('research')">Copy ResearchBot spec →</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-name"><span class="agent-card-dot" style="background:#818cf8"></span>OutreachBot</div>
+        <div class="agent-card-role">Cold email · prospecting agent</div>
+        <div class="agent-card-meta"><strong>scope:</strong> send_payment, open_subscription, read_data</div>
+        <div class="agent-card-meta"><strong>vendors:</strong> apollo.io, smartlead.ai, clearout.io, instantly.ai</div>
+        <div class="agent-card-meta"><strong>limits:</strong> $100 / txn, $200 / day, $2500 / mo</div>
+        <div class="agent-card-cta" onclick="copyAgentSpec('outreach')">Copy OutreachBot spec →</div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-card-name"><span class="agent-card-dot" style="background:#fbbf24"></span>DevBot</div>
+        <div class="agent-card-role">Code generation · deploy agent</div>
+        <div class="agent-card-meta"><strong>scope:</strong> send_payment, open_subscription, deploy_code</div>
+        <div class="agent-card-meta"><strong>vendors:</strong> vercel.com, supabase.com, openai.com, anthropic.com, github.com</div>
+        <div class="agent-card-meta"><strong>limits:</strong> $50 / txn, $150 / day, $1500 / mo</div>
+        <div class="agent-card-cta" onclick="copyAgentSpec('devbot')">Copy DevBot spec →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="adopt">
+  <div class="wrap">
+    <div class="section-label">Adopt this</div>
+    <h2>Three ways to use the spec today.</h2>
+    <p class="section-sub">It's a JSON file. There's nothing to install, no SDK, no platform. Pick the path that matches what you're building.</p>
+    <div class="adopt-grid">
+      <div class="adopt-card">
+        <div class="adopt-num">01 · Solo builder</div>
+        <div class="adopt-title">One file per agent</div>
+        <div class="adopt-body">Drop a <code>.kya.json</code> in the same folder as each agent. Read it on agent startup. Refuse vendors and limits not in the spec. Done in an afternoon.</div>
+      </div>
+      <div class="adopt-card">
+        <div class="adopt-num">02 · SaaS vendor</div>
+        <div class="adopt-title">Demand a KYA at API auth</div>
+        <div class="adopt-body">If a request comes from an agent (header: <code>X-Agent-KYA</code>), require the file. Reject if scope or vendor_allowlist excludes you. Free upgrade to your fraud posture.</div>
+      </div>
+      <div class="adopt-card">
+        <div class="adopt-num">03 · Audit tool</div>
+        <div class="adopt-title">Cross-check transactions</div>
+        <div class="adopt-body"><a href="https://daily-build-portfolio.vercel.app/agent-ledger.html" style="color:var(--accent)">Agent Ledger</a> already does this — paste a CSV plus a KYA, get a list of transactions that violated the spec. Open the same pattern up in your tool.</div>
+      </div>
+      <div class="adopt-card">
+        <div class="adopt-num">04 · Bank or fintech</div>
+        <div class="adopt-title">Make agent accounts unprovisionable without one</div>
+        <div class="adopt-body">Meow opens accounts for agents today. Block the open call without a valid KYA attached. Pushes the standard upstream where it belongs.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">Why open</div>
+    <h2>Why this isn't a product.</h2>
+    <div class="why-block">
+      <p>The first KYA framework — MetaComp's StableX, shipped April 21 — is a paid commercial product for regulated finance. <strong>Useful. Closed. Finance-only.</strong></p>
+      <p>That's fine for the regulated layer. It's not fine for the long tail: solo founders running 3 agents on Meow, indie SaaS adding agent endpoints, the small Brex customer who just gave a ResearchBot a corporate card. None of them will adopt a closed standard owned by a vendor they don't use.</p>
+      <p>Standards work when they're <strong>boring, free, and adopted before anyone's asking permission.</strong> HTTP, OAuth, OpenTelemetry — none of them won by being products. They won by being the obvious shape that everyone could converge on without a contract.</p>
+      <p>This spec is in the public domain. Copy it, fork it, extend it, ignore it. The goal is for "<code>.kya.json</code>" to mean the same thing in 12 months whether you ship in finance, healthcare, e-commerce, or your own kitchen-table SaaS. If something better gets proposed, this gets retired. The point is the convention, not the artifact.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-label">FAQ</div>
+    <h2>Short answers, no hedging.</h2>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Why not just use OAuth scopes or API keys?</div>
+      <div class="faq-a">OAuth scopes describe what an authenticated user can do. KYA describes <em>who an agent is</em> — a different question that becomes urgent the moment the actor isn't a human. An API key with no KYA still leaves the question of liability and limits unanswered. They're complementary, not overlapping.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What stops someone from forging a KYA file?</div>
+      <div class="faq-a">The <code>attestation</code> block. Signature is over the canonical-form JSON of the rest of the file. Verify with the principal's published public key. If the principal won't publish a key, the KYA is unverifiable — which is the right outcome.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is this trying to compete with MetaComp?</div>
+      <div class="faq-a">No. MetaComp's StableX is a paid framework for regulated financial services with workflow tooling around it. This is a one-page JSON convention for everyone else. Two different markets, both can exist.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Where do I propose a change?</div>
+      <div class="faq-a">Open an issue on the daily-build-portfolio GitHub repo with the title <code>[KYA] proposal</code> — version 0.2 will roll up community amendments. Backwards compatibility is a hard requirement until v1.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is healthcare next?</div>
+      <div class="faq-a">Probably. HIPAA has no agent category and the same gap exists. A KYA-Healthcare draft is on the surprise stack — propose <code>"jurisdiction": "US-HIPAA"</code> and add a <code>phi_access</code> scope. If you're working in healthcare AI and want to co-author it, hit the email above.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>Public domain spec · part of the <a href="https://daily-build-portfolio.vercel.app" target="_blank">Daily Build Portfolio</a></div>
+    <div style="margin-top:6px">Pairs with <a href="https://daily-build-portfolio.vercel.app/agent-ledger.html" target="_blank">Agent Ledger</a> — the audit tool that already reads this format</div>
+  </div>
+</footer>
+
+<script>
+  const SPEC_OUTREACH = `{
+  "version": "0.1",
+  "agent_id": "agent.outreach.001",
+  "principal": {
+    "legal_name": "Acme Build Co LLC",
+    "jurisdiction": "US-DE",
+    "ein": "88-1234567"
+  },
+  "scope": ["send_payment", "open_subscription", "read_data"],
+  "vendor_allowlist": ["apollo.io", "smartlead.ai", "clearout.io", "instantly.ai"],
+  "limits": {
+    "per_transaction_usd": 100,
+    "per_day_usd": 200,
+    "per_month_usd": 2500
+  },
+  "escalation": {
+    "webhook": "https://acme.co/agent-alerts",
+    "email": "ops@acme.co"
+  },
+  "attestation": {
+    "signed_by": "vv@acme.co",
+    "signed_at": "2026-04-22T08:00:00Z",
+    "signature": "sha256:9c2f...e114"
+  }
+}`;
+
+  const SPEC_RESEARCH = `{
+  "version": "0.1",
+  "agent_id": "agent.research.001",
+  "principal": {
+    "legal_name": "Acme Build Co LLC",
+    "jurisdiction": "US-DE",
+    "ein": "88-1234567"
+  },
+  "scope": ["read_data"],
+  "vendor_allowlist": ["perplexity.ai", "apify.com", "exa.ai", "firecrawl.dev"],
+  "limits": {
+    "per_transaction_usd": 20,
+    "per_day_usd": 100,
+    "per_month_usd": 500
+  },
+  "escalation": {
+    "webhook": "https://acme.co/agent-alerts",
+    "email": "ops@acme.co"
+  },
+  "attestation": {
+    "signed_by": "vv@acme.co",
+    "signed_at": "2026-04-22T08:00:00Z",
+    "signature": "sha256:a4c1...d220"
+  }
+}`;
+
+  const SPEC_DEVBOT = `{
+  "version": "0.1",
+  "agent_id": "agent.devbot.001",
+  "principal": {
+    "legal_name": "Acme Build Co LLC",
+    "jurisdiction": "US-DE",
+    "ein": "88-1234567"
+  },
+  "scope": ["send_payment", "open_subscription", "deploy_code"],
+  "vendor_allowlist": ["vercel.com", "supabase.com", "openai.com", "anthropic.com", "github.com"],
+  "limits": {
+    "per_transaction_usd": 50,
+    "per_day_usd": 150,
+    "per_month_usd": 1500
+  },
+  "escalation": {
+    "webhook": "https://acme.co/agent-alerts",
+    "email": "ops@acme.co"
+  },
+  "attestation": {
+    "signed_by": "vv@acme.co",
+    "signed_at": "2026-04-22T08:00:00Z",
+    "signature": "sha256:7e91...b558"
+  }
+}`;
+
+  function copySpec() {
+    navigator.clipboard.writeText(SPEC_OUTREACH);
+    const btn = document.getElementById('copyBtn');
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1600);
+    }
+  }
+
+  function copyAgentSpec(which) {
+    const spec = which === 'research' ? SPEC_RESEARCH : which === 'devbot' ? SPEC_DEVBOT : SPEC_OUTREACH;
+    navigator.clipboard.writeText(spec);
+  }
+
+  function toggleFaq(el) {
+    const a = el.nextElementSibling;
+    el.classList.toggle('open');
+    a.classList.toggle('open');
+  }
+</script>
+</body>
+</html>

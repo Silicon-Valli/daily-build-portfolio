@@ -173,6 +173,62 @@
   .txn-time { font-size: 11px; color: var(--muted-2); margin-top: 4px; }
   .txn-amount { font-size: 14px; font-weight: 700; text-align: right; }
 
+  /* KYA VERIFY */
+  .kya-block {
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: 14px; padding: 22px;
+  }
+  .kya-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .kya-tab {
+    padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    background: var(--surface-2); color: var(--muted); cursor: pointer;
+    border: 1px solid var(--border-strong);
+  }
+  .kya-tab.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+  .kya-desc { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .kya-actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
+  .kya-result { margin-top: 18px; display: none; }
+  .kya-result.show { display: block; }
+  .kya-summary {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 560px) { .kya-summary { grid-template-columns: 1fr 1fr; } }
+  .kya-stat {
+    background: var(--surface-2); border: 1px solid var(--border-strong);
+    border-radius: 10px; padding: 12px;
+  }
+  .kya-stat-num { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .kya-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+  .kya-stat-num.ok { color: var(--ok); }
+  .kya-stat-num.bad { color: var(--flag); }
+  .kya-stat-num.warn { color: var(--warn); }
+  .kya-agent-card {
+    background: var(--surface-2); border: 1px solid var(--border-strong);
+    border-radius: 10px; padding: 14px; margin-bottom: 10px;
+  }
+  .kya-agent-card.has-violations { border-color: var(--flag); background: #f8717108; }
+  .kya-agent-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
+  }
+  .kya-agent-title { font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+  .kya-status {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  .kya-status.pass { background: #4ade8022; color: var(--ok); }
+  .kya-status.fail { background: #f8717122; color: var(--flag); }
+  .kya-status.unknown { background: #fbbf2422; color: var(--warn); }
+  .kya-violation {
+    font-size: 12px; color: var(--text); padding: 8px 10px;
+    background: var(--bg); border-radius: 6px; margin-top: 6px;
+    border-left: 2px solid var(--flag);
+  }
+  .kya-violation code { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: var(--accent); }
+  .kya-violation .vrule { color: var(--muted); margin-right: 6px; }
+  .kya-passlist { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
   /* PASTE YOUR OWN */
   .paste-block {
     background: var(--surface); border: 1px solid var(--border-strong);
@@ -303,6 +359,39 @@
     </div>
 
     <p class="paste-hint">Seeded demo — no real agent data here. Four representative agents, plausible transaction mix, synthetic "why" annotations. Production version hooks into the real Meow/Bank of Bots MCP endpoints.</p>
+  </div>
+</section>
+
+<!-- KYA VERIFY -->
+<section id="kya">
+  <div class="wrap">
+    <div class="section-label">New · v2 · KYA verification</div>
+    <h2>Check every transaction against a Know-Your-Agent spec.</h2>
+    <p class="section-sub">Drop in a KYA spec — the open JSON format that declares an agent's principal, scope, vendor allowlist, and spend limits. Agent Ledger flags every transaction that breaks it. Works on the seeded demo above and on any CSV you paste below.</p>
+
+    <div class="kya-block">
+      <div class="kya-tabs">
+        <div class="kya-tab active" onclick="switchKyaTab(this, 'paste')">Paste a KYA spec</div>
+        <div class="kya-tab" onclick="switchKyaTab(this, 'sample')">Use a sample spec</div>
+      </div>
+      <p class="kya-desc">A KYA spec is a small JSON file (one per agent) that says who the agent works for, what it's allowed to do, who it's allowed to pay, and how much. Open spec — see <a href="https://agent-kya.vercel.app" target="_blank" style="color:var(--accent)">agent-kya.vercel.app</a>.</p>
+      <textarea id="kyaInput" placeholder='[
+  {
+    "agent_id": "ResearchBot",
+    "principal": "acme-corp/research",
+    "scope": ["web-search","scrape","summarize"],
+    "vendor_allowlist": ["perplexity.ai","exa.ai","apify.com","firecrawl.dev","openai.com","anthropic.com"],
+    "limits": { "per_txn_usd": 25, "daily_usd": 60 },
+    "version": "1.0.0"
+  }
+]'></textarea>
+      <div class="kya-actions">
+        <button class="btn-primary" onclick="verifyKya()">Verify all transactions</button>
+        <button class="btn-secondary" onclick="loadSampleKya()">Load full sample (4 agents)</button>
+        <button class="btn-secondary" onclick="loadStrictKya()">Try a strict spec</button>
+      </div>
+      <div class="kya-result" id="kyaResult"></div>
+    </div>
   </div>
 </section>
 
@@ -614,6 +703,223 @@
 
   function toggleFaq(q) {
     q.parentElement.classList.toggle('open');
+  }
+
+  // KYA VERIFY ENGINE
+  function switchKyaTab(el, mode) {
+    document.querySelectorAll('.kya-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    if (mode === 'sample') loadSampleKya();
+  }
+
+  function loadSampleKya() {
+    const sample = [
+      {
+        agent_id: 'ResearchBot',
+        principal: 'acme-corp/research',
+        scope: ['web-search', 'scrape', 'summarize'],
+        vendor_allowlist: ['perplexity.ai', 'exa.ai', 'apify.com', 'firecrawl.dev', 'openai.com', 'anthropic.com'],
+        limits: { per_txn_usd: 25, daily_usd: 60 },
+        version: '1.0.0'
+      },
+      {
+        agent_id: 'OutreachBot',
+        principal: 'acme-corp/sales',
+        scope: ['email-send', 'enrich', 'verify-email'],
+        vendor_allowlist: ['apollo.io', 'smartlead.ai', 'clearout.io', 'instantly.ai'],
+        limits: { per_txn_usd: 75, daily_usd: 200 },
+        version: '1.0.0'
+      },
+      {
+        agent_id: 'DevBot',
+        principal: 'acme-corp/eng',
+        scope: ['deploy', 'codegen', 'review'],
+        vendor_allowlist: ['vercel.com', 'supabase.com', 'fixa.dev', 'openai.com', 'anthropic.com', 'github.com'],
+        limits: { per_txn_usd: 50, daily_usd: 150 },
+        version: '1.0.0'
+      }
+    ];
+    document.getElementById('kyaInput').value = JSON.stringify(sample, null, 2);
+  }
+
+  function loadStrictKya() {
+    const strict = [
+      {
+        agent_id: 'ResearchBot',
+        principal: 'acme-corp/research',
+        scope: ['web-search'],
+        vendor_allowlist: ['perplexity.ai'],
+        limits: { per_txn_usd: 5, daily_usd: 30 },
+        version: '1.0.0'
+      },
+      {
+        agent_id: 'OutreachBot',
+        principal: 'acme-corp/sales',
+        scope: ['email-send'],
+        vendor_allowlist: ['smartlead.ai', 'instantly.ai'],
+        limits: { per_txn_usd: 40, daily_usd: 100 },
+        version: '1.0.0'
+      }
+    ];
+    document.getElementById('kyaInput').value = JSON.stringify(strict, null, 2);
+  }
+
+  function verifyKya() {
+    const raw = document.getElementById('kyaInput').value.trim();
+    const result = document.getElementById('kyaResult');
+    if (!raw) {
+      result.classList.add('show');
+      result.innerHTML = '<div class="kya-agent-card"><strong>Paste a KYA spec first.</strong> Or click "Use a sample spec" to load one.</div>';
+      return;
+    }
+
+    let specs;
+    try {
+      specs = JSON.parse(raw);
+      if (!Array.isArray(specs)) specs = [specs];
+    } catch (err) {
+      result.classList.add('show');
+      result.innerHTML = `<div class="kya-agent-card has-violations"><strong>That's not valid JSON.</strong><div class="kya-passlist">Parser said: ${err.message}</div></div>`;
+      return;
+    }
+
+    // Build a lookup of normalized spec by agent name
+    const specByAgent = {};
+    specs.forEach(s => {
+      const key = (s.agent_id || s.id || '').toString().toLowerCase().trim();
+      if (key) specByAgent[key] = s;
+    });
+
+    // Pull seeded transactions + any pasted CSV transactions into a unified list
+    const allTxns = [];
+    agents.forEach(a => {
+      a.txns.forEach(t => {
+        allTxns.push({
+          agent: a.name,
+          vendor: t.vendor,
+          amount: t.amount,
+          why: t.why,
+          source: 'seeded demo'
+        });
+      });
+    });
+
+    // Also pull from CSV input if present
+    const csvRaw = (document.getElementById('csvInput').value || '').trim();
+    if (csvRaw) {
+      const lines = csvRaw.split('\n').map(l => l.trim()).filter(Boolean);
+      if (lines.length >= 2) {
+        const header = lines[0].toLowerCase().split(/[,|;\t]/).map(s => s.trim());
+        const aIdx = header.findIndex(h => h.includes('agent'));
+        const vIdx = header.findIndex(h => h.includes('vendor') || h.includes('merchant') || h.includes('payee'));
+        const amIdx = header.findIndex(h => h.includes('amount') || h.includes('total') || h.includes('usd'));
+        const nIdx = header.findIndex(h => h.includes('note') || h.includes('reason') || h.includes('why'));
+        if (aIdx >= 0 && amIdx >= 0) {
+          lines.slice(1).forEach(l => {
+            const cells = l.split(/[,|;\t]/).map(s => s.trim());
+            allTxns.push({
+              agent: cells[aIdx] || 'unknown',
+              vendor: vIdx >= 0 ? cells[vIdx] : '?',
+              amount: parseFloat(cells[amIdx]) || 0,
+              why: nIdx >= 0 ? cells[nIdx] : '',
+              source: 'pasted CSV'
+            });
+          });
+        }
+      }
+    }
+
+    // Run verification
+    const byAgent = {};
+    allTxns.forEach(t => {
+      const key = t.agent.toLowerCase().trim();
+      if (!byAgent[key]) byAgent[key] = { name: t.agent, txns: [], violations: [], spec: specByAgent[key] || null, dailyTotal: 0 };
+      byAgent[key].txns.push(t);
+      byAgent[key].dailyTotal += t.amount;
+    });
+
+    let totalTxns = 0, totalViolations = 0, agentsCovered = 0, agentsUnknown = 0;
+
+    Object.values(byAgent).forEach(a => {
+      totalTxns += a.txns.length;
+      const spec = a.spec;
+      if (!spec) {
+        agentsUnknown++;
+        a.violations.push({
+          rule: 'no-kya',
+          msg: `No KYA spec found for "${a.name}". This agent is operating without an attested identity.`
+        });
+        totalViolations++;
+        return;
+      }
+      agentsCovered++;
+
+      const allow = (spec.vendor_allowlist || []).map(v => v.toLowerCase());
+      const perTxnLimit = spec.limits && spec.limits.per_txn_usd;
+      const dailyLimit = spec.limits && spec.limits.daily_usd;
+
+      // Per-transaction checks
+      a.txns.forEach(t => {
+        const v = (t.vendor || '').toLowerCase();
+        if (allow.length && !allow.some(a2 => v.includes(a2) || a2.includes(v))) {
+          a.violations.push({
+            rule: 'vendor',
+            msg: `Vendor <code>${t.vendor}</code> not in allowlist for ${a.name}.`,
+            txn: t
+          });
+          totalViolations++;
+        }
+        if (perTxnLimit != null && t.amount > perTxnLimit) {
+          a.violations.push({
+            rule: 'per-txn limit',
+            msg: `<code>$${t.amount.toFixed(2)}</code> at ${t.vendor} exceeds per-transaction limit of $${perTxnLimit}.`,
+            txn: t
+          });
+          totalViolations++;
+        }
+      });
+
+      // Daily total check
+      if (dailyLimit != null && a.dailyTotal > dailyLimit) {
+        a.violations.push({
+          rule: 'daily limit',
+          msg: `Daily total <code>$${a.dailyTotal.toFixed(2)}</code> exceeds daily cap of $${dailyLimit}.`
+        });
+        totalViolations++;
+      }
+    });
+
+    // Render
+    const summaryHtml = `
+      <div class="kya-summary">
+        <div class="kya-stat"><div class="kya-stat-num">${totalTxns}</div><div class="kya-stat-label">Transactions checked</div></div>
+        <div class="kya-stat"><div class="kya-stat-num ${totalViolations > 0 ? 'bad' : 'ok'}">${totalViolations}</div><div class="kya-stat-label">Violations</div></div>
+        <div class="kya-stat"><div class="kya-stat-num ok">${agentsCovered}</div><div class="kya-stat-label">Agents covered</div></div>
+        <div class="kya-stat"><div class="kya-stat-num ${agentsUnknown > 0 ? 'warn' : ''}">${agentsUnknown}</div><div class="kya-stat-label">No KYA on file</div></div>
+      </div>
+    `;
+
+    const cards = Object.values(byAgent).sort((x, y) => y.violations.length - x.violations.length).map(a => {
+      const passed = a.violations.length === 0 && a.spec;
+      const noSpec = !a.spec;
+      const status = passed ? 'pass' : (noSpec ? 'unknown' : 'fail');
+      const statusLabel = passed ? 'KYA passed' : (noSpec ? 'No KYA' : `${a.violations.length} violation${a.violations.length>1?'s':''}`);
+      const violationsHtml = a.violations.length
+        ? a.violations.map(v => `<div class="kya-violation"><span class="vrule">[${v.rule}]</span>${v.msg}</div>`).join('')
+        : `<div class="kya-passlist">Allowed scope: ${(a.spec.scope||[]).join(', ') || '(none specified)'} · ${(a.spec.vendor_allowlist||[]).length} vendors approved · daily cap $${a.spec.limits?.daily_usd ?? '–'}</div>`;
+      return `
+        <div class="kya-agent-card ${a.violations.length ? 'has-violations' : ''}">
+          <div class="kya-agent-head">
+            <div class="kya-agent-title">${a.name} <span style="font-size:11px;color:var(--muted-2);font-weight:400">· ${a.txns.length} txn${a.txns.length!==1?'s':''} · $${a.dailyTotal.toFixed(2)}</span></div>
+            <span class="kya-status ${status}">${statusLabel}</span>
+          </div>
+          ${violationsHtml}
+        </div>
+      `;
+    }).join('');
+
+    result.classList.add('show');
+    result.innerHTML = summaryHtml + cards + `<p class="paste-hint" style="margin-top:14px">Verification ran across ${totalTxns} seeded + pasted transactions. The full Agent Ledger version checks signed attestations, escalation rules, and time-of-day windows too.</p>`;
   }
 
   // INIT

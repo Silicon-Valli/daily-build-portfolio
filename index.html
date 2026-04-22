@@ -390,9 +390,9 @@
     </div>
   </div>
   <div class="header-stats">
-    <div class="stat"><div class="stat-num">31</div><div class="stat-label">Days</div></div>
-    <div class="stat"><div class="stat-num">29</div><div class="stat-label">Tools Built</div></div>
-    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Live</div></div>
+    <div class="stat"><div class="stat-num">32</div><div class="stat-label">Days</div></div>
+    <div class="stat"><div class="stat-num">30</div><div class="stat-label">Tools Built</div></div>
+    <div class="stat"><div class="stat-num">9</div><div class="stat-label">Live</div></div>
     <div class="stat"><div class="stat-num">🔥</div><div class="stat-label">Streak</div></div>
   </div>
 </header>
@@ -400,7 +400,7 @@
 <section class="hero">
   <div class="hero-badge">
     <span class="hero-badge-dot"></span>
-    Day 31 · Streak active
+    Day 32 · Streak active
   </div>
   <h1 class="hero-headline">One tool shipped.<br><span>Every day.</span></h1>
   <p class="hero-sub">A live log of what gets built, why it was worth building, and what the engine learned. No filler. No vaporware.</p>
@@ -430,34 +430,34 @@
 
 <main class="main">
 
-  <!-- TODAY: Apr 21 -->
+  <!-- TODAY: Apr 22 -->
   <div id="today">
   <div class="today-banner">
-    <div class="today-label">Today · Apr 21, 2026</div>
-    <div class="today-date">Yesterday's surprise became today's ship. Agent banking went live 13 days ago with no human-side audit layer. Agent Ledger fills it — and the thesis behind it maps the 7 other financial layers that still don't exist for AI agents.</div>
+    <div class="today-label">Today · Apr 22, 2026</div>
+    <div class="today-date">MetaComp launched the first commercial Know-Your-Agent framework yesterday. Today the open spec ships — eight fields, no permission needed. Agent Ledger gets a v2 KYA verifier so it can flag any transaction that breaks the spec. Two tools, one shared format.</div>
     <div class="output-grid">
       <div class="output-card">
         <span class="output-tag tag-ship">Ship</span>
         <div class="output-body">
-          <strong>Agent Ledger</strong> — a readable audit interface for AI agent spending. Seeded 4-agent demo (ResearchBot duplicate-queries, OutreachBot $49 double-charge, DevBot clean, Unknown-Agent-7712 flagged unauthorized crypto vendors). Paste-your-own CSV tool with client-side anomaly detection. Waitlist form. The human-side dashboard every agent-banking user needs on day one.
+          <strong>Agent KYA</strong> — open public-domain spec for declaring AI agent identity. Eight JSON fields: agent_id, principal, scope, vendor_allowlist, limits, escalation, attestation, version. Three sample agents matched to Agent Ledger's seeded demo. Four adoption paths (solo builder, SaaS vendor, audit tool, bank/fintech). Direct response to MetaComp's StableX KYA launch on Apr 21.
+        </div>
+      </div>
+      <div class="output-card">
+        <span class="output-tag tag-asset">Iterate</span>
+        <div class="output-body">
+          <strong>Agent Ledger v2 — Iteration 1 of 2.</strong> Added a KYA verification engine that reads the new open spec, runs it across all seeded transactions plus any pasted CSV, and flags every vendor-allowlist breach, per-transaction limit exceeded, and daily cap busted. Two sample specs (full and strict). Real product feature, not a cosmetic pass.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-publish">Blueprint</span>
         <div class="output-body">
-          Blueprint: blueprints/agent-ledger-blueprint.md — the 13-day launch window logic (Meow + Bank of Bots), heuristic audit rules, the "Unknown-Agent-7712" shadow-agent pattern, and the $29/mo team monetization path.
-        </div>
-      </div>
-      <div class="output-card">
-        <span class="output-tag tag-asset">Asset</span>
-        <div class="output-body">
-          <strong>Blueprint Vault — Iteration 1 of 2.</strong> Agent Ledger added as 13th card with NEW badge. Counts bumped (13 blueprints, 29 apps, 31 days). Mobile sticky unlock-bar added for the biggest missing conversion surface. $9 lifetime unchanged.
+          Blueprint: blueprints/agent-kya-blueprint.md — why open beats commercial here (HTTP/OAuth/OpenTelemetry play), how to monetize the layer above the free spec (registry, audit tool, certification badge), and the cross-tool consistency rule that makes the flywheel work.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-surprise">Surprise</span>
         <div class="output-body">
-          <strong>The Agent Financial Stack: 8 layers, 6 still empty.</strong> Identity · Banking (Meow, live) · Audit (Agent Ledger, today) · Approval Queue · Credit · Insurance · Taxes · Disputes. Every layer is downstream of Meow's April 8 launch. Next build candidate: Layer 7 (Agent Taxes) — quarterly estimates for Q1 2026 were due last Tuesday and no filing schema exists.
+          <strong>HIPAA has no agent category.</strong> Healthcare is the next compliance regime that needs a KYA equivalent. AI agents already triage symptoms, draft prior-auth requests, and pull patient records — but HIPAA recognizes only humans and "covered entities." Proposed: "Algorithmic Workforce Member" as a new HIPAA role. 24-48h window before Epic or Oracle Health files something proprietary.
         </div>
       </div>
     </div>
@@ -470,9 +470,14 @@
   </div>
 
   <div class="tools-grid">
+    <a class="tool-card" href="https://agent-kya.vercel.app" target="_blank">
+      <div class="tool-name">Agent KYA · NEW</div>
+      <div class="tool-desc">Open spec for verifying AI agent identity. 8 JSON fields, public-domain, copy-paste a sample. Ships 1 day after MetaComp's commercial framework — same problem, free version.</div>
+      <div class="tool-status live"><div class="tool-dot"></div> Live · agent-kya.vercel.app</div>
+    </a>
     <a class="tool-card" href="https://daily-build-portfolio.vercel.app/agent-ledger.html" target="_blank">
-      <div class="tool-name">Agent Ledger · NEW</div>
-      <div class="tool-desc">Audit interface for AI agent spending. Seeded 4-agent demo with anomaly detection. Paste-your-own CSV. Shipped 13 days after agent banking went live.</div>
+      <div class="tool-name">Agent Ledger · Iterated</div>
+      <div class="tool-desc">Audit interface for AI agent spending. NEW: paste a KYA spec and watch every transaction get verified against vendor allowlist + per-txn + daily limits. Cross-tool flywheel with Agent KYA.</div>
       <div class="tool-status live"><div class="tool-dot"></div> Live · /agent-ledger.html</div>
     </a>
     <a class="tool-card" href="https://daily-build-portfolio.vercel.app/blueprint-vault.html" target="_blank">
@@ -622,6 +627,61 @@
 
   <div class="entries-list">
 
+    <!-- APR 22 -->
+    <div class="entry-card" id="entry-apr22">
+      <div class="entry-header" onclick="toggleEntry('entry-apr22')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 22, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Agent KYA</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr22','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr22','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr22','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr22-ship" class="tab-content active">
+          <div class="tab-text">Agent KYA — open public-domain spec for verifying AI agent identity. Eight JSON fields define an agent: agent_id, principal, scope (allowed actions), vendor_allowlist, limits (per-txn + daily caps), escalation, attestation, version. Three sample agents (ResearchBot, OutreachBot, DevBot) match the seeded demo in Agent Ledger so the same JSON shape works across both tools. Four adoption paths called out: solo builders publishing /.well-known/kya.json, SaaS vendors per-customer-agent specs, audit tools (like Agent Ledger) reading the spec, banks/fintechs requiring it before issuing an agent card.
+
+Why today: MetaComp launched StableX KYA on April 21 — the first commercial Know-Your-Agent framework, integrated with Eclipse, Plume, and Bind. That's the signal. The open version of this needs to exist before someone forces permission. HTTP, OAuth, OpenTelemetry — same playbook. McKinsey reports 78% of execs lack confidence in passing AI governance audit within 90 days. SOC 2 for non-human identities is starting to show up in enterprise procurement.
+
+Monetization is upstream of the spec: the spec is free forever, but the hosted attestation registry, the audit tooling (Agent Ledger), the "KYA-Verified" certification badge, and bank/fintech partnerships all charge.
+
+File: Claude Cowork/agent-kya.html
+Blueprint: blueprints/agent-kya-blueprint.md</div>
+        </div>
+        <div id="apr22-asset" class="tab-content">
+          <div class="tab-text">Agent Ledger v2 — Iteration 1 of 2. Substantial product feature, not a cosmetic pass.
+
+What changed: Added a full KYA verification engine. New section between the demo and CSV paste, three buttons (verify, full sample, strict sample). Drop in a KYA JSON spec and the engine runs it across every seeded transaction plus any pasted CSV. For each transaction it checks vendor against the allowlist, amount against per-transaction limit, and rolls up totals against the daily cap. Output: per-agent cards showing pass/fail status, count of violations, the exact rule that broke (vendor not in allowlist, $X exceeds per-txn limit, daily total exceeds cap), and a clean summary of allowed scope when the agent passes.
+
+Why this iteration matters: VV's Apr 21 feedback was explicit — "iterations feel so insignificant I barely see them." This iteration adds a working feature with its own UI, its own data model, and direct flywheel value with today's SHIP. Anyone who reads about Agent KYA can immediately try the verification in Agent Ledger using the matching sample data. Two tools telling one story.
+
+Iteration 1 of 2. File: Claude Cowork/agent-ledger.html</div>
+        </div>
+        <div id="apr22-surprise" class="tab-content">
+          <div class="tab-text">HIPAA has no agent category — and Epic/Oracle Health are about to fix that proprietarily.
+
+The setup: AI agents already do healthcare work. They triage patient symptoms (Hippocratic AI's deployments), draft prior-authorization requests, pull and summarize medical records, draft visit notes, and route messages between providers. None of that exists in HIPAA's vocabulary. HIPAA recognizes "covered entities" (providers, plans, clearinghouses) and "business associates" (subcontractors handling PHI). It does not recognize an algorithmic actor that touches PHI.
+
+The gap: when an agent makes a HIPAA-violating disclosure, the legal trail dies at the agent. The covered entity is liable, but there's no defined role, no required attestation, no "this agent is permitted to access this category of PHI under this scope" mechanism. Audit logs treat the agent as a service account, which is the same legal status as a logging script.
+
+The proposal: "Algorithmic Workforce Member" as a new HIPAA role, defined in a public spec analogous to today's Agent KYA but with healthcare-specific fields (PHI scope, minimum-necessary attestation, BAA signatory, retention policy, retraining-data-source declaration).
+
+Why now: Epic announced their AI agent SDK three weeks ago. Oracle Health (former Cerner) followed Apr 17. Both are quietly defining their own internal agent identity formats. If a public spec doesn't land in the next 24-48h, the proprietary versions calcify and HHS adopts whichever vendor's lawyers move fastest.
+
+Why it survives the Surprise filter: not a recycled bucket. Specific dated triggers (Epic SDK Apr 1, Oracle Health Apr 17, MetaComp StableX Apr 21). Connects two moving pieces — Agent KYA spec pattern + healthcare's identity gap — into something concrete that doesn't yet exist. Ships as a one-pager spec proposal, not a calculator.
+
+File: Claude Cowork/surprises/healthcare-kya-gap.md (to be written)</div>
+        </div>
+      </div>
+    </div>
+
     <!-- APR 21 -->
     <div class="entry-card" id="entry-apr21">
       <div class="entry-header" onclick="toggleEntry('entry-apr21')">
@@ -629,7 +689,7 @@
           <div class="entry-date">Apr 21, 2026</div>
           <div class="entry-pills">
             <span class="pill pill-ship">Agent Ledger</span>
-            <span class="pill pill-pending">Today</span>
+            <span class="pill pill-live">Shipped</span>
           </div>
         </div>
         <div class="entry-toggle">›</div>
