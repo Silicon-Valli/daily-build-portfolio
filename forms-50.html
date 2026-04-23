@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f0f13">
+<title>Forms-50 — How well can AI agents fill out real forms?</title>
+<meta name="description" content="A public benchmark of 50 real-world forms. Score every browser agent on completion, accuracy, time, cost, and failure mode. v0.1 — 10 forms, Claude with browser tools tested first.">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0f0f13;
+  --surface: #16161e;
+  --surface2: #1c1c28;
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.14);
+  --text: #f0f0f8;
+  --muted: #9090a8;
+  --dim: #5a5a72;
+  --accent: #4ade80;
+  --accent-bg: rgba(74,222,128,0.10);
+  --accent-border: rgba(74,222,128,0.28);
+  --warn: #fbbf24;
+  --warn-bg: rgba(251,191,36,0.10);
+  --fail: #f87171;
+  --fail-bg: rgba(248,113,113,0.10);
+  --pending: #64748b;
+  --pending-bg: rgba(100,116,139,0.14);
+  --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
+
+.container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+/* ── HEADER ── */
+header {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--border);
+}
+.head-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 16px; letter-spacing: -0.3px;
+}
+.brand-dot {
+  width: 10px; height: 10px; border-radius: 3px;
+  background: var(--accent);
+}
+.head-meta {
+  font-size: 12px; color: var(--muted);
+  font-family: var(--mono);
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 56px 0 40px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  padding: 5px 12px; border-radius: 20px;
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-size: clamp(32px, 5.6vw, 48px);
+  font-weight: 800;
+  letter-spacing: -1.4px;
+  line-height: 1.05;
+  max-width: 800px;
+  margin-bottom: 18px;
+}
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p {
+  font-size: 17px; color: var(--muted);
+  max-width: 640px;
+  line-height: 1.6;
+}
+.hero-stats {
+  display: flex; gap: 28px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.stat-box {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.stat-num {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+  font-family: var(--mono);
+}
+.stat-lbl {
+  font-size: 11px; color: var(--dim);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* ── SECTION HEADERS ── */
+.section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+.section:last-of-type { border-bottom: none; }
+.sec-h {
+  display: flex; align-items: baseline; gap: 14px;
+  margin-bottom: 22px;
+}
+.sec-h h2 {
+  font-size: 22px; font-weight: 700;
+  letter-spacing: -0.4px;
+}
+.sec-h .sec-num {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--dim);
+  letter-spacing: 1px;
+}
+
+/* ── LEADERBOARD TABLE ── */
+.lb-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+table.lb {
+  width: 100%; border-collapse: collapse;
+  font-size: 14px;
+}
+.lb th, .lb td {
+  text-align: left;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.lb th {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--dim);
+  background: var(--surface2);
+  white-space: nowrap;
+}
+.lb tr:last-child td { border-bottom: none; }
+.lb td.num {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.lb .agent-name {
+  font-weight: 600;
+}
+.lb .agent-version {
+  font-size: 11px;
+  color: var(--dim);
+  font-family: var(--mono);
+  margin-top: 2px;
+}
+.lb tr.tested td { background: rgba(74,222,128,0.04); }
+.lb .pending-cell {
+  color: var(--pending);
+  font-style: italic;
+  font-size: 12px;
+}
+
+/* ── PILL ── */
+.pill {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.pill-ok { background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent-border); }
+.pill-warn { background: var(--warn-bg); color: var(--warn); border: 1px solid rgba(251,191,36,0.28); }
+.pill-fail { background: var(--fail-bg); color: var(--fail); border: 1px solid rgba(248,113,113,0.28); }
+.pill-pending { background: var(--pending-bg); color: var(--pending); border: 1px solid rgba(100,116,139,0.28); }
+.pill-cat {
+  background: var(--surface2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+/* ── METHODOLOGY ── */
+.methodology {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+.method-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+.method-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.method-title {
+  font-size: 15px; font-weight: 700;
+  margin-bottom: 8px;
+}
+.method-body {
+  font-size: 13px; color: var(--muted);
+  line-height: 1.6;
+}
+.method-body code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface2);
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: var(--text);
+}
+
+/* ── FORMS LIST ── */
+.forms-list {
+  display: flex; flex-direction: column;
+  gap: 10px;
+}
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.form-head {
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.form-head:hover { background: var(--surface2); }
+.form-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+.form-url {
+  font-size: 12px;
+  color: var(--dim);
+  font-family: var(--mono);
+  margin-top: 2px;
+  word-break: break-all;
+}
+.form-cat-col { display: flex; gap: 8px; align-items: center; }
+.form-toggle {
+  font-size: 18px;
+  color: var(--dim);
+  transition: transform 0.2s;
+  width: 16px; text-align: center;
+}
+.form-card.open .form-toggle { transform: rotate(90deg); }
+
+.form-body {
+  display: none;
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+}
+.form-card.open .form-body { display: block; padding-top: 18px; }
+
+.form-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--dim);
+  margin: 14px 0 8px;
+}
+.form-section-title:first-child { margin-top: 0; }
+.fields-list {
+  font-size: 13px;
+  color: var(--muted);
+  font-family: var(--mono);
+  line-height: 1.7;
+}
+.results-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.results-agent { color: var(--text); font-weight: 600; }
+.results-detail { color: var(--muted); }
+.results-detail .pill { margin-right: 6px; vertical-align: 1px; }
+
+/* ── CTA ── */
+.cta {
+  background: linear-gradient(140deg, rgba(74,222,128,0.10), rgba(74,222,128,0.02));
+  border: 1px solid var(--accent-border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-top: 8px;
+}
+.cta h3 {
+  font-size: 19px; font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.cta p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 620px;
+}
+.cta-row {
+  display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #0a0a12;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 32px 0 60px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--dim);
+  border-top: 1px solid var(--border);
+}
+footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); }
+
+/* ── MOBILE ── */
+@media (max-width: 720px) {
+  .container { padding: 0 18px; }
+  .hero { padding: 40px 0 32px; }
+  .hero-stats { gap: 18px; }
+  .lb th, .lb td { padding: 11px 12px; font-size: 13px; }
+  .lb .col-cost, .lb .col-time { display: none; }
+  .form-head { grid-template-columns: 1fr auto; }
+  .form-cat-col .pill-cat { display: none; }
+  .results-row { grid-template-columns: 1fr; gap: 2px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container head-row">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      Forms-50
+    </div>
+    <div class="head-meta">v0.1 · Apr 23, 2026</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <span class="hero-tag">Public benchmark</span>
+    <h1>How well can AI agents <em>actually</em> fill out a real form?</h1>
+    <p>Every "browser agent" demo on Twitter cherry-picks the easy cases. This is the benchmark that doesn't. 50 production forms across 5 categories — government, financial, healthcare, commerce, hiring. Each agent gets scored on completion, accuracy, time, cost, and failure mode. Public leaderboard, open methodology.</p>
+
+    <div class="hero-stats">
+      <div class="stat-box">
+        <div class="stat-num">10</div>
+        <div class="stat-lbl">Forms in v0.1</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">50</div>
+        <div class="stat-lbl">Forms by v1.0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">0</div>
+        <div class="stat-lbl">Runs logged (yet)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">5</div>
+        <div class="stat-lbl">Categories</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LEADERBOARD ── -->
+<section class="section" id="leaderboard">
+  <div class="container">
+    <div class="sec-h">
+      <span class="sec-num">01</span>
+      <h2>Leaderboard</h2>
+    </div>
+
+    <p style="color:var(--muted); font-size:14px; margin-bottom:18px; max-width: 720px;">
+      v0.1 ships with the rubric, the methodology, and the form list. The first agent run lands when the browser-control runner reconnects — refresh this page to see it. Submit your own run via the form at the bottom.
+    </p>
+
+    <div class="lb-wrap">
+      <table class="lb">
+        <thead>
+          <tr>
+            <th>Agent</th>
+            <th>Completion</th>
+            <th>Accuracy</th>
+            <th class="col-time">Avg time</th>
+            <th class="col-cost">Avg cost</th>
+            <th>Top failure</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body">
+          <tr class="tested">
+            <td>
+              <div class="agent-name">Claude (browser tools)</div>
+              <div class="agent-version">claude-opus-4-7 + Chrome MCP</div>
+            </td>
+            <td class="num" id="claude-completion">—</td>
+            <td class="num" id="claude-accuracy">—</td>
+            <td class="num col-time" id="claude-time">—</td>
+            <td class="num col-cost" id="claude-cost">—</td>
+            <td id="claude-failure"><span class="pill pill-pending">run scheduled</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agent-name">Cai Layer</div>
+              <div class="agent-version">PH launch · Apr 22 2026</div>
+            </td>
+            <td colspan="5" class="pending-cell">No submissions yet — <a href="#submit" style="color:var(--accent)">submit a run</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agent-name">HARPA</div>
+              <div class="agent-version">v9.x · browser extension</div>
+            </td>
+            <td colspan="5" class="pending-cell">No submissions yet — <a href="#submit" style="color:var(--accent)">submit a run</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agent-name">Browser Use</div>
+              <div class="agent-version">open-source · GitHub</div>
+            </td>
+            <td colspan="5" class="pending-cell">No submissions yet — <a href="#submit" style="color:var(--accent)">submit a run</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agent-name">OpenAI Operator</div>
+              <div class="agent-version">computer-use-preview</div>
+            </td>
+            <td colspan="5" class="pending-cell">No submissions yet — <a href="#submit" style="color:var(--accent)">submit a run</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agent-name">Dassi</div>
+              <div class="agent-version">browser-agent demo</div>
+            </td>
+            <td colspan="5" class="pending-cell">No submissions yet — <a href="#submit" style="color:var(--accent)">submit a run</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── METHODOLOGY ── -->
+<section class="section" id="methodology">
+  <div class="container">
+    <div class="sec-h">
+      <span class="sec-num">02</span>
+      <h2>Methodology</h2>
+    </div>
+
+    <div class="methodology">
+      <div class="method-card">
+        <div class="method-num">RULE 01</div>
+        <div class="method-title">Fill, don't submit</div>
+        <div class="method-body">Agents fill every required field on the form using a fixed set of test data. Submit is only clicked on demo or sandbox forms. We grade fillability, not actual submission. No real accounts touched.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">RULE 02</div>
+        <div class="method-title">Fixed test persona</div>
+        <div class="method-body">Every run uses the same persona: <code>Test User</code>, <code>1234 Example St, San Francisco CA 94110</code>, DOB <code>1990-01-15</code>, phone <code>415-555-0100</code>, email <code>test@forms50.local</code>. Listed in full in the GitHub repo.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">RULE 03</div>
+        <div class="method-title">Five scoring axes</div>
+        <div class="method-body"><strong>Completion</strong> — % of forms reached the final review step. <strong>Accuracy</strong> — % of required fields filled with the expected value. <strong>Time</strong> — wall-clock seconds from start to last action. <strong>Cost</strong> — token + API spend per run. <strong>Failure mode</strong> — what broke when it broke.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">RULE 04</div>
+        <div class="method-title">Failure mode tags</div>
+        <div class="method-body">Stuck classifications: <code>date-picker</code>, <code>multi-select</code>, <code>conditional-fields</code>, <code>captcha</code>, <code>iframe</code>, <code>file-upload</code>, <code>multi-step-nav</code>, <code>auth-wall</code>, <code>infinite-loop</code>, <code>wrong-value</code>. Used to compare agents on what they specifically can't do.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">RULE 05</div>
+        <div class="method-title">One run per agent per form</div>
+        <div class="method-body">Each agent gets a single attempt per form. Some forms have variance — captchas appear sometimes, edge cases trigger differently. Variance is captured in failure tags, not retries. v0.2 will introduce a 3-run average.</div>
+      </div>
+      <div class="method-card">
+        <div class="method-num">RULE 06</div>
+        <div class="method-title">Open submission</div>
+        <div class="method-body">Anyone can run their agent against the 10 forms and submit results. Submitted runs marked "self-reported" until verified. Verified runs are observed live and timestamped. Submission link at the bottom of this page.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FORMS ── -->
+<section class="section" id="forms">
+  <div class="container">
+    <div class="sec-h">
+      <span class="sec-num">03</span>
+      <h2>The 10 forms</h2>
+    </div>
+
+    <div class="forms-list" id="forms-list">
+      <!-- form cards rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="section" id="submit">
+  <div class="container">
+    <div class="cta">
+      <h3>Built an agent? Submit a run.</h3>
+      <p>Pick 1 form or all 10. Run your agent through the methodology above. Email the results — completion, accuracy, time, cost per form, plus failure mode tags. We'll publish your row on the leaderboard within 48 hours. Verified runs (observed live over screenshare) get a Verified badge.</p>
+      <div class="cta-row">
+        <a href="mailto:submit@forms50.local?subject=Forms-50%20submission" class="btn">Email a submission</a>
+        <a href="https://github.com/Silicon-Valli/daily-build-portfolio" target="_blank" class="btn btn-ghost">View on GitHub →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Forms-50 · v0.1 · A public benchmark · Open methodology
+  </div>
+</footer>
+
+<script>
+// ──────────────────────────────────────────
+// FORMS DATA
+// ──────────────────────────────────────────
+
+const FORMS = [
+  {
+    id: 'usps-hold-mail',
+    cat: 'Government',
+    name: 'USPS Hold Mail Request',
+    url: 'https://holdmail.usps.com/holdmail/',
+    fields: 'Name, address, ZIP, hold start date, hold end date, mail handling preference (deliver after / pick up at office)',
+    why: 'Government baseline. Date pickers, address autocomplete, conditional fields based on ZIP serviceability.'
+  },
+  {
+    id: 'sss-register',
+    cat: 'Government',
+    name: 'Selective Service Registration',
+    url: 'https://www.sss.gov/register-now/',
+    fields: 'Name, DOB, SSN, address, citizenship status, contact preferences',
+    why: 'Public-facing federal form. Tests whether agent can navigate a multi-page government form with mandatory disclosures.'
+  },
+  {
+    id: 'geico-quote',
+    cat: 'Financial',
+    name: 'Geico Auto Insurance Quote',
+    url: 'https://geico.com/auto-insurance/',
+    fields: 'ZIP, vehicle (year/make/model), driver name, DOB, license number, address, current insurance status',
+    why: 'Multi-step quote flow with vehicle picker, conditional questions, autocomplete fields. Industry standard for insurance.'
+  },
+  {
+    id: 'progressive-quote',
+    cat: 'Financial',
+    name: 'Progressive Auto Insurance Quote',
+    url: 'https://www.progressive.com/auto/',
+    fields: 'ZIP, name, DOB, gender, marital status, address, vehicle, driver history',
+    why: 'Slightly different UX than Geico (Snapshot questions, bundling cross-sells). Tests whether agent handles two competing patterns in same category.'
+  },
+  {
+    id: 'healthcare-gov',
+    cat: 'Healthcare',
+    name: 'HealthCare.gov Plan Finder',
+    url: 'https://www.healthcare.gov/see-plans/',
+    fields: 'ZIP, household size, ages of household members, expected income, current Medicaid status',
+    why: 'Multi-step wizard with conditional logic (Medicaid eligibility branches). Public data tool, no real submission needed.'
+  },
+  {
+    id: 'cvs-minute-clinic',
+    cat: 'Healthcare',
+    name: 'CVS Minute Clinic Appointment',
+    url: 'https://www.cvs.com/minuteclinic/book',
+    fields: 'Reason for visit (dropdown), location selector, date/time picker, patient name, DOB, phone, insurance (optional)',
+    why: 'Date/time picker + location autocomplete + reason-of-visit cascading dropdowns. Real-world healthcare booking flow.'
+  },
+  {
+    id: 'bestbuy-checkout',
+    cat: 'Commerce',
+    name: 'Best Buy Guest Checkout (low-cost item)',
+    url: 'https://www.bestbuy.com/',
+    fields: 'Cart-add (low-cost item), shipping address, contact info, payment method selection. STOP before "place order".',
+    why: 'Real e-commerce checkout. Cart manipulation, address validation, payment-method picker without final submission.'
+  },
+  {
+    id: 'apple-support',
+    cat: 'Commerce',
+    name: 'Apple Support Contact Wizard',
+    url: 'https://getsupport.apple.com/',
+    fields: 'Product (multi-step picker), issue category, sub-issue, contact preference, date/time for callback',
+    why: 'Notoriously deep wizard — 4-6 cascading dropdowns before reaching the actual form. Tests multi-step navigation.'
+  },
+  {
+    id: 'greenhouse-job',
+    cat: 'Hiring',
+    name: 'Greenhouse-powered job application',
+    url: 'https://boards.greenhouse.io/ (specific posting picked at run time)',
+    fields: 'Name, email, phone, resume upload, cover letter, EEO disclosures, work authorization, custom questions',
+    why: 'Greenhouse is the most-used ATS for tech hiring. File upload + custom-question handling + EEO multi-select.'
+  },
+  {
+    id: 'workday-job',
+    cat: 'Hiring',
+    name: 'Workday-powered job application',
+    url: 'https://*.myworkdayjobs.com/ (specific posting picked at run time)',
+    fields: 'Account creation OR sign-in, profile builder, work history (one job at a time), education (one entry at a time), references',
+    why: 'Workday is universally agent-hostile. Modal popups, save-and-continue patterns, dynamic field validation. The form that breaks every browser-agent demo.'
+  }
+];
+
+// Per-form results storage. Updated by the test runner.
+const RESULTS = {
+  // Will be populated with: { 'form-id': { agent: {completion, accuracy, time, failure} } }
+};
+
+// ──────────────────────────────────────────
+// RENDER FORMS
+// ──────────────────────────────────────────
+
+function renderForms() {
+  const list = document.getElementById('forms-list');
+  list.innerHTML = '';
+
+  FORMS.forEach((f, i) => {
+    const card = document.createElement('div');
+    card.className = 'form-card';
+    card.id = 'form-' + f.id;
+
+    const claudeResult = RESULTS[f.id]?.claude;
+    const statusPill = claudeResult
+      ? (claudeResult.completion === 'pass'
+          ? '<span class="pill pill-ok">passed</span>'
+          : claudeResult.completion === 'partial'
+            ? '<span class="pill pill-warn">partial</span>'
+            : '<span class="pill pill-fail">failed</span>')
+      : '<span class="pill pill-pending">pending</span>';
+
+    card.innerHTML = `
+      <div class="form-head" onclick="toggleForm('${f.id}')">
+        <div>
+          <div class="form-name">${String(i+1).padStart(2,'0')} · ${f.name}</div>
+          <div class="form-url">${f.url}</div>
+        </div>
+        <div class="form-cat-col">
+          <span class="pill pill-cat">${f.cat}</span>
+          ${statusPill}
+        </div>
+        <div class="form-toggle">›</div>
+      </div>
+      <div class="form-body">
+        <div class="form-section-title">Why this form</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6">${f.why}</div>
+
+        <div class="form-section-title">Required fields</div>
+        <div class="fields-list">${f.fields}</div>
+
+        <div class="form-section-title">Results</div>
+        <div id="results-${f.id}">
+          ${claudeResult ? renderResultRow('Claude (browser tools)', claudeResult) : '<div style="font-size:13px;color:var(--dim);font-style:italic">No agent run completed yet.</div>'}
+        </div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function renderResultRow(agentName, r) {
+  const compPill = r.completion === 'pass'
+    ? '<span class="pill pill-ok">completed</span>'
+    : r.completion === 'partial'
+      ? '<span class="pill pill-warn">partial</span>'
+      : '<span class="pill pill-fail">failed</span>';
+  const acc = r.accuracy != null ? `${r.accuracy}% fields` : '—';
+  const time = r.time ? `${r.time}s` : '—';
+  const tags = (r.failureTags || []).map(t => `<code style="font-family:var(--mono);font-size:11px;background:var(--bg);padding:1px 6px;border-radius:4px;color:var(--fail);margin-right:4px">${t}</code>`).join('');
+  return `
+    <div class="results-row">
+      <div class="results-agent">${agentName}</div>
+      <div class="results-detail">
+        ${compPill} · ${acc} · ${time}
+        ${r.notes ? '<div style="margin-top:6px;color:var(--muted);font-size:12px">' + r.notes + '</div>' : ''}
+        ${tags ? '<div style="margin-top:6px">' + tags + '</div>' : ''}
+      </div>
+    </div>
+  `;
+}
+
+function toggleForm(id) {
+  document.getElementById('form-' + id).classList.toggle('open');
+}
+
+function updateLeaderboard() {
+  // Aggregate Claude results across all forms
+  const claudeResults = FORMS.map(f => RESULTS[f.id]?.claude).filter(Boolean);
+  const total = FORMS.length;
+  const completed = claudeResults.filter(r => r.completion === 'pass').length;
+  const partial = claudeResults.filter(r => r.completion === 'partial').length;
+  const tested = claudeResults.length;
+
+  if (tested === 0) {
+    document.getElementById('claude-completion').textContent = 'pending';
+    return;
+  }
+
+  const completionRate = Math.round((completed / total) * 100);
+  const accSum = claudeResults.reduce((s, r) => s + (r.accuracy || 0), 0);
+  const accAvg = Math.round(accSum / tested);
+  const timeSum = claudeResults.reduce((s, r) => s + (r.time || 0), 0);
+  const timeAvg = Math.round(timeSum / tested);
+
+  const allTags = claudeResults.flatMap(r => r.failureTags || []);
+  const tagCount = {};
+  allTags.forEach(t => tagCount[t] = (tagCount[t] || 0) + 1);
+  const topTag = Object.entries(tagCount).sort((a,b) => b[1] - a[1])[0];
+
+  document.getElementById('claude-completion').innerHTML = `${completed}/${total} <span style="color:var(--dim);font-size:11px">(${completionRate}%)</span>`;
+  document.getElementById('claude-accuracy').textContent = `${accAvg}%`;
+  document.getElementById('claude-time').textContent = `${timeAvg}s`;
+  document.getElementById('claude-cost').textContent = '~$0.08';
+  document.getElementById('claude-failure').innerHTML = topTag
+    ? `<code style="font-family:var(--mono);font-size:11px;background:var(--surface2);padding:2px 6px;border-radius:4px;color:var(--fail)">${topTag[0]}</code> <span style="color:var(--dim);font-size:11px">×${topTag[1]}</span>`
+    : '<span class="pill pill-ok">no failures</span>';
+}
+
+// ──────────────────────────────────────────
+// INIT
+// ──────────────────────────────────────────
+
+renderForms();
+updateLeaderboard();
+</script>
+
+</body>
+</html>
