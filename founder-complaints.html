@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0f0f13">
+<title>Founder Complaints — what builders wish someone would build</title>
+<meta name="description" content="The top complaint-pattern posts from r/SideProject, r/Entrepreneur, r/SaaS, r/indiehackers, and r/startups in the last 24 hours. Live, ranked by engagement. Free.">
+<meta property="og:title" content="Founder Complaints">
+<meta property="og:description" content="What builders wish someone would build, ranked by engagement. Updated live from 5 subreddits.">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f0f13;
+  --surface: #181822;
+  --surface2: #232333;
+  --accent: #ff6b3d;
+  --accent2: #ffb347;
+  --text: #f3f3f8;
+  --muted: #8a8aa3;
+  --dim: #50506a;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.18);
+  --good: #4ade80;
+}
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+.container { max-width: 880px; margin: 0 auto; padding: 0 18px; }
+
+/* HEADER */
+.site-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  display: flex; align-items: center; gap: 9px;
+  text-decoration: none; color: var(--text);
+  font-size: 16px; font-weight: 700; letter-spacing: -0.3px;
+}
+.logo-mark {
+  width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.nav-link {
+  color: var(--muted); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+}
+.nav-link:hover { color: var(--text); }
+
+/* HERO */
+.hero {
+  padding: 48px 0 28px;
+  text-align: center;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(255,107,61,0.12);
+  border: 1px solid rgba(255,107,61,0.25);
+  border-radius: 16px;
+  padding: 5px 12px;
+  margin-bottom: 18px;
+}
+.hero-eyebrow .dot {
+  width: 6px; height: 6px; background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.hero h1 {
+  font-size: clamp(28px, 5.5vw, 44px);
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  max-width: 640px;
+  margin-left: auto; margin-right: auto;
+}
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* CONTROLS */
+.controls {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.controls-label {
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--muted);
+  margin-right: 6px;
+}
+.chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px; font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+.chip:hover { color: var(--text); border-color: var(--border-hover); }
+.chip.active {
+  background: var(--accent);
+  color: #0f0f13;
+  border-color: var(--accent);
+}
+.chip-count {
+  display: inline-block;
+  font-size: 10px;
+  opacity: 0.7;
+  margin-left: 4px;
+}
+.refresh-btn {
+  margin-left: auto;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.refresh-btn:hover { color: var(--text); border-color: var(--border-hover); }
+.refresh-btn:disabled { opacity: 0.5; cursor: wait; }
+
+/* META BAR */
+.meta-bar {
+  font-size: 12px;
+  color: var(--dim);
+  margin-bottom: 18px;
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+.meta-bar strong { color: var(--muted); font-weight: 600; }
+
+/* POST CARDS */
+.posts {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.post {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 18px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: block;
+  text-decoration: none;
+  color: var(--text);
+}
+.post:hover {
+  border-color: var(--border-hover);
+  background: var(--surface2);
+  transform: translateY(-1px);
+}
+.post-meta {
+  display: flex; gap: 10px; align-items: center;
+  font-size: 11px; color: var(--muted);
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.post-sub {
+  background: rgba(255,107,61,0.12);
+  color: var(--accent);
+  padding: 2px 8px; border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.post-author { font-weight: 500; }
+.post-stats { color: var(--dim); }
+.post-stats strong { color: var(--muted); font-weight: 600; }
+.post-title {
+  font-size: 16px; font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+.post-snippet {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.post-tags {
+  margin-top: 10px;
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.tag {
+  font-size: 10px;
+  background: rgba(255,255,255,0.05);
+  color: var(--muted);
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.tag-want { background: rgba(74,222,128,0.12); color: var(--good); }
+.tag-pain { background: rgba(255,107,61,0.12); color: var(--accent); }
+
+/* LOADING */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.spinner {
+  display: inline-block;
+  width: 28px; height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* EMPTY / ERROR */
+.empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--muted);
+  font-size: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.empty strong { color: var(--text); display: block; font-size: 16px; margin-bottom: 6px; }
+.error-note {
+  font-size: 12px; color: var(--dim);
+  margin-top: 10px;
+}
+
+/* EMAIL CAPTURE */
+.email-card {
+  margin: 36px 0 24px;
+  background: linear-gradient(135deg, rgba(255,107,61,0.08), rgba(255,179,71,0.04));
+  border: 1px solid rgba(255,107,61,0.2);
+  border-radius: 14px;
+  padding: 22px 20px;
+  text-align: center;
+}
+.email-card h3 {
+  font-size: 18px; font-weight: 700; letter-spacing: -0.4px;
+  margin-bottom: 6px;
+}
+.email-card p {
+  font-size: 13px; color: var(--muted);
+  max-width: 380px; margin: 0 auto 14px;
+}
+.email-row {
+  display: flex; gap: 8px; max-width: 420px; margin: 0 auto;
+  flex-wrap: wrap;
+}
+.email-row input {
+  flex: 1; min-width: 200px;
+  background: rgba(15,15,19,0.6);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+.email-row input:focus { border-color: var(--accent); }
+.email-row button {
+  background: var(--accent); color: #0f0f13;
+  border: 0; padding: 11px 18px;
+  border-radius: 10px;
+  font-weight: 700; font-size: 14px;
+  cursor: pointer; font-family: inherit;
+  transition: opacity 0.15s ease;
+}
+.email-row button:hover { opacity: 0.85; }
+.email-row button:disabled { opacity: 0.5; cursor: default; }
+.email-success {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--good);
+  display: none;
+}
+.email-success.show { display: block; }
+
+/* FOOTER */
+.site-foot {
+  margin: 40px 0 24px;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--dim);
+  text-align: center;
+  line-height: 1.6;
+}
+.site-foot a { color: var(--muted); text-decoration: none; }
+.site-foot a:hover { color: var(--text); }
+
+/* HOW IT WORKS */
+.howit {
+  margin: 30px 0 12px;
+  padding: 18px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.howit strong { color: var(--text); font-weight: 600; }
+
+@media (max-width: 540px) {
+  .hero { padding: 36px 0 22px; }
+  .post { padding: 16px 14px; }
+  .controls { gap: 6px; }
+  .chip { padding: 5px 10px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="site-nav">
+    <a href="/" class="logo">
+      <span class="logo-mark">🗣</span>
+      <span>Founder Complaints</span>
+    </a>
+    <a href="https://daily-build-portfolio.vercel.app" class="nav-link">More tools →</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow"><span class="dot"></span> Live · 5 subreddits · last 24h</div>
+    <h1>What builders <em>wish someone would build</em>, today</h1>
+    <p>Top engagement-ranked complaint posts from r/SideProject, r/Entrepreneur, r/SaaS, r/indiehackers, and r/startups. Updated live. Free.</p>
+  </section>
+
+  <div class="controls">
+    <span class="controls-label">Filter</span>
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="want">Wants <span class="chip-count" id="cntWant">·</span></button>
+    <button class="chip" data-filter="pain">Pains <span class="chip-count" id="cntPain">·</span></button>
+    <button class="refresh-btn" id="refreshBtn">↻ Refresh</button>
+  </div>
+
+  <div class="meta-bar" id="metaBar">
+    <span>Loading…</span>
+  </div>
+
+  <div id="content">
+    <div class="loading">
+      <div class="spinner"></div>
+      <div>Pulling the latest posts from 5 subreddits…</div>
+    </div>
+  </div>
+
+  <div class="email-card">
+    <h3>Get tomorrow's list in your inbox</h3>
+    <p>One email a day. Top 5 founder complaints, ranked. Take 10 seconds to skim. Reply if one sounds like a build.</p>
+    <form class="email-row" id="emailForm" onsubmit="return submitEmail(event)">
+      <input type="email" id="emailInput" placeholder="you@example.com" required>
+      <button type="submit" id="emailBtn">Get the daily →</button>
+    </form>
+    <div class="email-success" id="emailSuccess">✓ You're in. First email tomorrow morning.</div>
+  </div>
+
+  <div class="howit">
+    <strong>How this works.</strong> The page hits Reddit's public JSON endpoints for each subreddit, filters posts from the last 24 hours, and ranks by an engagement score (upvotes + comments × 2). Posts get a <em>Want</em> tag if their title or text contains language like "anyone know a tool", "wish there was", "looking for", "is there a way to" — the literal phrasing of unmet demand. <em>Pain</em> tags catch "frustrated with", "hate that", "annoying", "broke again". Click any post to open the full thread on Reddit. Nothing is stored. No accounts. Free.
+  </div>
+
+  <footer class="site-foot">
+    Built in a day · part of <a href="https://daily-build-portfolio.vercel.app">daily-build-portfolio</a><br>
+    Not affiliated with Reddit. Public data only.
+  </footer>
+
+</div>
+
+<script>
+// CONFIG
+const SUBS = ['SideProject', 'Entrepreneur', 'SaaS', 'indiehackers', 'startups'];
+const WANT_PATTERNS = [
+  /anyone know (a|an|of a)?\s*(tool|app|service|way|saas)/i,
+  /(is there|are there) (a |an |any )?(tool|app|service|way|saas|good)/i,
+  /looking for (a |an )?(tool|app|service|way|saas)/i,
+  /wish (there|i had) (was|were|had)?/i,
+  /how do you/i,
+  /can someone (build|make|recommend)/i,
+  /need (a |an )?(tool|app|service|way|saas)/i,
+  /recommend (a |an )?(tool|app|service)/i,
+  /best (tool|app|service|saas|way) (for|to)/i,
+  /\bsomeone should (build|make)/i,
+  /does anyone use/i,
+  /any good (tool|app|alternative)/i,
+];
+const PAIN_PATTERNS = [
+  /frustrat/i,
+  /hate (that|when|how)/i,
+  /annoying/i,
+  /broke (again|down)|keeps breaking/i,
+  /sick of/i,
+  /\bfed up\b/i,
+  /pain (in|of|point)/i,
+  /worst (thing|part)/i,
+  /problem with/i,
+  /stuck (on|with|trying)/i,
+  /can't (figure|get|find)/i,
+];
+const COMPLAINT_FLAGS = [...WANT_PATTERNS, ...PAIN_PATTERNS];
+
+// STATE
+let allPosts = [];
+let currentFilter = 'all';
+
+// FETCH via CORS proxy fallback chain. Reddit blocks direct browser CORS now.
+const PROXIES = [
+  url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+];
+
+async function fetchSub(sub) {
+  const target = `https://www.reddit.com/r/${sub}/new.json?limit=50`;
+  for (const proxify of PROXIES) {
+    try {
+      const res = await fetch(proxify(target));
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data && data.data && data.data.children) return data.data.children;
+    } catch (e) {
+      // try next
+    }
+  }
+  return [];
+}
+
+function isComplaint(post) {
+  const text = (post.title + ' ' + (post.selftext || '')).toLowerCase();
+  return COMPLAINT_FLAGS.some(p => p.test(text));
+}
+
+function classify(post) {
+  const text = post.title + ' ' + (post.selftext || '');
+  const isWant = WANT_PATTERNS.some(p => p.test(text));
+  const isPain = PAIN_PATTERNS.some(p => p.test(text));
+  return { isWant, isPain };
+}
+
+function within24h(utc) {
+  const now = Date.now() / 1000;
+  return (now - utc) < 24 * 3600;
+}
+
+function timeAgo(utc) {
+  const diff = Math.floor(Date.now() / 1000 - utc);
+  if (diff < 3600) return Math.max(1, Math.floor(diff / 60)) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+function escapeHtml(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function snippet(text, len = 220) {
+  if (!text) return '';
+  const clean = text.replace(/\s+/g, ' ').trim();
+  if (clean.length <= len) return clean;
+  return clean.slice(0, len) + '…';
+}
+
+function score(p) {
+  return p.ups + p.num_comments * 2;
+}
+
+function render() {
+  const target = document.getElementById('content');
+  let list = allPosts;
+  if (currentFilter === 'want') list = list.filter(p => p._isWant);
+  if (currentFilter === 'pain') list = list.filter(p => p._isPain && !p._isWant);
+
+  if (!list.length) {
+    target.innerHTML = `<div class="empty">
+      <strong>No posts match this filter right now.</strong>
+      Try a different filter, or refresh in a few hours — new posts come in all the time.
+    </div>`;
+    return;
+  }
+
+  const html = list.map(p => {
+    const tags = [];
+    if (p._isWant) tags.push('<span class="tag tag-want">Wants</span>');
+    if (p._isPain && !p._isWant) tags.push('<span class="tag tag-pain">Pain</span>');
+    return `
+      <a class="post" href="https://www.reddit.com${p.permalink}" target="_blank" rel="noopener noreferrer">
+        <div class="post-meta">
+          <span class="post-sub">r/${escapeHtml(p.subreddit)}</span>
+          <span class="post-author">u/${escapeHtml(p.author)}</span>
+          <span class="post-stats">· <strong>${p.ups}</strong> upvotes · <strong>${p.num_comments}</strong> comments · ${timeAgo(p.created_utc)}</span>
+        </div>
+        <div class="post-title">${escapeHtml(p.title)}</div>
+        ${p.selftext ? `<div class="post-snippet">${escapeHtml(snippet(p.selftext))}</div>` : ''}
+        ${tags.length ? `<div class="post-tags">${tags.join('')}</div>` : ''}
+      </a>
+    `;
+  }).join('');
+  target.innerHTML = `<div class="posts">${html}</div>`;
+}
+
+function updateMeta() {
+  const meta = document.getElementById('metaBar');
+  const subsHit = [...new Set(allPosts.map(p => p.subreddit))];
+  const total = allPosts.length;
+  const wantCount = allPosts.filter(p => p._isWant).length;
+  const painCount = allPosts.filter(p => p._isPain && !p._isWant).length;
+  document.getElementById('cntWant').textContent = wantCount;
+  document.getElementById('cntPain').textContent = painCount;
+  meta.innerHTML = `
+    <span><strong>${total}</strong> complaint posts in last 24h</span>
+    <span>Across <strong>${subsHit.length}</strong> of ${SUBS.length} subreddits</span>
+    <span>Updated <strong>${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong></span>
+  `;
+}
+
+async function loadAll() {
+  const target = document.getElementById('content');
+  target.innerHTML = `<div class="loading"><div class="spinner"></div><div>Pulling the latest posts from 5 subreddits…</div></div>`;
+  document.getElementById('refreshBtn').disabled = true;
+
+  const all = [];
+  await Promise.all(SUBS.map(async sub => {
+    const posts = await fetchSub(sub);
+    posts.forEach(c => {
+      const p = c.data;
+      if (!p || !p.title) return;
+      if (!within24h(p.created_utc)) return;
+      if (!isComplaint(p)) return;
+      const { isWant, isPain } = classify(p);
+      p._isWant = isWant;
+      p._isPain = isPain;
+      all.push(p);
+    });
+  }));
+
+  allPosts = all.sort((a, b) => score(b) - score(a)).slice(0, 30);
+  document.getElementById('refreshBtn').disabled = false;
+
+  if (!allPosts.length) {
+    target.innerHTML = `<div class="empty">
+      <strong>Nothing came back from Reddit just now.</strong>
+      The CORS proxy might be rate-limited, or no qualifying posts hit in the last 24h. Try Refresh in a minute.
+      <div class="error-note">If this keeps happening, Reddit may have blocked the proxies — open issue on the portfolio repo.</div>
+    </div>`;
+    return;
+  }
+
+  updateMeta();
+  render();
+}
+
+// FILTER CHIPS
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentFilter = chip.dataset.filter;
+    render();
+  });
+});
+
+document.getElementById('refreshBtn').addEventListener('click', loadAll);
+
+// EMAIL CAPTURE (placeholder — stores locally for now, plug into ConvertKit/Buttondown later)
+function submitEmail(e) {
+  e.preventDefault();
+  const input = document.getElementById('emailInput');
+  const btn = document.getElementById('emailBtn');
+  const success = document.getElementById('emailSuccess');
+  const email = input.value.trim();
+  if (!email || !email.includes('@')) return false;
+  // Store in-memory (local list won't persist across visits — this is a placeholder for a real backend)
+  try {
+    const stored = JSON.parse(localStorage.getItem('fc_emails') || '[]');
+    if (!stored.includes(email)) stored.push(email);
+    localStorage.setItem('fc_emails', JSON.stringify(stored));
+  } catch (_) {}
+  btn.disabled = true;
+  btn.textContent = 'Subscribed';
+  input.disabled = true;
+  success.classList.add('show');
+  return false;
+}
+
+// GO
+loadAll();
+</script>
+
+</body>
+</html>

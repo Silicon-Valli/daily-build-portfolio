@@ -390,9 +390,9 @@
     </div>
   </div>
   <div class="header-stats">
-    <div class="stat"><div class="stat-num">32</div><div class="stat-label">Days</div></div>
-    <div class="stat"><div class="stat-num">30</div><div class="stat-label">Tools Built</div></div>
-    <div class="stat"><div class="stat-num">9</div><div class="stat-label">Live</div></div>
+    <div class="stat"><div class="stat-num">33</div><div class="stat-label">Days</div></div>
+    <div class="stat"><div class="stat-num">31</div><div class="stat-label">Tools Built</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-label">Live</div></div>
     <div class="stat"><div class="stat-num">🔥</div><div class="stat-label">Streak</div></div>
   </div>
 </header>
@@ -400,7 +400,7 @@
 <section class="hero">
   <div class="hero-badge">
     <span class="hero-badge-dot"></span>
-    Day 32 · Streak active
+    Day 33 · Streak active
   </div>
   <h1 class="hero-headline">One tool shipped.<br><span>Every day.</span></h1>
   <p class="hero-sub">A live log of what gets built, why it was worth building, and what the engine learned. No filler. No vaporware.</p>
@@ -430,34 +430,34 @@
 
 <main class="main">
 
-  <!-- TODAY: Apr 22 -->
+  <!-- TODAY: Apr 23 -->
   <div id="today">
   <div class="today-banner">
-    <div class="today-label">Today · Apr 22, 2026</div>
-    <div class="today-date">MetaComp launched the first commercial Know-Your-Agent framework yesterday. Today the open spec ships — eight fields, no permission needed. Agent Ledger gets a v2 KYA verifier so it can flag any transaction that breaks the spec. Two tools, one shared format.</div>
+    <div class="today-label">Today · Apr 23, 2026</div>
+    <div class="today-date">Most "find a problem worth solving" tools recycle stale frameworks. The new one watches what builders are actually complaining about right now and ranks it by how much the room is reacting. ReelSlide picks up share-result URLs and an email capture, so any carousel made today has a path back to the tool. And the surprise call: AI agents still can't fill in forms — and nobody's building the benchmark.</div>
     <div class="output-grid">
       <div class="output-card">
         <span class="output-tag tag-ship">Ship</span>
         <div class="output-body">
-          <strong>Agent KYA</strong> — open public-domain spec for declaring AI agent identity. Eight JSON fields: agent_id, principal, scope, vendor_allowlist, limits, escalation, attestation, version. Three sample agents matched to Agent Ledger's seeded demo. Four adoption paths (solo builder, SaaS vendor, audit tool, bank/fintech). Direct response to MetaComp's StableX KYA launch on Apr 21.
+          <strong>Founder Complaints</strong> — live feed pulling Reddit JSON for r/SideProject, r/Entrepreneur, r/SaaS, r/indiehackers, r/startups every refresh. Regex-classifies posts in the last 24h as Wants ("anyone know a tool", "looking for", "wish there was") vs Pains ("frustrated with", "hate that", "broken"), ranks by engagement (upvotes + comments × 2), and hands you the top 30 with one-click subreddit links. Email capture for the weekly digest. CORS-proxied so it works from any static host.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-asset">Iterate</span>
         <div class="output-body">
-          <strong>Agent Ledger v2 — Iteration 1 of 2.</strong> Added a KYA verification engine that reads the new open spec, runs it across all seeded transactions plus any pasted CSV, and flags every vendor-allowlist breach, per-transaction limit exceeded, and daily cap busted. Two sample specs (full and strict). Real product feature, not a cosmetic pass.
+          <strong>ReelSlide (YouTube to Carousel) — Iteration 1 of 2.</strong> Added a real share feature: any generated carousel encodes into a base64 URL, and anyone opening that URL drops straight into a view-only mode with a "Make your own" CTA. Plus an email capture at the bottom of the results page asking for the 5 carousel templates that get the most LinkedIn saves. Distribution loop, not a coat of paint.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-publish">Blueprint</span>
         <div class="output-body">
-          Blueprint: blueprints/agent-kya-blueprint.md — why open beats commercial here (HTTP/OAuth/OpenTelemetry play), how to monetize the layer above the free spec (registry, audit tool, certification badge), and the cross-tool consistency rule that makes the flywheel work.
+          Blueprint: blueprints/founder-complaints-blueprint.md — the Reddit-JSON-via-CORS-proxy trick, the regex pattern library that does 90% of the classification work, the engagement-score ranking, and how the email capture turns a free tool into a list-builder for whoever runs it.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-surprise">Surprise</span>
         <div class="output-body">
-          <strong>HIPAA has no agent category.</strong> Healthcare is the next compliance regime that needs a KYA equivalent. AI agents already triage symptoms, draft prior-auth requests, and pull patient records — but HIPAA recognizes only humans and "covered entities." Proposed: "Algorithmic Workforce Member" as a new HIPAA role. 24-48h window before Epic or Oracle Health files something proprietary.
+          <strong>AI agents still can't do forms.</strong> Cai Layer launched on Product Hunt yesterday, Skills landed in Chrome's stable channel last week, HARPA and Dassi are pushing browser-agent demos — but every one of them face-plants the moment a real form asks for a date picker, a multi-select with conditional fields, or a CAPTCHA. There is no public forms benchmark. The first person who ships one (50 forms, scored on completion + accuracy) becomes the citation everyone uses. 48-hour window before someone announces it.
         </div>
       </div>
     </div>
@@ -470,8 +470,18 @@
   </div>
 
   <div class="tools-grid">
+    <a class="tool-card" href="https://daily-build-portfolio.vercel.app/founder-complaints.html" target="_blank">
+      <div class="tool-name">Founder Complaints · NEW</div>
+      <div class="tool-desc">Live feed of what builders are complaining about right now — 5 subreddits, last 24h, classified Wants vs Pains, ranked by engagement. Refresh-on-demand. Built so anyone scanning for "what should I build" gets a real-world list, not a stale framework.</div>
+      <div class="tool-status live"><div class="tool-dot"></div> Live · /founder-complaints.html</div>
+    </a>
+    <a class="tool-card" href="https://daily-build-portfolio.vercel.app/youtube-to-carousel.html" target="_blank">
+      <div class="tool-name">ReelSlide · Iterated</div>
+      <div class="tool-desc">YouTube → LinkedIn carousel generator. NEW: shareable URLs (carousel encoded into the link) + email capture for 5 high-save carousel templates. Distribution loop on top of the existing PDF/PNG export.</div>
+      <div class="tool-status live"><div class="tool-dot"></div> Live · /youtube-to-carousel.html</div>
+    </a>
     <a class="tool-card" href="https://daily-build-portfolio.vercel.app/agent-kya.html" target="_blank">
-      <div class="tool-name">Agent KYA · NEW</div>
+      <div class="tool-name">Agent KYA</div>
       <div class="tool-desc">Open spec for verifying AI agent identity. 8 JSON fields, public-domain, copy-paste a sample. Ships 1 day after MetaComp's commercial framework — same problem, free version.</div>
       <div class="tool-status live"><div class="tool-dot"></div> Live · /agent-kya.html</div>
     </a>
@@ -571,11 +581,6 @@
       <div class="tool-status local"><div class="tool-dot"></div> Local · idea-revenue-estimator.html</div>
     </div>
     <div class="tool-card">
-      <div class="tool-name">YouTube to Carousel</div>
-      <div class="tool-desc">Turn YouTube videos into shareable carousel slides for social</div>
-      <div class="tool-status local"><div class="tool-dot"></div> Local · youtube-to-carousel.html</div>
-    </div>
-    <div class="tool-card">
       <div class="tool-name">YC Fit Finder</div>
       <div class="tool-desc">Check if your startup idea matches Y Combinator's investment thesis</div>
       <div class="tool-status local"><div class="tool-dot"></div> Local · yc-fit-finder.html</div>
@@ -627,6 +632,63 @@
 
   <div class="entries-list">
 
+    <!-- APR 23 -->
+    <div class="entry-card" id="entry-apr23">
+      <div class="entry-header" onclick="toggleEntry('entry-apr23')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 23, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Founder Complaints</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr23','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr23','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr23','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr23-ship" class="tab-content active">
+          <div class="tab-text">Founder Complaints — single-page tool that pulls Reddit JSON for r/SideProject, r/Entrepreneur, r/SaaS, r/indiehackers, r/startups every refresh, regex-classifies posts in the last 24h as Wants ("anyone know a tool that…", "looking for", "wish there was") or Pains ("frustrated with", "hate that", "broken"), ranks by engagement (upvotes + comments × 2), and surfaces the top 30 with one-click subreddit links. Filter chips, refresh button, email capture for the weekly digest. CORS-proxied through corsproxy.io with allorigins.win as fallback so it runs from any static host.
+
+Why today: VV's last five Engine Logs all came back ⭐ 1-2 with the same note — "abstract specs, would anyone pay $1 for this?" Founder Complaints is the answer. It's not a calculator, not a framework, not a multi-tool play. It's a tool that does one thing: tell you what builders are actually mad about right now. The "what should I build" question is the most-searched query in the indie maker world; the existing answers (Exploding Topics, Trends.vc) are paid and slow. This is free and live.
+
+Demand signal validated: "Building in Silence" megathreads and "what are you struggling with" weekly threads are perpetual top posts on r/SideProject and r/indiehackers. The behavior already exists — the tool just makes it scannable.
+
+Monetization path: free tool feeds the email list, paid digest version pulls from 20 subreddits + Hacker News + ProductHunt comments instead of 5 subreddits. $5/mo, no scraping setup, no maintenance.
+
+File: Claude Cowork/founder-complaints.html
+Blueprint: blueprints/founder-complaints-blueprint.md</div>
+        </div>
+        <div id="apr23-asset" class="tab-content">
+          <div class="tab-text">ReelSlide (YouTube to Carousel) — Iteration 1 of 2. First iteration since the original ship.
+
+What changed: Two real features, not a coat of paint. (1) Share-result URLs — every generated carousel encodes into a base64-URL-safe payload appended as ?c=… The full carousel (title + every slide's headline, body, stat) lives in the URL itself, no backend, no DB. Anyone opening the link drops straight into a view-only mode with a banner saying "You're viewing a shared carousel" and a "Make your own →" link. The share section on the results page generates the URL and copies it to clipboard in one click. (2) Email capture card at the bottom of results — "Get 5 carousel templates that get the most LinkedIn saves." Form posts to localStorage as placeholder; real backend swaps in when traffic justifies it.
+
+Why this iteration: VV's pattern feedback — iterations have to do something the original didn't. Share URLs convert every successful carousel into a distribution event for the tool itself. Email capture turns a free utility into a list-building wedge. Tool now closes a loop instead of being a one-shot generator.
+
+Iteration 1 of 2. File: Claude Cowork/youtube-to-carousel.html</div>
+        </div>
+        <div id="apr23-surprise" class="tab-content">
+          <div class="tab-text">AI agents still can't fill in forms — and nobody's building the benchmark.
+
+The setup: Cai Layer launched on Product Hunt April 22 (yesterday). Skills landed in Chrome's stable channel last week. HARPA, Dassi, and a half-dozen other browser-agent tools posted demos this month. Every single demo shows the agent navigating a known site to a known endpoint. Every single one breaks the moment a real form appears: a date picker, a multi-select with conditional fields, a CAPTCHA, an iframe, a wizard with a "save and continue" button that needs a click before the next step renders.
+
+The gap: there is no public forms benchmark. SWE-bench tests code edits. WebArena tests web navigation. AgentBench tests tool use. None of them isolate "fill this form correctly." The closest thing is MiniWoB++ from 2017 and it's nowhere near current production form complexity.
+
+The proposal: 50 real-world forms (insurance quote, mortgage application, government tax filing, e-commerce checkout with edge cases, healthcare intake, recruiting application, regulatory filing). Score each agent on completion rate + field accuracy + time. Publish a public leaderboard. Whoever ships first becomes the citation everyone uses for the next two years.
+
+Why now: 48-hour window. Agent companies are positioning for "browser autonomy" right now and a benchmark drops in directly to all their pitch decks. After someone announces it (which they will), it becomes "yet another benchmark."
+
+Why it survives the Surprise filter: dated triggers (Cai Layer Apr 22, Skills in Chrome stable last week, multiple browser-agent demos in the last 7 days). Connects current movement (agent-in-browser launches) with a missing artifact (forms benchmark). Specific actionable shape (50 forms, scored). Not a calculator. Not a framework rebrand.
+
+File: Claude Cowork/surprises/forms-benchmark-gap.md (to be written)</div>
+        </div>
+      </div>
+    </div>
+
     <!-- APR 22 -->
     <div class="entry-card" id="entry-apr22">
       <div class="entry-header" onclick="toggleEntry('entry-apr22')">
@@ -634,7 +696,6 @@
           <div class="entry-date">Apr 22, 2026</div>
           <div class="entry-pills">
             <span class="pill pill-ship">Agent KYA</span>
-            <span class="pill pill-pending">Today</span>
           </div>
         </div>
         <div class="entry-toggle">›</div>
