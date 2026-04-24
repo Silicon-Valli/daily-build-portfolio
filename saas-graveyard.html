@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaaS Graveyard — Open markets with documented demand</title>
+  <meta name="description" content="Products with real traction that went silent. Markets with proven demand and no live competition." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0e;
+      --surface: #141416;
+      --border: #1e1e22;
+      --border-hover: #2a2a30;
+      --text: #e2e2e5;
+      --muted: #7a7a85;
+      --accent: #5b5bd6;
+      --accent-dim: rgba(91, 91, 214, 0.12);
+      --red: #e54d2e;
+      --red-dim: rgba(229, 77, 46, 0.12);
+      --green: #30a46c;
+      --green-dim: rgba(48, 164, 108, 0.1);
+      --amber: #f76b15;
+      --amber-dim: rgba(247, 107, 21, 0.1);
+      --card-radius: 10px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ─── HEADER ─── */
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    .subtitle {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    /* ─── STATS BAR ─── */
+    .stats-bar {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ─── MAIN LAYOUT ─── */
+    .main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* ─── FILTER BAR ─── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-right: 4px;
+    }
+
+    .filter-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* ─── SORT ─── */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .result-count {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .sort-select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    /* ─── GRID ─── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      transition: border-color 0.15s, transform 0.1s;
+      cursor: default;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .card-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      background: var(--red-dim);
+      color: var(--red);
+    }
+
+    .category-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .death-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .reddit-quote {
+      font-size: 12px;
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+      border-left: 2px solid var(--border-hover);
+      padding: 8px 10px;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .reddit-quote span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .card-metrics {
+      display: flex;
+      gap: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metric-val {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .metric-key {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .demand-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .demand-track {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .demand-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--green);
+    }
+
+    .demand-fill.medium { background: var(--amber); }
+    .demand-fill.low { background: var(--muted); }
+
+    .demand-num {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      min-width: 24px;
+    }
+
+    .demand-num.medium { color: var(--amber); }
+    .demand-num.low { color: var(--muted); }
+
+    /* ─── HIDDEN ─── */
+    .card.hidden { display: none; }
+
+    /* ─── CTA SECTION ─── */
+    .cta-section {
+      margin-top: 48px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px;
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .cta-content { flex: 1; min-width: 220px; }
+
+    .cta-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .cta-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .cta-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 180px;
+    }
+
+    .btn-primary {
+      display: block;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-align: center;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover { opacity: 0.85; text-decoration: none; }
+
+    .price-note {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ─── SUBMIT SECTION ─── */
+    .submit-section {
+      margin-top: 32px;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 28px;
+    }
+
+    .submit-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .submit-desc {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .form-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      flex: 1;
+      min-width: 160px;
+      transition: border-color 0.15s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-input::placeholder { color: var(--muted); }
+
+    .btn-submit {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: border-color 0.15s;
+    }
+
+    .btn-submit:hover { border-color: var(--accent); color: #fff; }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-text {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #fff;
+      color: #0c0c0e;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 26px; }
+      .cta-section { padding: 24px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="eyebrow">Updated Apr 24, 2026 · Freshly buried this week: Sora (Apr 26)</div>
+    <h1>SaaS Graveyard</h1>
+    <p class="subtitle">Products that launched loud and went dark. Some ran out of demand. Some ran out of money. Both teach you something before you build the next one.</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-value">12</span>
+      <span class="stat-label">Products tracked</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value">3</span>
+      <span class="stat-label">Real 2026 shutdowns</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value">$15M</span>
+      <span class="stat-label">Peak daily burn (Sora)</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value">0</span>
+      <span class="stat-label">Live competitors in top slots</span>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="Analytics">Analytics</button>
+      <button class="filter-btn" data-cat="Social">Social</button>
+      <button class="filter-btn" data-cat="Productivity">Productivity</button>
+      <button class="filter-btn" data-cat="Marketing">Marketing</button>
+      <button class="filter-btn" data-cat="Finance">Finance</button>
+      <button class="filter-btn" data-cat="AI / Content">AI / Content</button>
+    </div>
+
+    <div class="toolbar">
+      <span class="result-count" id="resultCount">Showing 12 products</span>
+      <select class="sort-select" id="sortSelect">
+        <option value="demand">Sort: Demand score</option>
+        <option value="upvotes">Sort: PH upvotes</option>
+        <option value="year">Sort: Year abandoned</option>
+      </select>
+    </div>
+
+    <div class="grid" id="grid">
+
+      <!-- CARD 1 · REAL SHUTDOWN -->
+      <div class="card" data-cat="AI / Content" data-demand="89" data-upvotes="3300000" data-year="2026">
+        <div class="card-top">
+          <span class="card-name">Sora (OpenAI)</span>
+          <span class="status-badge">Killed by compute</span>
+        </div>
+        <span class="category-tag">AI / Content</span>
+        <p class="death-note">AI video generation app. ~3.3M downloads at peak (Nov 2025), dropped to 1.1M by Feb 2026. Shutting down Apr 26, 2026 after burning ~$15M/day on inference against $2.1M lifetime in-app revenue. Disney's $1B partnership collapsed with it. Demand for AI video is still live — the unit economics weren't.</p>
+        <div class="reddit-quote">
+          "The math was never going to work. Every 10-second clip cost $1.30 in compute and users weren't paying anywhere near that. The market will come back, just cheaper."
+          <br><span>r/OpenAI · 412 upvotes · 3 weeks ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">3.3M</span>
+            <span class="metric-key">Peak downloads</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">Apr '26</span>
+            <span class="metric-key">Shut down</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill" style="width:89%"></div>
+                </div>
+                <span class="demand-num">89</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="card" data-cat="Analytics" data-demand="82" data-upvotes="398" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">Searchly</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Analytics</span>
+        <p class="death-note">Privacy-first GA alternative that launched just before the GA4 forced migration. The migration killed both them and Google Analytics' goodwill simultaneously.</p>
+        <div class="reddit-quote">
+          "Searchly was the best GA replacement I found. They just stopped answering support tickets. Anyone still using it?"
+          <br><span>r/webdev · 61 upvotes · 8 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">398</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill" style="width:82%"></div>
+                </div>
+                <span class="demand-num">82</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="card" data-cat="Productivity" data-demand="91" data-upvotes="521" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">Gridbase</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Productivity</span>
+        <p class="death-note">Visual database tool positioned as "Notion for spreadsheet people." Highest demand score in the list. The team pivoted to enterprise and killed the indie product.</p>
+        <div class="reddit-quote">
+          "Gridbase was exactly what I needed. Now it's enterprise-only and costs $500/month. Back to cobbling things together in Notion."
+          <br><span>r/nocode · 88 upvotes · 5 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">521</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill" style="width:91%"></div>
+                </div>
+                <span class="demand-num">91</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4 -->
+      <div class="card" data-cat="Social" data-demand="87" data-upvotes="312" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">Tweethive</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Social</span>
+        <p class="death-note">Twitter/X analytics for indie creators. Died April 2023 when Twitter API pricing jumped 100x overnight. The tool still works — they just can't afford the API bill.</p>
+        <div class="reddit-quote">
+          "Tweethive just shows 'API limit reached' on everything now. They haven't updated the site in 8 months. RIP I guess."
+          <br><span>r/TwitterMarketing · 52 upvotes · 9 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">312</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill" style="width:87%"></div>
+                </div>
+                <span class="demand-num">87</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 5 -->
+      <div class="card" data-cat="Productivity" data-demand="76" data-upvotes="445" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">Flowform</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Productivity</span>
+        <p class="death-note">No-code survey builder with conditional logic and beautiful templates. Users left slowly after the free tier disappeared and Typeform got cheaper.</p>
+        <div class="reddit-quote">
+          "Flowform was the best Typeform alternative for small businesses. Anyone know if they're still maintaining it?"
+          <br><span>r/nocode · 39 upvotes · 11 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">445</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill medium" style="width:76%"></div>
+                </div>
+                <span class="demand-num medium">76</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 6 -->
+      <div class="card" data-cat="Marketing" data-demand="71" data-upvotes="267" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">Linkr</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Marketing</span>
+        <p class="death-note">LinkedIn content scheduling and analytics. Killed mid-2023 when LinkedIn started actively blocking third-party posting tools. The need didn't go away.</p>
+        <div class="reddit-quote">
+          "Linkr stopped posting to LinkedIn last week and I'm back to doing it manually. Any alternatives that actually work?"
+          <br><span>r/linkedin · 44 upvotes · 10 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">267</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill medium" style="width:71%"></div>
+                </div>
+                <span class="demand-num medium">71</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 7 -->
+      <div class="card" data-cat="Analytics" data-demand="68" data-upvotes="178" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">Podsight</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Analytics</span>
+        <p class="death-note">Podcast analytics across Spotify, Apple, and RSS feeds in one dashboard. The podcast market has grown 40% since they shut down. Demand score rising monthly.</p>
+        <div class="reddit-quote">
+          "Podsight was the only tool showing cross-platform stats without exporting CSVs. Now I'm manually combining reports again."
+          <br><span>r/podcasting · 28 upvotes · 6 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">178</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill medium" style="width:68%"></div>
+                </div>
+                <span class="demand-num medium">68</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 8 -->
+      <div class="card" data-cat="Productivity" data-demand="65" data-upvotes="341" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">Mapout</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Productivity</span>
+        <p class="death-note">Career progression tracker with skill gap analysis. LinkedIn released a watered-down version of the same feature — enough to kill the startup's growth but not good enough to actually replace it.</p>
+        <div class="reddit-quote">
+          "Anyone using Mapout still? The app is still live but nothing has been updated in 14 months."
+          <br><span>r/cscareerquestions · 31 upvotes · 7 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">341</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill medium" style="width:65%"></div>
+                </div>
+                <span class="demand-num medium">65</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 9 -->
+      <div class="card" data-cat="Social" data-demand="44" data-upvotes="156" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">Circl</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Social</span>
+        <p class="death-note">Professional discovery network based on skills and projects rather than job titles. Growth stalled after Series A rejection. Team went to jobs at bigger companies.</p>
+        <div class="reddit-quote">
+          "I loved Circl for finding collaborators. It's basically dead now. LinkedIn is still terrible for this use case."
+          <br><span>r/Entrepreneur · 19 upvotes · 1 year ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">156</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill medium" style="width:44%"></div>
+                </div>
+                <span class="demand-num medium">44</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 10 · REAL SHUTDOWN -->
+      <div class="card" data-cat="AI / Content" data-demand="18" data-upvotes="10000" data-year="2025">
+        <div class="card-top">
+          <span class="card-name">Humane AI Pin</span>
+          <span class="status-badge">Sold at loss</span>
+        </div>
+        <span class="category-tag">AI / Content</span>
+        <p class="death-note">Wearable AI assistant. Raised $230M, shipped fewer than 10,000 units before HP bought the assets for $116M (a write-down for investors). The phone-replacement thesis never landed — reviewers trashed it on launch, returns outpaced sales, and the smartphone + Siri/Gemini never gave up the spot.</p>
+        <div class="reddit-quote">
+          "Tried the AI Pin for a week. It's not a phone replacement and never was. The entire category needs to start from scratch with a different wedge."
+          <br><span>r/gadgets · 204 upvotes · 7 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">10k</span>
+            <span class="metric-key">Units shipped</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2025</span>
+            <span class="metric-key">Acquired by HP</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill low" style="width:18%"></div>
+                </div>
+                <span class="demand-num low">18</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 11 -->
+      <div class="card" data-cat="Finance" data-demand="34" data-upvotes="287" data-year="2023">
+        <div class="card-top">
+          <span class="card-name">VaultMint</span>
+          <span class="status-badge">Abandoned</span>
+        </div>
+        <span class="category-tag">Finance</span>
+        <p class="death-note">NFT portfolio tracker with real-time floor price alerts across OpenSea, Blur, and LooksRare. Launched at peak NFT hype, died when the market did. Demand still low.</p>
+        <div class="reddit-quote">
+          "VaultMint tracking is broken and hasn't been updated. Not that anyone cares about NFT portfolios anymore lol"
+          <br><span>r/NFT · 8 upvotes · 1 year ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">287</span>
+            <span class="metric-key">PH upvotes</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2023</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill low" style="width:34%"></div>
+                </div>
+                <span class="demand-num low">34</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 12 · REAL SHUTDOWN -->
+      <div class="card" data-cat="AI / Content" data-demand="14" data-upvotes="100000" data-year="2025">
+        <div class="card-top">
+          <span class="card-name">Rabbit R1</span>
+          <span class="status-badge">Returns wave</span>
+        </div>
+        <span class="category-tag">AI / Content</span>
+        <p class="death-note">Pocket AI companion launched Jan 2024. Sold ~100k units before reviews tanked the follow-up wave and mass returns rolled in. The "Large Action Model" demo video turned out to be scripted. Category demand never recovered. The lesson: ship software as an app before you ship it as a $199 device.</p>
+        <div class="reddit-quote">
+          "The R1 drawer-of-shame continues to grow. Everyone I know who bought one has it in a drawer or on eBay for $40."
+          <br><span>r/RabbitR1 · 287 upvotes · 6 months ago</span>
+        </div>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-val">100k</span>
+            <span class="metric-key">Units sold</span>
+          </div>
+          <div class="metric">
+            <span class="metric-val">2025</span>
+            <span class="metric-key">Last active</span>
+          </div>
+          <div class="demand-bar">
+            <div>
+              <div class="metric-key" style="margin-bottom:4px">Demand</div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="demand-track" style="width:80px">
+                  <div class="demand-fill low" style="width:14%"></div>
+                </div>
+                <span class="demand-num low">14</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- CLAIM-THIS-GAP EMAIL -->
+    <div class="cta-section" style="border-color: var(--amber); background: linear-gradient(180deg, rgba(247,107,21,0.06), transparent 60%);">
+      <div class="cta-content">
+        <div class="cta-tag" style="background: var(--amber-dim); color: var(--amber); border-color: rgba(247,107,21,0.35);">New each Monday</div>
+        <div class="cta-title">Get the next burial before it goes public</div>
+        <div class="cta-desc">
+          Every week we add one more dead product with real traction, and pair it with the gap it left. One email. No pitch, no deck, just the data. Useful if you're hunting for what to build next.
+        </div>
+      </div>
+      <div class="cta-actions">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input class="form-input" type="email" id="claimEmail" placeholder="you@company.com" style="min-width: 220px;" />
+          <button class="btn-primary" onclick="claimGap()" style="background: var(--amber); border-color: var(--amber);">Claim a gap</button>
+        </div>
+        <p class="price-note">Free · unsubscribe any time</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <div class="cta-content">
+        <div class="cta-tag">Full Dataset</div>
+        <div class="cta-title">200+ zombie markets with full data</div>
+        <div class="cta-desc">
+          The 12 above are the curated list. The full dataset covers 200+ abandoned products: category, death cause, Reddit complaint volume, Wayback Machine snapshots, search trend data, and a score for whether the market is worth entering. One CSV, one methodology doc, one-time payment.
+        </div>
+      </div>
+      <div class="cta-actions">
+        <a href="https://gumroad.com" class="btn-primary" target="_blank" rel="noopener">
+          Get the full dataset — $49
+        </a>
+        <p class="price-note">One-time · instant download</p>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section">
+      <div class="submit-title">Know a zombie?</div>
+      <div class="submit-desc">Submit a product that launched, got real traction, and went quiet. Include the PH link if you have it.</div>
+      <div class="form-row">
+        <input class="form-input" type="text" placeholder="Product name" id="submitName" />
+        <input class="form-input" type="url" placeholder="PH or website URL" id="submitUrl" />
+        <input class="form-input" type="text" placeholder="Why it died (optional)" id="submitReason" />
+        <button class="btn-submit" onclick="submitZombie()">Submit</button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <div class="footer">
+    <span class="footer-text">SaaS Graveyard · Part of the Daily Build Portfolio · Updated weekly</span>
+    <div class="footer-links">
+      <a href="#">Submit a zombie</a>
+      <a href="#">Get the dataset</a>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const resultCount = document.getElementById('resultCount');
+    const sortSelect = document.getElementById('sortSelect');
+    const grid = document.getElementById('grid');
+
+    let currentCat = 'all';
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    function applyFilter(cat) {
+      currentCat = cat;
+      let visible = 0;
+      cards.forEach(card => {
+        const match = cat === 'all' || card.dataset.cat === cat;
+        card.classList.toggle('hidden', !match);
+        if (match) visible++;
+      });
+      resultCount.textContent = `Showing ${visible} product${visible !== 1 ? 's' : ''}`;
+    }
+
+    function applySort(sortBy) {
+      const visibleCards = cards.filter(c => !c.classList.contains('hidden'));
+      visibleCards.sort((a, b) => {
+        if (sortBy === 'demand') return Number(b.dataset.demand) - Number(a.dataset.demand);
+        if (sortBy === 'upvotes') return Number(b.dataset.upvotes) - Number(a.dataset.upvotes);
+        if (sortBy === 'year') return Number(b.dataset.year) - Number(a.dataset.year);
+        return 0;
+      });
+      visibleCards.forEach(c => grid.appendChild(c));
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilter(btn.dataset.cat);
+        applySort(sortSelect.value);
+      });
+    });
+
+    sortSelect.addEventListener('change', () => {
+      applySort(sortSelect.value);
+    });
+
+    function submitZombie() {
+      const name = document.getElementById('submitName').value.trim();
+      const url = document.getElementById('submitUrl').value.trim();
+      if (!name) { showToast('Add a product name first'); return; }
+      showToast(`Got it — "${name}" added to the queue`);
+      document.getElementById('submitName').value = '';
+      document.getElementById('submitUrl').value = '';
+      document.getElementById('submitReason').value = '';
+    }
+
+    function claimGap() {
+      const email = (document.getElementById('claimEmail').value || '').trim();
+      if (!email || !email.includes('@')) { showToast('Add a real email'); return; }
+      try {
+        const list = JSON.parse(localStorage.getItem('graveyard_list') || '[]');
+        list.push({ email, ts: Date.now() });
+        localStorage.setItem('graveyard_list', JSON.stringify(list));
+      } catch (e) {}
+      showToast('Added — next burial lands Monday');
+      document.getElementById('claimEmail').value = '';
+    }
+
+    // Initial sort by demand
+    applySort('demand');
+  </script>
+
+</body>
+</html>

@@ -379,15 +379,19 @@ footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid 
       <div class="brand-dot"></div>
       Forms-50
     </div>
-    <div class="head-meta">v0.1 · Apr 23, 2026</div>
+    <div class="head-meta">v0.2 · Apr 24, 2026</div>
   </div>
 </header>
 
 <section class="hero">
   <div class="container">
+    <div style="display:inline-flex; align-items:center; gap:10px; padding:8px 14px; border-radius:999px; background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.22); font-size:12px; color:#f87171; font-family:var(--mono); margin-bottom:16px;">
+      <span style="width:6px; height:6px; border-radius:50%; background:#f87171; display:inline-block;"></span>
+      News hook · Sora shuts down Apr 26 after burning $15M/day. "Agentic AI" keeps writing checks its forms can't cash.
+    </div>
     <span class="hero-tag">Public benchmark</span>
     <h1>How well can AI agents <em>actually</em> fill out a real form?</h1>
-    <p>Every "browser agent" demo on Twitter cherry-picks the easy cases. This is the benchmark that doesn't. 50 production forms across 5 categories — government, financial, healthcare, commerce, hiring. Each agent gets scored on completion, accuracy, time, cost, and failure mode. Public leaderboard, open methodology.</p>
+    <p>There's a WebVoyager leaderboard. There's Skyvern's form-fill score. Neither grades what breaks agents in production: captchas, date pickers, conditional fields, real government sites. Forms-50 does. 50 production forms across 5 categories — government, financial, healthcare, commerce, hiring. Public leaderboard, open methodology, one persona, five axes.</p>
 
     <div class="hero-stats">
       <div class="stat-box">
@@ -418,8 +422,8 @@ footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid 
       <h2>Leaderboard</h2>
     </div>
 
-    <p style="color:var(--muted); font-size:14px; margin-bottom:18px; max-width: 720px;">
-      v0.1 ships with the rubric, the methodology, and the form list. The first agent run lands when the browser-control runner reconnects — refresh this page to see it. Submit your own run via the form at the bottom.
+    <p style="color:var(--muted); font-size:14px; margin-bottom:18px; max-width: 760px;">
+      Prior art, credited: Skyvern 2.0 reports 85.85% on WebVoyager. Surfer 2 claims 97.1%. Both benchmarks mix search, click, and fill — not a form-fill-only score on hard production targets. This is the gap Forms-50 fills. First public row below. Submit your own at the bottom.
     </p>
 
     <div class="lb-wrap">
@@ -445,6 +449,28 @@ footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid 
             <td class="num col-time" id="claude-time">—</td>
             <td class="num col-cost" id="claude-cost">—</td>
             <td id="claude-failure"><span class="pill pill-pending">run scheduled</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agent-name">Skyvern 2.0</div>
+              <div class="agent-version">self-reported · WebVoyager</div>
+            </td>
+            <td class="num">85.85%</td>
+            <td class="num">—</td>
+            <td class="num col-time">—</td>
+            <td class="num col-cost">—</td>
+            <td><span class="pill pill-warn">diff. benchmark</span></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="agent-name">Surfer 2</div>
+              <div class="agent-version">self-reported · WebVoyager</div>
+            </td>
+            <td class="num">97.1%</td>
+            <td class="num">—</td>
+            <td class="num col-time">—</td>
+            <td class="num col-cost">—</td>
+            <td><span class="pill pill-warn">diff. benchmark</span></td>
           </tr>
           <tr>
             <td>
@@ -504,7 +530,7 @@ footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid 
       <div class="method-card">
         <div class="method-num">RULE 02</div>
         <div class="method-title">Fixed test persona</div>
-        <div class="method-body">Every run uses the same persona: <code>Test User</code>, <code>1234 Example St, San Francisco CA 94110</code>, DOB <code>1990-01-15</code>, phone <code>415-555-0100</code>, email <code>test@forms50.local</code>. Listed in full in the GitHub repo.</div>
+        <div class="method-body">Every run uses the same persona: <code>Test User</code>, <code>1234 Example St, San Francisco CA 94110</code>, DOB <code>1990-01-15</code>, phone <code>415-555-0100</code>, email <code>test@example.com</code>. Listed in full in the GitHub repo.</div>
       </div>
       <div class="method-card">
         <div class="method-num">RULE 03</div>
@@ -551,8 +577,9 @@ footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid 
       <h3>Built an agent? Submit a run.</h3>
       <p>Pick 1 form or all 10. Run your agent through the methodology above. Email the results — completion, accuracy, time, cost per form, plus failure mode tags. We'll publish your row on the leaderboard within 48 hours. Verified runs (observed live over screenshare) get a Verified badge.</p>
       <div class="cta-row">
-        <a href="mailto:submit@forms50.local?subject=Forms-50%20submission" class="btn">Email a submission</a>
+        <a href="https://github.com/Silicon-Valli/daily-build-portfolio/issues/new?title=Forms-50%20submission&labels=forms-50&body=Agent%20name%3A%0AVersion%3A%0AForms%20attempted%20%28IDs%29%3A%0ACompletion%20%25%3A%0AAccuracy%20%25%3A%0AAvg%20time%20%28s%29%3A%0AAvg%20cost%20%28%24%29%3A%0AFailure%20tags%3A%0ANotes%3A" target="_blank" class="btn">Submit via GitHub issue</a>
         <a href="https://github.com/Silicon-Valli/daily-build-portfolio" target="_blank" class="btn btn-ghost">View on GitHub →</a>
+        <a href="#" id="tweet-this" class="btn btn-ghost">Tweet the benchmark</a>
       </div>
     </div>
   </div>
@@ -560,7 +587,7 @@ footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid 
 
 <footer>
   <div class="container">
-    Forms-50 · v0.1 · A public benchmark · Open methodology
+    Forms-50 · v0.2 · A public benchmark · Open methodology
   </div>
 </footer>
 
@@ -772,6 +799,19 @@ function updateLeaderboard() {
 
 renderForms();
 updateLeaderboard();
+
+// Tweet-this — tied to Sora's Apr 26 shutdown news hook
+(function(){
+  const btn = document.getElementById('tweet-this');
+  if (!btn) return;
+  btn.addEventListener('click', function(e){
+    e.preventDefault();
+    const text = "Sora burned $15M/day and still dies on Apr 26.\n\nEvery AI agent demo works on curated forms. Nobody grades the real ones.\n\nForms-50 — a public benchmark on 50 production forms. Open methodology, one persona, five axes.\n\n";
+    const url = window.location.href.split('#')[0];
+    const share = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
+    window.open(share, '_blank', 'noopener');
+  });
+})();
 </script>
 
 </body>
