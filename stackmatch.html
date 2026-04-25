@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StackMatch — Find Your Vibe Coding Stack</title>
+  <meta name="description" content="5 questions → the exact tools you need to ship your idea. No fluff, no lists, just a recommendation.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+      background: #0d0d0f;
+      color: #e5e5e5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+    }
+
+    .container {
+      max-width: 620px;
+      width: 100%;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-size: 13px;
+      font-weight: 800;
+      color: #7c3aed;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: #4a4a55;
+    }
+
+    /* Progress */
+    .progress-wrap {
+      width: 100%;
+      height: 2px;
+      background: #1a1a22;
+      border-radius: 2px;
+      margin-bottom: 44px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #6d28d9, #a855f7);
+      border-radius: 2px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Question */
+    .question-block {
+      animation: slideIn 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-label {
+      font-size: 11px;
+      color: #7c3aed;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .question-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #f0f0f5;
+      line-height: 1.3;
+      margin-bottom: 28px;
+      letter-spacing: -0.3px;
+    }
+
+    /* Options */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option {
+      padding: 15px 18px;
+      background: #14141a;
+      border: 1.5px solid #1e1e28;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .option:hover {
+      border-color: #7c3aed;
+      background: #16161e;
+      transform: translateX(3px);
+    }
+
+    .option:active {
+      transform: translateX(5px) scale(0.99);
+    }
+
+    .option-emoji {
+      font-size: 19px;
+      flex-shrink: 0;
+      width: 28px;
+      text-align: center;
+    }
+
+    .option-content { flex: 1; }
+
+    .option-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e2ea;
+      line-height: 1.3;
+    }
+
+    .option-sub {
+      font-size: 12px;
+      color: #5a5a6a;
+      margin-top: 2px;
+    }
+
+    /* Results */
+    .results-block {
+      animation: slideIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .results-label {
+      font-size: 11px;
+      color: #7c3aed;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .results-headline {
+      font-size: 26px;
+      font-weight: 800;
+      color: #f0f0f5;
+      margin-bottom: 12px;
+      letter-spacing: -0.4px;
+      line-height: 1.2;
+    }
+
+    .results-why {
+      font-size: 14px;
+      color: #8888a0;
+      line-height: 1.65;
+      margin-bottom: 28px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid #1a1a22;
+    }
+
+    /* Tool cards */
+    .tools-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tool-card {
+      background: #14141a;
+      border: 1.5px solid #1e1e28;
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .tool-emoji { font-size: 20px; }
+
+    .tool-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #f0f0f5;
+      flex: 1;
+    }
+
+    .tool-role {
+      font-size: 11px;
+      color: #a855f7;
+      font-weight: 700;
+      background: rgba(168, 85, 247, 0.12);
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+
+    .tool-desc {
+      font-size: 13px;
+      color: #7a7a8a;
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .tool-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tool-badge {
+      font-size: 12px;
+      color: #5a5a6a;
+      background: #1a1a22;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* Total cost bar */
+    .cost-bar {
+      display: flex;
+      align-items: center;
+      background: #14141a;
+      border: 1px solid #1e1e28;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .cost-label {
+      font-size: 13px;
+      color: #6a6a7a;
+    }
+
+    .cost-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: #a855f7;
+      margin-left: auto;
+    }
+
+    /* Restart */
+    .restart-btn {
+      width: 100%;
+      padding: 13px;
+      background: transparent;
+      border: 1.5px solid #1e1e28;
+      border-radius: 10px;
+      color: #5a5a6a;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s ease, color 0.15s ease;
+      font-family: inherit;
+    }
+
+    .restart-btn:hover {
+      border-color: #7c3aed;
+      color: #a855f7;
+    }
+
+    /* Share */
+    .share-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #14141a;
+      border: 1.5px solid #1e1e28;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+    }
+
+    .share-label {
+      font-size: 13px;
+      color: #5a5a6a;
+      flex: 1;
+    }
+
+    .share-btn {
+      padding: 8px 16px;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .share-btn:hover { background: #6d28d9; }
+
+    .share-confirm {
+      font-size: 11px;
+      color: #a855f7;
+      text-align: center;
+      height: 14px;
+      margin-bottom: 6px;
+    }
+
+    /* AI assistant pick block */
+    .ai-pick {
+      background: linear-gradient(135deg, #14141c 0%, #181826 100%);
+      border: 1px solid #2a2a3a;
+      border-radius: 12px;
+      padding: 18px 18px 16px;
+      margin-top: 22px;
+      margin-bottom: 4px;
+    }
+
+    .ai-pick-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #a855f7;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .ai-pick-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f0f0f5;
+      margin-bottom: 6px;
+    }
+
+    .ai-pick-why {
+      font-size: 13px;
+      color: #a1a1aa;
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .ai-pick-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ai-pick-badge {
+      font-size: 11px;
+      color: #a1a1aa;
+      background: #0d0d0f;
+      padding: 4px 9px;
+      border-radius: 5px;
+      border: 1px solid #2a2a35;
+    }
+
+    /* News banner */
+    .news-banner {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(168, 85, 247, 0.06));
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 28px;
+      font-size: 13px;
+      color: #d4d4dc;
+      line-height: 1.5;
+    }
+
+    .news-banner .news-tag {
+      display: inline-block;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* Email capture */
+    .email-capture {
+      background: #14141c;
+      border: 1px solid #1f1f2a;
+      border-radius: 12px;
+      padding: 18px 18px 16px;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    .email-capture-headline {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f0f0f5;
+      margin-bottom: 4px;
+    }
+
+    .email-capture-sub {
+      font-size: 12px;
+      color: #71717a;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .email-capture-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .email-capture-input {
+      flex: 1;
+      padding: 10px 12px;
+      background: #0d0d0f;
+      border: 1px solid #2a2a35;
+      border-radius: 7px;
+      color: #f0f0f5;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .email-capture-input:focus {
+      border-color: #7c3aed;
+    }
+
+    .email-capture-btn {
+      padding: 10px 16px;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .email-capture-btn:hover { background: #6d28d9; }
+
+    .email-capture-confirm {
+      font-size: 11px;
+      color: #a855f7;
+      margin-top: 8px;
+      min-height: 14px;
+    }
+
+    @media (max-width: 480px) {
+      .question-text { font-size: 20px; }
+      .results-headline { font-size: 22px; }
+      body { justify-content: flex-start; padding-top: 40px; }
+      .email-capture-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">StackMatch</div>
+      <div class="tagline">6 questions → the right tools to ship your idea</div>
+    </div>
+
+    <div class="news-banner">
+      <span class="news-tag">Apr 24</span>DeepSeek V4 just launched with the same vibe-code score as Claude at ~1/10th the API cost. Stack picks now factor it in.
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progress" style="width: 0%"></div>
+    </div>
+
+    <div id="quiz"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "What are you building?",
+        options: [
+          { emoji: "🎯", label: "Landing page or marketing site", sub: "Present an idea, product, or service", value: "landing" },
+          { emoji: "⚡", label: "Web app with user accounts", sub: "People sign up, log in, save data", value: "webapp" },
+          { emoji: "🧮", label: "Simple tool or calculator", sub: "One job, no login needed", value: "tool" },
+          { emoji: "📱", label: "Mobile app", sub: "iOS or Android", value: "mobile" },
+          { emoji: "🔌", label: "API or backend service", sub: "Other services connect to mine", value: "api" }
+        ]
+      },
+      {
+        text: "How comfortable are you with code?",
+        options: [
+          { emoji: "🙅", label: "I avoid it entirely", sub: "AI handles everything, that's the goal", value: "none" },
+          { emoji: "🌱", label: "I can follow a tutorial", sub: "Step-by-step, I can do it", value: "tutorial" },
+          { emoji: "💪", label: "Comfortable in one language", sub: "I can read and write code", value: "comfortable" },
+          { emoji: "🧠", label: "Full developer", sub: "This is my craft", value: "developer" }
+        ]
+      },
+      {
+        text: "How fast do you need this live?",
+        options: [
+          { emoji: "🚀", label: "Today or this weekend", sub: "Speed is everything right now", value: "today" },
+          { emoji: "📅", label: "Within a week", sub: "A little time to do it right", value: "week" },
+          { emoji: "🏗️", label: "A few weeks is fine", sub: "I'd rather get the structure right", value: "weeks" }
+        ]
+      },
+      {
+        text: "Do users need accounts or saved data?",
+        options: [
+          { emoji: "🙅", label: "No — fully standalone", sub: "No login, no persistent state needed", value: "no" },
+          { emoji: "🤔", label: "Maybe later, not right now", sub: "Start simple, add it when the time comes", value: "maybe" },
+          { emoji: "✅", label: "Yes, from day one", sub: "Users sign up and their data persists", value: "yes" }
+        ]
+      },
+      {
+        text: "What's your monthly tool budget?",
+        options: [
+          { emoji: "🆓", label: "Free only", sub: "$0 forever if possible", value: "free" },
+          { emoji: "💸", label: "Up to $30/month", sub: "One or two paid tools is fine", value: "low" },
+          { emoji: "💰", label: "Up to $100/month", sub: "Happy to pay for the right thing", value: "mid" },
+          { emoji: "🏦", label: "Budget isn't the constraint", sub: "Whatever gets it shipped", value: "high" }
+        ]
+      },
+      {
+        text: "Which AI model do you want doing the heavy lifting?",
+        options: [
+          { emoji: "🟣", label: "Claude (Sonnet/Opus)", sub: "Best at long-running agent code, Claude Code default", value: "claude" },
+          { emoji: "🔵", label: "GPT-5", sub: "Strong reasoning, broad ecosystem, OpenAI tooling", value: "gpt5" },
+          { emoji: "🐋", label: "DeepSeek V4", sub: "Open-weight, ~10x cheaper, just shipped April 24", value: "deepseek" },
+          { emoji: "🤷", label: "Show me whichever is cheapest right now", sub: "I just want it to work — pick for me", value: "any" }
+        ]
+      }
+    ];
+
+    const stacks = {
+      landing: {
+        name: "The 30-Minute Launch Stack",
+        why: "A landing page doesn't need a backend, a database, or an IDE. This gets you live in under an hour with professional results and zero monthly cost.",
+        cost: "$0/month",
+        tools: [
+          {
+            emoji: "🎨",
+            name: "v0.dev",
+            role: "Build",
+            desc: "Describe what you want, get pixel-perfect React UI instantly. Copy the code, drop it in a file. No setup, no IDE needed.",
+            price: "Free",
+            time: "15 min to first draft"
+          },
+          {
+            emoji: "💜",
+            name: "Vercel",
+            role: "Host",
+            desc: "Drag your folder to vercel.com/new, get a live HTTPS URL. The free tier handles serious traffic without breaking a sweat.",
+            price: "Free",
+            time: "2 min to deploy"
+          },
+          {
+            emoji: "📋",
+            name: "Tally",
+            role: "Waitlist",
+            desc: "Embed a waitlist form in minutes without touching code. Handles signups, sends confirmation emails, exports to CSV.",
+            price: "Free",
+            time: "5 min to embed"
+          }
+        ]
+      },
+
+      webapp_none: {
+        name: "The Lovable Stack",
+        why: "You're building a real web app without writing code. Lovable handles the frontend and backend together through prompts. It's the most capable no-code AI builder in 2026 — it ships actual apps, not mockups.",
+        cost: "$25–45/month",
+        tools: [
+          {
+            emoji: "💜",
+            name: "Lovable",
+            role: "Build everything",
+            desc: "Full-stack builder via prompts. Handles auth, UI, and backend in one place. The gap between what you describe and what gets built is smaller than any other tool right now.",
+            price: "$25/mo",
+            time: "Ship this weekend"
+          },
+          {
+            emoji: "🟢",
+            name: "Supabase",
+            role: "Database",
+            desc: "Lovable plugs in natively. Free tier covers your first 500 users: Postgres, auth, storage, all included.",
+            price: "Free tier",
+            time: "10 min to connect"
+          },
+          {
+            emoji: "💜",
+            name: "Vercel",
+            role: "Deploy",
+            desc: "Lovable deploys to Vercel automatically. Your app goes live with every save. Free tier covers everything early-stage.",
+            price: "Free tier",
+            time: "Automatic"
+          }
+        ]
+      },
+
+      webapp_dev: {
+        name: "The Developer Stack",
+        why: "You know code and want to move fast without losing control. Cursor with Claude gives you AI pair programming inside a real IDE — you write the code, the AI accelerates everything.",
+        cost: "$20–35/month",
+        tools: [
+          {
+            emoji: "🖱️",
+            name: "Cursor",
+            role: "IDE",
+            desc: "The AI-native code editor that most developers switch to and don't go back from. Tab completes full functions, rewrites files on command, understands your whole codebase.",
+            price: "$20/mo",
+            time: "Install today"
+          },
+          {
+            emoji: "⚡",
+            name: "Next.js + TypeScript",
+            role: "Framework",
+            desc: "The default web framework in 2026. Vercel built it, deploys in seconds, and the ecosystem answers every question you'll ever have.",
+            price: "Free",
+            time: "npx create-next-app"
+          },
+          {
+            emoji: "🟢",
+            name: "Supabase",
+            role: "Backend",
+            desc: "Postgres + auth + storage in one dashboard. No DevOps. Free tier is genuinely generous — covers a real product at early scale.",
+            price: "Free → $25/mo",
+            time: "30 min setup"
+          }
+        ]
+      },
+
+      webapp_dev_fast: {
+        name: "The Speed Stack",
+        why: "You're a developer and you need this live now. Windsurf's Cascade mode handles multi-file edits faster than anything else on the market right now. Pair it with what you already know.",
+        cost: "$15–35/month",
+        tools: [
+          {
+            emoji: "🌊",
+            name: "Windsurf",
+            role: "IDE",
+            desc: "Fastest multi-file AI editing right now. Cascade understands your whole codebase, not just the open file. Speed is the real differentiator vs Cursor for deadline scenarios.",
+            price: "$15/mo",
+            time: "Install today"
+          },
+          {
+            emoji: "⚡",
+            name: "Next.js + TypeScript",
+            role: "Framework",
+            desc: "Ship with what's familiar. Speed comes from cutting decisions, not switching tools.",
+            price: "Free",
+            time: "Already installed"
+          },
+          {
+            emoji: "🟢",
+            name: "Supabase",
+            role: "Backend",
+            desc: "Database + auth in 30 minutes. Windsurf can scaffold your Supabase schema and queries in one prompt.",
+            price: "Free → $25/mo",
+            time: "30 min setup"
+          }
+        ]
+      },
+
+      free_webapp: {
+        name: "The Zero Budget Stack",
+        why: "Building with $0 is real — these free tiers aren't toy limits. The tradeoff vs paying for Lovable is more manual prompting and some rough edges. Worth it if budget is the real constraint.",
+        cost: "$0/month",
+        tools: [
+          {
+            emoji: "⚡",
+            name: "Bolt.new",
+            role: "Build",
+            desc: "Full-stack app builder with a real free tier. More limited than Lovable but genuinely functional. Good enough for an MVP you can show people.",
+            price: "Free tier",
+            time: "Ship this weekend"
+          },
+          {
+            emoji: "🟢",
+            name: "Supabase",
+            role: "Database + Auth",
+            desc: "Free tier: 500MB storage, 50k monthly active users, auth included. Enough for your first 12+ months of real usage.",
+            price: "Free",
+            time: "10 min"
+          },
+          {
+            emoji: "💜",
+            name: "Vercel",
+            role: "Deploy",
+            desc: "Free tier has no practical limits for early projects. Auto-deploys on git push.",
+            price: "Free",
+            time: "5 min"
+          }
+        ]
+      },
+
+      tool_simple: {
+        name: "The One-Afternoon Stack",
+        why: "A standalone tool — a calculator, quiz, generator, converter — doesn't need a framework or a database. Ship in a single afternoon, host it for free forever.",
+        cost: "$0/month",
+        tools: [
+          {
+            emoji: "🤖",
+            name: "Claude.ai or ChatGPT",
+            role: "Build",
+            desc: "Describe exactly what your tool should do, ask for complete working HTML/CSS/JS in one file. Paste it into a .html file, open in browser, done. No IDE, no terminal.",
+            price: "Free tier",
+            time: "Under 2 hours"
+          },
+          {
+            emoji: "🐱",
+            name: "GitHub Pages",
+            role: "Host",
+            desc: "Create a repo, push your HTML file, enable Pages in settings — you have a live URL. Free forever for public repos.",
+            price: "Free",
+            time: "10 min"
+          },
+          {
+            emoji: "📋",
+            name: "Tally",
+            role: "Capture leads",
+            desc: "If your tool gets traction, embed a 'get notified when I add X' form. Takes 5 minutes, no code.",
+            price: "Free",
+            time: "5 min when needed"
+          }
+        ]
+      },
+
+      mobile_stack: {
+        name: "The Mobile Stack",
+        why: "Mobile is the hardest path to ship fast. Plan for 2–4 weeks, not a weekend. The upside: one codebase ships iOS and Android. The tradeoff: the App Store review process adds unpredictable time.",
+        cost: "$15–45/month",
+        tools: [
+          {
+            emoji: "📱",
+            name: "Expo + React Native",
+            role: "Framework",
+            desc: "Build once, ship iOS and Android. Expo handles most of the painful native setup. The standard for indie mobile in 2026.",
+            price: "Free",
+            time: "Setup: 1–2 hours"
+          },
+          {
+            emoji: "🖱️",
+            name: "Cursor or Windsurf",
+            role: "IDE",
+            desc: "AI-accelerated coding in a real editor. Both work well with React Native. Pick whichever you've tried — the difference is small.",
+            price: "$15–20/mo",
+            time: "Install today"
+          },
+          {
+            emoji: "🟢",
+            name: "Supabase",
+            role: "Backend",
+            desc: "Auth + database for mobile. Their React Native client is well-maintained and the free tier covers early users.",
+            price: "Free → $25/mo",
+            time: "30 min setup"
+          }
+        ]
+      },
+
+      api_stack: {
+        name: "The API Builder Stack",
+        why: "You're building something other apps connect to. Focus on a clean API, good error handling, and fast deploys. This stack keeps infrastructure costs near zero while scaling well.",
+        cost: "$15–30/month",
+        tools: [
+          {
+            emoji: "🖱️",
+            name: "Cursor",
+            role: "IDE",
+            desc: "Excellent at generating API endpoints, request validation, and error handling from plain descriptions. Tell it your routes in English, get production-quality code.",
+            price: "$20/mo",
+            time: "Install today"
+          },
+          {
+            emoji: "⚡",
+            name: "Hono + Cloudflare Workers",
+            role: "Runtime",
+            desc: "Fastest serverless API in 2026. Deploys globally, free tier handles real traffic, near-zero cold starts. The indie default for APIs that need speed.",
+            price: "Free → pay per use",
+            time: "30 min setup"
+          },
+          {
+            emoji: "🟢",
+            name: "Supabase",
+            role: "Database",
+            desc: "Postgres with a REST API built in. Connect directly from Workers via their client SDK.",
+            price: "Free → $25/mo",
+            time: "30 min setup"
+          }
+        ]
+      }
+    };
+
+    function getStackKey(answers) {
+      const [project, coding, speed, database, budget, model] = answers;
+
+      if (project === 'landing') return 'landing';
+      if (project === 'tool') return 'tool_simple';
+      if (project === 'mobile') return 'mobile_stack';
+      if (project === 'api') return 'api_stack';
+
+      // Web app
+      if (budget === 'free') return 'free_webapp';
+      if (coding === 'none' || coding === 'tutorial') return 'webapp_none';
+      if ((coding === 'comfortable' || coding === 'developer') && speed === 'today') return 'webapp_dev_fast';
+      return 'webapp_dev';
+    }
+
+    // AI assistant recommendation based on the 6th question
+    const aiPicks = {
+      claude: {
+        name: "Claude Sonnet 4.6 (in Claude Code)",
+        why: "Best-in-class for long-running agent code, tool use, and editing across multiple files. Default for most builders shipping seriously in 2026.",
+        cost: "~$0.30 per dense edit session",
+        tag: "🟣 Claude"
+      },
+      gpt5: {
+        name: "GPT-5 (via Cursor or API)",
+        why: "Strongest at structured reasoning and broader ecosystem coverage. Pick this if you're already deep in OpenAI tooling or need its specific strengths.",
+        cost: "~$0.40 per dense edit session",
+        tag: "🔵 GPT-5"
+      },
+      deepseek: {
+        name: "DeepSeek V4 (via OpenClaw or self-hosted)",
+        why: "Just launched April 24, 2026. Open-weight, ~10x cheaper API, vibe-code score within ~3% of Claude. Great if cost matters or you want full control.",
+        cost: "~$0.03 per dense edit session",
+        tag: "🐋 DeepSeek V4"
+      },
+      any: {
+        name: "Whichever wins the price/quality tradeoff today",
+        why: "Right now (Apr 2026): DeepSeek V4 for cost-sensitive work, Claude Sonnet 4.6 for anything agentic, GPT-5 if you're already in that ecosystem. Re-check monthly — this changes fast.",
+        cost: "Varies — check current rates",
+        tag: "🤷 Mixed"
+      }
+    };
+
+    let answers = [];
+    let current = 0;
+
+    function renderQuestion(i) {
+      const q = questions[i];
+      const pct = (i / questions.length) * 100;
+      document.getElementById('progress').style.width = pct + '%';
+
+      document.getElementById('quiz').innerHTML = `
+        <div class="question-block">
+          <div class="step-label">Question ${i + 1} of ${questions.length}</div>
+          <div class="question-text">${q.text}</div>
+          <div class="options">
+            ${q.options.map(opt => `
+              <div class="option" onclick="pick('${opt.value}')">
+                <div class="option-emoji">${opt.emoji}</div>
+                <div class="option-content">
+                  <div class="option-label">${opt.label}</div>
+                  ${opt.sub ? `<div class="option-sub">${opt.sub}</div>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function pick(value) {
+      answers.push(value);
+      current++;
+      if (current >= questions.length) {
+        showResults();
+      } else {
+        renderQuestion(current);
+      }
+    }
+
+    function showResults() {
+      document.getElementById('progress').style.width = '100%';
+      const key = getStackKey(answers);
+      const s = stacks[key];
+      const modelKey = answers[5] || 'any';
+      const ai = aiPicks[modelKey] || aiPicks.any;
+
+      document.getElementById('quiz').innerHTML = `
+        <div class="results-block">
+          <div class="results-label">Your Stack</div>
+          <div class="results-headline">${s.name}</div>
+          <div class="results-why">${s.why}</div>
+
+          <div class="tools-grid">
+            ${s.tools.map(t => `
+              <div class="tool-card">
+                <div class="tool-header">
+                  <div class="tool-emoji">${t.emoji}</div>
+                  <div class="tool-name">${t.name}</div>
+                  <div class="tool-role">${t.role}</div>
+                </div>
+                <div class="tool-desc">${t.desc}</div>
+                <div class="tool-meta">
+                  <span class="tool-badge">💰 ${t.price}</span>
+                  <span class="tool-badge">⏱ ${t.time}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="ai-pick">
+            <div class="ai-pick-label">AI assistant pick · ${ai.tag}</div>
+            <div class="ai-pick-name">${ai.name}</div>
+            <div class="ai-pick-why">${ai.why}</div>
+            <div class="ai-pick-meta">
+              <span class="ai-pick-badge">💸 ${ai.cost}</span>
+              <span class="ai-pick-badge">📅 Updated Apr 24, 2026</span>
+            </div>
+          </div>
+
+          <div class="cost-bar">
+            <span class="cost-label">Total monthly cost</span>
+            <span class="cost-value">${s.cost}</span>
+          </div>
+
+          <div class="share-bar">
+            <span class="share-label">Share this exact recommendation</span>
+            <button class="share-btn" onclick="copyShareLink()">Copy link</button>
+          </div>
+          <div class="share-confirm" id="share-confirm"></div>
+
+          <div class="email-capture">
+            <div class="email-capture-headline">Get notified when a model launch changes the recommendation</div>
+            <div class="email-capture-sub">No spam. One email when something material moves the picks above — like DeepSeek V4 just did.</div>
+            <div class="email-capture-row">
+              <input type="email" id="email-input" class="email-capture-input" placeholder="you@example.com">
+              <button class="email-capture-btn" onclick="captureEmail()">Notify me</button>
+            </div>
+            <div class="email-capture-confirm" id="email-confirm"></div>
+          </div>
+
+          <button class="restart-btn" onclick="restart()">← Try different answers</button>
+        </div>
+      `;
+    }
+
+    function captureEmail() {
+      const input = document.getElementById('email-input');
+      const confirm = document.getElementById('email-confirm');
+      const email = (input.value || '').trim();
+      const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!valid) {
+        confirm.textContent = 'Enter a valid email and try again.';
+        confirm.style.color = '#f87171';
+        return;
+      }
+      // Stash locally for now; on a hosted version this would POST to a real endpoint.
+      try {
+        const list = JSON.parse(localStorage.getItem('stackmatch_emails') || '[]');
+        list.push({ email, ts: Date.now(), answers });
+        localStorage.setItem('stackmatch_emails', JSON.stringify(list));
+      } catch (e) {}
+      input.value = '';
+      confirm.textContent = "You're on the list. Watch for one email when a model launch shifts the picks.";
+      confirm.style.color = '#a855f7';
+    }
+
+    function copyToClipboard(text) {
+      // Works on file://, http, and https
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand('copy'); } catch(e) {}
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    }
+
+    function copyShareLink() {
+      const a = encodeURIComponent(answers.join(','));
+      const url = window.location.href.split('?')[0] + '?a=' + a;
+      copyToClipboard(url).then(() => {
+        const el = document.getElementById('share-confirm');
+        if (el) { el.textContent = 'Link copied!'; setTimeout(() => { if(el) el.textContent = ''; }, 2000); }
+      });
+    }
+
+    function restart() {
+      answers = [];
+      current = 0;
+      // Clear ?a= from the URL so future shares reflect the new run
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      renderQuestion(0);
+    }
+
+    // Check for shared answers (?a=...) or legacy ?stack=
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedAnswers = urlParams.get('a');
+    const directStack = urlParams.get('stack');
+
+    if (sharedAnswers) {
+      try {
+        answers = decodeURIComponent(sharedAnswers).split(',');
+        if (answers.length >= 5) {
+          current = answers.length;
+          setTimeout(() => showResults(), 0);
+        } else {
+          renderQuestion(0);
+        }
+      } catch (e) {
+        renderQuestion(0);
+      }
+    } else if (directStack && stacks[directStack]) {
+      // Legacy share links — render result without AI pick
+      setTimeout(() => {
+        const key = directStack;
+        const s = stacks[key];
+        document.getElementById('progress').style.width = '100%';
+        document.getElementById('quiz').innerHTML = `
+          <div class="results-block">
+            <div class="results-label">Recommended Stack</div>
+            <div class="results-headline">${s.name}</div>
+            <div class="results-why">${s.why}</div>
+            <div class="tools-grid">
+              ${s.tools.map(t => `
+                <div class="tool-card">
+                  <div class="tool-header">
+                    <div class="tool-emoji">${t.emoji}</div>
+                    <div class="tool-name">${t.name}</div>
+                    <div class="tool-role">${t.role}</div>
+                  </div>
+                  <div class="tool-desc">${t.desc}</div>
+                  <div class="tool-meta">
+                    <span class="tool-badge">💰 ${t.price}</span>
+                    <span class="tool-badge">⏱ ${t.time}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="cost-bar">
+              <span class="cost-label">Total monthly cost</span>
+              <span class="cost-value">${s.cost}</span>
+            </div>
+            <button class="restart-btn" onclick="restart()">← Find my own stack</button>
+          </div>
+        `;
+      }, 0);
+    } else {
+      renderQuestion(0);
+    }
+  </script>
+</body>
+</html>

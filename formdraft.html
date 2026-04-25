@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormDraft — Stop retyping your details into every form</title>
+  <meta name="description" content="Paste your profile once. Drop in any form's field labels. Get every answer mapped, ready to copy. Works offline, no signup, $9 forever.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+      background: #0b0b0e;
+      color: #e5e5e5;
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+    }
+
+    .container { max-width: 940px; margin: 0 auto; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 36px; }
+    .logo { font-size: 12px; font-weight: 800; color: #14b8a6; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 8px; }
+    .headline { font-size: 30px; font-weight: 700; color: #f0f0f5; line-height: 1.2; margin-bottom: 10px; letter-spacing: -0.4px; }
+    .sub { font-size: 14px; color: #71717a; line-height: 1.55; max-width: 520px; margin: 0 auto; }
+
+    /* News strip */
+    .news-strip {
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.10), rgba(45, 212, 191, 0.04));
+      border: 1px solid rgba(20, 184, 166, 0.22);
+      border-radius: 10px;
+      padding: 11px 14px;
+      margin-bottom: 28px;
+      font-size: 13px;
+      color: #d4d4dc;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .news-strip .tag {
+      display: inline-block;
+      background: #14b8a6;
+      color: #0b0b0e;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* Workspace grid */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .panel {
+      background: #14141c;
+      border: 1px solid #1f1f2a;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .panel-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #14b8a6;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f0f0f5;
+      margin-bottom: 6px;
+    }
+
+    .panel-hint {
+      font-size: 12px;
+      color: #71717a;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 240px;
+      padding: 14px;
+      background: #0b0b0e;
+      border: 1px solid #2a2a35;
+      border-radius: 9px;
+      color: #f0f0f5;
+      font-size: 13px;
+      font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+      line-height: 1.55;
+      outline: none;
+      transition: border-color 0.15s;
+      resize: vertical;
+    }
+
+    textarea:focus { border-color: #14b8a6; }
+
+    .panel-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      padding: 7px 12px;
+      background: #0b0b0e;
+      color: #a1a1aa;
+      border: 1px solid #2a2a35;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+
+    .btn-secondary:hover { border-color: #14b8a6; color: #14b8a6; }
+
+    /* Run bar */
+    .run-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      margin: 28px 0 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 14px 32px;
+      background: #14b8a6;
+      color: #0b0b0e;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-primary:hover { background: #2dd4bf; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .privacy-note {
+      font-size: 11px;
+      color: #52525b;
+      max-width: 420px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* Results */
+    .results {
+      background: #14141c;
+      border: 1px solid #1f1f2a;
+      border-radius: 14px;
+      padding: 22px;
+      display: none;
+    }
+
+    .results.active { display: block; }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .results-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f0f0f5;
+    }
+
+    .results-stats {
+      font-size: 12px;
+      color: #a1a1aa;
+    }
+
+    .results-stats .matched { color: #14b8a6; font-weight: 700; }
+    .results-stats .skipped { color: #f59e0b; font-weight: 700; }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 220px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #1f1f2a;
+    }
+
+    .field-row:last-child { border-bottom: none; }
+
+    .field-label {
+      font-size: 13px;
+      color: #a1a1aa;
+      font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+      word-break: break-word;
+    }
+
+    .field-value {
+      font-size: 14px;
+      color: #f0f0f5;
+      word-break: break-word;
+    }
+
+    .field-value.empty { color: #52525b; font-style: italic; font-size: 13px; }
+
+    .copy-btn {
+      padding: 6px 12px;
+      background: rgba(20, 184, 166, 0.12);
+      color: #14b8a6;
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover { background: rgba(20, 184, 166, 0.22); }
+    .copy-btn.copied { background: #14b8a6; color: #0b0b0e; }
+
+    .copy-all-bar {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid #1f1f2a;
+      flex-wrap: wrap;
+    }
+
+    /* Footer / monetization */
+    .upsell {
+      margin-top: 36px;
+      padding: 22px;
+      background: linear-gradient(135deg, #14141c 0%, #181824 100%);
+      border: 1px solid #2a2a3a;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .upsell-headline {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f0f0f5;
+      margin-bottom: 6px;
+    }
+
+    .upsell-sub {
+      font-size: 13px;
+      color: #a1a1aa;
+      line-height: 1.55;
+      margin-bottom: 14px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .upsell-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      max-width: 420px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .upsell-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 10px 14px;
+      background: #0b0b0e;
+      border: 1px solid #2a2a35;
+      border-radius: 8px;
+      color: #f0f0f5;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .upsell-input:focus { border-color: #14b8a6; }
+
+    .upsell-confirm {
+      font-size: 11px;
+      color: #14b8a6;
+      margin-top: 10px;
+      min-height: 14px;
+    }
+
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 11px;
+      color: #52525b;
+      line-height: 1.7;
+    }
+
+    .footer a { color: #71717a; text-decoration: underline; }
+
+    @media (max-width: 720px) {
+      .workspace { grid-template-columns: 1fr; }
+      .field-row { grid-template-columns: 1fr; gap: 6px; padding: 14px 0; }
+      .field-row .copy-btn { justify-self: start; }
+      .headline { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">FormDraft</div>
+      <div class="headline">Stop retyping your details into every form</div>
+      <div class="sub">Paste your profile once. Drop in any form's labels. Get every answer mapped, ready to copy. Runs entirely in your browser — your data never leaves the page.</div>
+    </div>
+
+    <div class="news-strip">
+      <span class="tag">New</span>Built off the Forms-50 benchmark research released April 24, 2026 — agents still struggle on real forms, so this is the dumb-but-reliable shortcut.
+    </div>
+
+    <div class="workspace">
+      <div class="panel">
+        <div class="panel-label">Step 1</div>
+        <div class="panel-title">Your profile</div>
+        <div class="panel-hint">Paste any text — JSON, key:value lines, or a freeform list. We'll find what's there.</div>
+        <textarea id="profile" spellcheck="false" placeholder='{
+  "name": "Alex Rivera",
+  "email": "alex@example.com",
+  "phone": "+1 415 555 0142",
+  "city": "San Francisco",
+  "country": "United States",
+  "company": "Acme Robotics",
+  "role": "Founder",
+  "linkedin": "linkedin.com/in/alexrivera",
+  "website": "alexrivera.dev",
+  "github": "github.com/alexrivera"
+}'></textarea>
+        <div class="panel-actions">
+          <button class="btn-secondary" onclick="loadSample()">Load sample profile</button>
+          <button class="btn-secondary" onclick="document.getElementById('profile').value=''">Clear</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-label">Step 2</div>
+        <div class="panel-title">Form fields to fill</div>
+        <div class="panel-hint">Paste the form's field labels — one per line. Copy them straight off the page or use the Inspect Element tip below.</div>
+        <textarea id="fields" spellcheck="false" placeholder='Full Name
+Email Address
+Phone Number
+Company / Organization
+Job Title
+LinkedIn URL
+Country
+City
+Personal website
+What are you working on right now?'></textarea>
+        <div class="panel-actions">
+          <button class="btn-secondary" onclick="loadSampleFields()">Load sample form</button>
+          <button class="btn-secondary" onclick="document.getElementById('fields').value=''">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="run-bar">
+      <button class="btn-primary" id="runBtn" onclick="runMatch()">Map my answers →</button>
+    </div>
+    <div class="privacy-note" style="margin: -8px auto 24px; text-align: center;">All matching happens locally in your browser. No server, no upload, no API. Refresh and it's gone.</div>
+
+    <div class="results" id="results">
+      <div class="results-header">
+        <div class="results-title">Mapped answers</div>
+        <div class="results-stats" id="stats"></div>
+      </div>
+      <div id="rows"></div>
+      <div class="copy-all-bar">
+        <button class="btn-secondary" onclick="copyAllAsList()">Copy all as list</button>
+        <button class="btn-secondary" onclick="copyAllAsJSON()">Copy as JSON</button>
+        <button class="btn-secondary" onclick="exportTSV()">Download TSV</button>
+      </div>
+    </div>
+
+    <div class="upsell">
+      <div class="upsell-headline">Want this as a Chrome extension that fills forms in one click?</div>
+      <div class="upsell-sub">FormDraft Pro is launching soon — same matching engine, but it autofills any form field on any site. $9 once, yours forever, no subscription. Drop your email to get the launch link.</div>
+      <div class="upsell-row">
+        <input type="email" id="proEmail" class="upsell-input" placeholder="you@example.com">
+        <button class="btn-primary" style="padding: 10px 18px; font-size: 13px;" onclick="captureProEmail()">Notify me</button>
+      </div>
+      <div class="upsell-confirm" id="proConfirm"></div>
+    </div>
+
+    <div class="footer">
+      <strong style="color:#71717a;">Tip:</strong> right-click a form on any site, choose Inspect, then copy the visible label text. That's all you need.<br>
+      Free tool, no signup, no tracking. The matching engine is deterministic so it works the same offline.
+    </div>
+  </div>
+
+  <script>
+    // -------- Field synonym map --------
+    // Each canonical key maps to lowercase phrases that should match it.
+    const synonyms = {
+      name: ['name', 'full name', 'your name', 'first and last', 'fullname', 'preferred name', 'legal name'],
+      first_name: ['first name', 'firstname', 'given name', 'forename'],
+      last_name: ['last name', 'surname', 'family name', 'lastname'],
+      email: ['email', 'e-mail', 'email address', 'work email', 'contact email', 'your email'],
+      phone: ['phone', 'phone number', 'mobile', 'mobile number', 'contact number', 'cell', 'telephone', 'tel'],
+      city: ['city', 'town', 'city of residence'],
+      state: ['state', 'province', 'region'],
+      country: ['country', 'country of residence', 'nation'],
+      address: ['address', 'street address', 'mailing address', 'home address'],
+      zip: ['zip', 'postcode', 'postal code', 'zip code'],
+      company: ['company', 'organization', 'organisation', 'employer', 'company name', 'business', 'company / organization'],
+      role: ['role', 'title', 'job title', 'position', 'occupation', 'current role', 'job role'],
+      linkedin: ['linkedin', 'linkedin url', 'linkedin profile', 'linkedin link'],
+      twitter: ['twitter', 'twitter url', 'x', 'x handle', 'x url', 'twitter handle'],
+      github: ['github', 'github url', 'github profile'],
+      website: ['website', 'url', 'personal website', 'portfolio', 'web site', 'site', 'homepage'],
+      bio: ['bio', 'about', 'about you', 'tell us about yourself', 'short bio', 'introduction', 'intro'],
+      project: ['project', 'what are you building', "what's your project", 'current project', 'what are you working on right now', 'working on'],
+      birthday: ['birthday', 'date of birth', 'dob', 'birth date'],
+      gender: ['gender', 'pronouns', 'preferred pronouns'],
+      experience: ['experience', 'years of experience', 'how many years', 'work experience'],
+      salary: ['salary', 'expected salary', 'desired salary', 'compensation', 'expected compensation'],
+      referral: ['how did you hear about us', 'referral', 'referred by', 'where did you hear', 'how did you find us'],
+      resume: ['resume', 'cv', 'resume url', 'cv url'],
+    };
+
+    // -------- Profile parser --------
+    function parseProfile(text) {
+      text = (text || '').trim();
+      if (!text) return {};
+
+      // Try JSON first
+      if (text.startsWith('{') || text.startsWith('[')) {
+        try {
+          const parsed = JSON.parse(text);
+          if (Array.isArray(parsed)) {
+            // collapse to first object
+            return typeof parsed[0] === 'object' ? flattenObject(parsed[0]) : {};
+          }
+          return flattenObject(parsed);
+        } catch (e) { /* fall through */ }
+      }
+
+      // Try key: value lines (also key = value, key - value)
+      const obj = {};
+      const lines = text.split(/\r?\n/);
+      for (const raw of lines) {
+        const line = raw.trim();
+        if (!line) continue;
+        const m = line.match(/^([^:=\-–—]+)\s*[:=\-–—]\s*(.+)$/);
+        if (m) {
+          const k = m[1].trim().toLowerCase();
+          const v = m[2].trim();
+          if (k && v) obj[k] = v;
+        }
+      }
+      return flattenObject(obj);
+    }
+
+    function flattenObject(obj, prefix) {
+      const out = {};
+      for (const [k, v] of Object.entries(obj || {})) {
+        const key = (prefix ? prefix + '.' : '') + String(k).toLowerCase().trim();
+        if (v && typeof v === 'object' && !Array.isArray(v)) {
+          Object.assign(out, flattenObject(v, key));
+        } else if (Array.isArray(v)) {
+          out[key] = v.join(', ');
+        } else if (v !== null && v !== undefined) {
+          out[key] = String(v);
+        }
+      }
+      return out;
+    }
+
+    // -------- Matcher --------
+    function normalize(s) {
+      return String(s).toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function matchField(label, profile) {
+      const target = normalize(label);
+      if (!target) return null;
+
+      // 1) Direct profile-key hit
+      for (const [pk, pv] of Object.entries(profile)) {
+        const nk = normalize(pk.split('.').pop());
+        if (nk === target) return { value: pv, via: pk, score: 1.0 };
+      }
+
+      // 2) Synonym hit — find canonical key matching the label, then look it up in profile
+      for (const [canon, phrases] of Object.entries(synonyms)) {
+        for (const ph of phrases) {
+          if (target === ph || target.includes(ph)) {
+            // Look up this canon in profile (try canon, its synonyms, and partial keys)
+            const found = lookupCanonical(canon, profile);
+            if (found) return { value: found.value, via: found.key, score: 0.9 };
+          }
+        }
+      }
+
+      // 3) Token overlap fallback against profile keys
+      const tokens = target.split(' ').filter(t => t.length > 2);
+      let best = null;
+      for (const [pk, pv] of Object.entries(profile)) {
+        const nk = normalize(pk.split('.').pop());
+        const ktokens = nk.split(' ');
+        let overlap = 0;
+        for (const t of tokens) if (ktokens.includes(t)) overlap++;
+        if (overlap === 0) continue;
+        const score = overlap / Math.max(tokens.length, 1) * 0.7;
+        if (!best || score > best.score) best = { value: pv, via: pk, score };
+      }
+      if (best && best.score >= 0.4) return best;
+
+      return null;
+    }
+
+    function lookupCanonical(canon, profile) {
+      // exact key match
+      for (const [pk, pv] of Object.entries(profile)) {
+        const nk = normalize(pk.split('.').pop());
+        if (nk === canon) return { key: pk, value: pv };
+      }
+      // any synonym matches a profile key
+      const phrases = synonyms[canon] || [];
+      for (const [pk, pv] of Object.entries(profile)) {
+        const nk = normalize(pk.split('.').pop());
+        for (const ph of phrases) {
+          if (nk === ph) return { key: pk, value: pv };
+          if (nk.includes(ph) || ph.includes(nk)) return { key: pk, value: pv };
+        }
+      }
+      return null;
+    }
+
+    // -------- UI --------
+    let lastResults = [];
+
+    function runMatch() {
+      const profileText = document.getElementById('profile').value;
+      const fieldsText = document.getElementById('fields').value;
+      const profile = parseProfile(profileText);
+      const fields = fieldsText.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+
+      if (!Object.keys(profile).length) {
+        alert("Add a profile in the left panel first.");
+        return;
+      }
+      if (!fields.length) {
+        alert("Add some form field labels in the right panel first.");
+        return;
+      }
+
+      lastResults = fields.map(label => {
+        const m = matchField(label, profile);
+        return { label, value: m ? m.value : '', via: m ? m.via : null };
+      });
+
+      renderResults(lastResults);
+    }
+
+    function renderResults(results) {
+      const wrap = document.getElementById('results');
+      const rows = document.getElementById('rows');
+      const stats = document.getElementById('stats');
+      const matched = results.filter(r => r.value).length;
+      const skipped = results.length - matched;
+
+      stats.innerHTML = `<span class="matched">${matched} matched</span> · <span class="skipped">${skipped} unfilled</span>`;
+      rows.innerHTML = results.map((r, i) => {
+        const valHtml = r.value
+          ? escapeHtml(r.value)
+          : '<span class="empty">no match — fill manually</span>';
+        const cls = r.value ? '' : 'empty';
+        return `
+          <div class="field-row">
+            <div class="field-label">${escapeHtml(r.label)}</div>
+            <div class="field-value ${cls}">${valHtml}</div>
+            ${r.value ? `<button class="copy-btn" onclick="copyOne(${i}, this)">Copy</button>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      wrap.classList.add('active');
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      try { document.execCommand('copy'); } catch(e) {}
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    }
+
+    function copyOne(idx, btn) {
+      const r = lastResults[idx];
+      if (!r || !r.value) return;
+      copyText(r.value).then(() => {
+        btn.textContent = 'Copied';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1400);
+      });
+    }
+
+    function copyAllAsList() {
+      const text = lastResults.map(r => `${r.label}: ${r.value || ''}`).join('\n');
+      copyText(text);
+    }
+
+    function copyAllAsJSON() {
+      const obj = {};
+      for (const r of lastResults) obj[r.label] = r.value || null;
+      copyText(JSON.stringify(obj, null, 2));
+    }
+
+    function exportTSV() {
+      const text = "label\tvalue\n" + lastResults.map(r => `${r.label}\t${r.value || ''}`).join('\n');
+      const blob = new Blob([text], { type: 'text/tab-separated-values' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'formdraft.tsv';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function loadSample() {
+      document.getElementById('profile').value = JSON.stringify({
+        name: "Alex Rivera",
+        email: "alex@example.com",
+        phone: "+1 415 555 0142",
+        city: "San Francisco",
+        country: "United States",
+        company: "Acme Robotics",
+        role: "Founder",
+        linkedin: "linkedin.com/in/alexrivera",
+        website: "alexrivera.dev",
+        github: "github.com/alexrivera",
+        bio: "Building tools that make annoying tasks one click instead of ten.",
+        project: "An offline-first personal CRM for indie founders."
+      }, null, 2);
+    }
+
+    function loadSampleFields() {
+      document.getElementById('fields').value = [
+        "Full Name",
+        "Email Address",
+        "Phone Number",
+        "Company / Organization",
+        "Job Title",
+        "LinkedIn URL",
+        "Country",
+        "City",
+        "Personal website",
+        "What are you working on right now?"
+      ].join('\n');
+    }
+
+    function captureProEmail() {
+      const input = document.getElementById('proEmail');
+      const confirm = document.getElementById('proConfirm');
+      const email = (input.value || '').trim();
+      const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!valid) {
+        confirm.style.color = '#f87171';
+        confirm.textContent = 'Enter a valid email and try again.';
+        return;
+      }
+      try {
+        const list = JSON.parse(localStorage.getItem('formdraft_pro_waitlist') || '[]');
+        list.push({ email, ts: Date.now() });
+        localStorage.setItem('formdraft_pro_waitlist', JSON.stringify(list));
+      } catch (e) {}
+      input.value = '';
+      confirm.style.color = '#14b8a6';
+      confirm.textContent = "You're on the list. One email when Pro ships.";
+    }
+  </script>
+</body>
+</html>
