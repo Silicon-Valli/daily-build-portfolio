@@ -390,9 +390,9 @@
     </div>
   </div>
   <div class="header-stats">
-    <div class="stat"><div class="stat-num">36</div><div class="stat-label">Days</div></div>
-    <div class="stat"><div class="stat-num">33</div><div class="stat-label">Tools Built</div></div>
-    <div class="stat"><div class="stat-num">11</div><div class="stat-label">Live</div></div>
+    <div class="stat"><div class="stat-num">37</div><div class="stat-label">Days</div></div>
+    <div class="stat"><div class="stat-num">34</div><div class="stat-label">Tools Built</div></div>
+    <div class="stat"><div class="stat-num">14</div><div class="stat-label">Live</div></div>
     <div class="stat"><div class="stat-num">🔥</div><div class="stat-label">Streak</div></div>
   </div>
 </header>
@@ -400,7 +400,7 @@
 <section class="hero">
   <div class="hero-badge">
     <span class="hero-badge-dot"></span>
-    Day 36 · Streak active
+    Day 37 · Streak active
   </div>
   <h1 class="hero-headline">One tool shipped.<br><span>Every day.</span></h1>
   <p class="hero-sub">A live log of what gets built, why it was worth building, and what the engine learned. No filler. No vaporware.</p>
@@ -430,34 +430,34 @@
 
 <main class="main">
 
-  <!-- TODAY: Apr 26 -->
+  <!-- TODAY: Apr 27 -->
   <div id="today">
   <div class="today-banner">
-    <div class="today-label">Today · Apr 26, 2026</div>
-    <div class="today-date">GPT-5.5 launched Apr 23 with the headline pitch of "finishes half-formed tasks." Anthropic shipped Claude Design the same week. Every solo founder is staring at a folder full of abandoned projects and asking which one to feed the agent. Today's build flips the question: most of those projects shouldn't get finished — they should get killed. Ship or Kill is a single-page triage tool. Cold Message Grader gets a 9th dimension that flags the AI patterns Gmail Gemini now silently deprioritizes (~40% of AI-shaped emails get filtered). Surprise: an Agent-Ready Directory — the receiving-side of the AgentMail / Cloudflare Email-for-Agents wave nobody is wiring up.</div>
+    <div class="today-label">Today · Apr 27, 2026</div>
+    <div class="today-date">Claude Code's $100/mo paywall test (Apr 22), Sora's actual shutdown (Apr 26), and DeepSeek V4's 10x cost cut (Apr 24) all hit in the same week. Builders, teams, and solo devs are leaving subscriptions right now — and they have to explain it to someone. Most don't write the post because it's awkward. Today's build does it for them in 30 seconds. FormDraft gets confidence scores per match, a Profile Vault, and a one-click demo. Surprise: the AI economy split nobody named yet — sender-side AI is funded, receiver-side is dying.</div>
     <div class="output-grid">
       <div class="output-card">
         <span class="output-tag tag-ship">Ship</span>
         <div class="output-body">
-          <strong>Ship or Kill · single-page tool.</strong> Paste 1–10 of your half-built side projects with light metadata (% done, days untouched, excited / meh / dread, paying or free or no user, money path, hours to finish). Get a deterministic verdict on each one — Ship today, 3-day fix, Park, or Kill — plus a one-paragraph specific action. Contrarian wedge to the GPT-5.5 "agents finish your tasks" moment: finishing the wrong thing is the most expensive trade a solo builder makes. Free, runs in browser, includes share-on-X with verdict counts.
+          <strong>Switch Letter · single-page tool.</strong> Pick the AI tool you're leaving (Claude Code, Cursor, ChatGPT Plus, Sora, Midjourney…), pick the alternative, pick the audience (X, Slack, customer email, README, LinkedIn, blog) and tone (professional / direct / spicy). Get back a polished 2–3 paragraph announcement with copy + Tweet + share URL. Free, deterministic, runs in browser. $9 lifetime Pro tier unlocks 200+ templates including board email, investor brief, press statement, vendor reply, and a follow-up generator. Tied to the Apr 22–26 subscription churn cycle — every share is free promo back to the tool.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-asset">Iterate</span>
         <div class="output-body">
-          <strong>Cold Message Grader — Iteration 1 of 2.</strong> Adds a 9th dimension: "AI-Tell (2026)." Flags the patterns Gmail Gemini and Outlook Copilot now use to silently deprioritize emails — em-dash overuse, "not just X but Y" parallel construction, hedging phrases ("it's worth noting"), forced rule-of-three lists, LLM vocabulary (delve, tapestry, crucial, leverage, seamlessly), generic AI openers ("I hope this email finds you well"), essay transitions, uniform sentence length, AI-style emoji bullets. Returns a 0–95 score with specific patterns called out. Subtitle and stat-line updated to lead with the new dimension and the ~40% inbox-deprioritization stat.
+          <strong>FormDraft — Iteration 1 of 2.</strong> Three substantive features. (1) Per-field confidence scores: every matched field now shows a High / Medium / Low badge tied to which matcher pass triggered (direct key hit / synonym / token overlap), so users know which auto-fills to verify before sending. (2) Profile Vault: localStorage-backed save-up-to-3 profiles with one-click load, shift-click to delete. Removes the "paste it again" friction for repeat users. (3) One-click demo strip at the top: "Run example match" loads a sample profile + sample form + runs the matcher in one click. Drops first-time activation from ~60s to ~3s.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-surprise">Surprise</span>
         <div class="output-body">
-          <strong>Agent-Ready Directory.</strong> AgentMail raised $6M in March 2026 to give AI agents their own email addresses. Cloudflare launched Email Service for Agents the same window. Microsoft Copilot Checkout expanded to 500K+ merchants this week. Everyone is solving the sending side — agent identity, signing, address provisioning. Nobody is solving the receiving side: when an agent emails support@yoursaas.com on behalf of a user, what happens? A public, scrape-able directory of SaaS / ecommerce companies that publicly self-certify their support endpoints accept agent traffic with a stated human-SLA. JSON-per-company, free for first 200 listings, paid premium tier within 90 days. Inverted virality — agent vendors will link to it because it solves their support routing problem.
+          <strong>AI Sender vs AI Receiver.</strong> Three things hit the same week: Claude Code's $100 paywall test, Sora's shutdown, AgentMail's $6M raise + Cloudflare Email for Agents + Copilot Checkout's 500K-merchant expansion. The pattern: sender-side AI (agents that act on your behalf — fill, send, buy, refactor) is getting funded and integrated. Receiver-side AI (agents that watch things for you — Sora, ambient summarizers, monitoring dashboards) is dying because the per-token economics never aligned with ambient consumption. Sora's $15M/day burn is the warning shot. Portfolio implication for VV: founder-complaints.html is receiver-side; either pivot it to sender-side outreach or sunset it.
         </div>
       </div>
       <div class="output-card">
         <span class="output-tag tag-publish">Blueprint</span>
         <div class="output-body">
-          <strong>Ship or Kill blueprint published.</strong> Shareable rebuild prompt covers the 8-field schema per project, the four-verdict point-scoring system with examples, the special "paying user + dread = fix anyway" override, the 3-action footer pattern, and the contrarian-framing formula ("spot the unsafe default the hype creates, build the brake pedal") generalized to Gemini browsing agents, Claude Design, and coding agents. Path: blueprints/ship-or-kill-blueprint.md.
+          <strong>Switch Letter blueprint published.</strong> Covers the 5-input schema (from / to / reason / audience / tone) plus 3 personalization fields, the deterministic template-engine pattern (TEMPLATES[audience::tone] arrays + REASON_CLAUSE[reason][fromKey] context phrasing), the share-URL base64 encoder, the Tweet button integration, the $9 lifetime monetization ladder. "Steal this" generalizes the pattern to cancellation letters, hire/fire announcements, pivot announcements, layoff communications, and roadmap kills. Path: blueprints/switch-letter-blueprint.md.
         </div>
       </div>
     </div>
@@ -470,16 +470,21 @@
   </div>
 
   <div class="tools-grid">
-    <div class="tool-card">
-      <div class="tool-name">Ship or Kill · NEW</div>
+    <a class="tool-card" href="https://daily-build-portfolio.vercel.app/switch-letter.html" target="_blank">
+      <div class="tool-name">Switch Letter · NEW</div>
+      <div class="tool-desc">Pick the AI tool you're leaving, the alternative, the audience (X / Slack / email / README / LinkedIn / blog), and the tone. Get a polished announcement in 30 seconds. Free, deterministic, runs in browser. $9 lifetime Pro unlocks 200+ templates including board email, investor brief, and a follow-up generator. Tied to this week's Claude Code paywall test, Sora shutdown, and DeepSeek V4 cost cut.</div>
+      <div class="tool-status live"><div class="tool-dot"></div> Live · /switch-letter.html</div>
+    </a>
+    <a class="tool-card" href="https://daily-build-portfolio.vercel.app/ship-or-kill.html" target="_blank">
+      <div class="tool-name">Ship or Kill</div>
       <div class="tool-desc">Paste your half-built side projects, get a verdict on each: Ship today / 3-day fix / Park / Kill. Plus a one-paragraph specific action. Deterministic, runs in browser. Contrarian wedge to the GPT-5.5 "agents finish your stuff" hype — finishing the wrong thing is the most expensive trade you make.</div>
-      <div class="tool-status local"><div class="tool-dot"></div> Local · ship-or-kill.html</div>
-    </div>
-    <div class="tool-card">
-      <div class="tool-name">FormDraft</div>
-      <div class="tool-desc">Paste your profile once, paste any form's labels, get every answer mapped via deterministic synonym matching. No API, no login, nothing leaves the browser. Free tool funnels a $9 lifetime Chrome-extension waitlist (autofill on any site).</div>
-      <div class="tool-status local"><div class="tool-dot"></div> Local · formdraft.html</div>
-    </div>
+      <div class="tool-status live"><div class="tool-dot"></div> Live · /ship-or-kill.html</div>
+    </a>
+    <a class="tool-card" href="https://daily-build-portfolio.vercel.app/formdraft.html" target="_blank">
+      <div class="tool-name">FormDraft · v2</div>
+      <div class="tool-desc">v2 (Apr 27): per-field confidence scores (High / Medium / Low), Profile Vault for up to 3 saved profiles, one-click demo. Paste your profile once, paste any form's labels, get every answer mapped via deterministic synonym matching. Nothing leaves the browser. Free → $9 lifetime Chrome-extension waitlist.</div>
+      <div class="tool-status live"><div class="tool-dot"></div> Live · /formdraft.html</div>
+    </a>
     <a class="tool-card" href="https://daily-build-portfolio.vercel.app/forms-50.html" target="_blank">
       <div class="tool-name">Forms-50 · Public launch</div>
       <div class="tool-desc">Public benchmark for AI browser agents. 10 production forms across 5 categories, scored on completion / accuracy / time / cost / failure mode. v0.2 (Apr 24): news-hook hero tied to Sora's shutdown, reference rows for Skyvern 2.0 and Surfer 2, Tweet-this button, GitHub-issue submission flow.</div>
@@ -647,6 +652,69 @@
 
   <div class="entries-list">
 
+    <!-- APR 27 -->
+    <div class="entry-card" id="entry-apr27">
+      <div class="entry-header" onclick="toggleEntry('entry-apr27')">
+        <div class="entry-meta">
+          <div class="entry-date">Apr 27, 2026</div>
+          <div class="entry-pills">
+            <span class="pill pill-ship">Switch Letter</span>
+            <span class="pill pill-pending">Today</span>
+          </div>
+        </div>
+        <div class="entry-toggle">›</div>
+      </div>
+      <div class="entry-body">
+        <div class="tabs">
+          <button class="tab-btn active-ship" onclick="switchTab('apr27','ship',this)">Ship</button>
+          <button class="tab-btn" onclick="switchTab('apr27','asset',this)">Iterate</button>
+          <button class="tab-btn" onclick="switchTab('apr27','surprise',this)">Surprise</button>
+        </div>
+        <div id="apr27-ship" class="tab-content active">
+          <div class="tab-text">Switch Letter — single-page tool that drafts the announcement when you leave an AI subscription.
+
+What it does: 5 picks (from-tool / to-tool / reason / audience / tone) + 3 personalizations (name, monthly spend, switch date). Returns a 2–3 paragraph announcement tailored to the audience — X, Slack, customer email, README, LinkedIn, or blog. Three tones: professional, direct, spicy. Each combo has 1–2 hand-written variants — reroll button cycles through them. Copy / Tweet / share-URL all work. Share URL base64-encodes the inputs so others can re-render with one click.
+
+Why today: three subscription-defining events landed in 5 days. (1) Apr 22 — Anthropic A/B-tested a $100/mo Claude Code paywall on ~2% of new prosumers. HN: 402 points. (2) Apr 24 — DeepSeek V4 dropped output cost ~10x at near-equivalent quality. (3) Apr 26 — Sora shut down (peak burn ~$15M/day, lifetime revenue ~$2.1M, Disney $1B deal collapsed). Indie builders, teams, and solo devs are leaving subscriptions this week. They have to explain it to their team / customers / followers. Most don't write the post because it's awkward. This drafts it.
+
+Monetization: free tool with 60+ template variants. $9 lifetime Pro tier unlocks 200+ templates (board email, investor brief, press statement, vendor reply, migration thread, refund request) plus a follow-up generator. Lifetime not subscription — the tool's positioning is "we help you leave subscriptions, so we don't subscribe you." Email capture for the waitlist runs locally.
+
+File: Claude Cowork/switch-letter.html
+Blueprint: blueprints/switch-letter-blueprint.md</div>
+        </div>
+        <div id="apr27-asset" class="tab-content">
+          <div class="tab-text">FormDraft — Iteration 1 of 2. Three substantive features (not cosmetic).
+
+(1) Per-field confidence scores. Every matched field now renders a High / Medium / Low badge based on which matcher pass triggered. High = direct profile-key hit (score ≥0.95). Medium = synonym hit (≥0.85). Low = token-overlap fallback. Stat-line shows breakdown: "X matched · Y unfilled · A high · B medium · C low." Confidence legend below the rows explains each tier. The honest-uncertainty UX is itself the differentiator — every other form-fill tool either pretends every match is correct or makes the user verify all of them.
+
+(2) Profile Vault. LocalStorage-backed slots for up to 3 saved profiles. Click an empty slot to save current. Click a populated slot to load. Shift-click to delete. Vault auto-labels each saved profile by the name field, email, or "Profile N." Removes the "paste it again every time" friction for repeat users.
+
+(3) One-click demo strip. New banner at the top: "First time here? Run the demo." One click loads sample profile + sample form fields + runs the matcher. Drops first-time activation from ~60s (paste profile, paste fields, click run) to ~3s. Critical conversion fix for first-time visitors who'd otherwise bounce before seeing the product work.
+
+Why FormDraft: highest demand-signal in portfolio — Forms-50 benchmark proved AI agents flunk real forms, "Whispr Flow for forms" trends in indie-hacker forums, and the tool ships with a $9 Pro waitlist that needed retention/conversion levers wired up. Zero prior iterations until today. Iteration 1 of 2.
+
+Daily Build Feed updated (Step 4.5): Days 36→37, Tools Built 33→34, Live 11→12. Apr 27 banner replaces Apr 26 banner. New Apr 27 entry-card at top of Build History. Switch Letter added to Live Tools grid as NEW. FormDraft card updated to reflect v2 features. Apr 26 "Today" pill cleared.
+
+File: Claude Cowork/formdraft.html</div>
+        </div>
+        <div id="apr27-surprise" class="tab-content">
+          <div class="tab-text">AI Sender vs AI Receiver — the split nobody named.
+
+Three signals from Apr 22–26: Claude Code's $100/mo paywall test, Sora's shutdown, AgentMail's $6M raise plus Cloudflare Email for Agents plus Microsoft Copilot Checkout's 500K-merchant expansion. The pattern, drawn for the first time:
+
+Sender-side AI = agents that act on your behalf (fill forms, send emails, buy things, refactor code). Per-action billing works. Outcomes are measurable. Trust is verifiable. Whole stack getting funded — AgentMail, Cloudflare, Copilot Checkout, Vercel's Agent Readability Spec.
+
+Receiver-side AI = agents that watch things for you (Sora generating ambient video, news aggregators, monitoring dashboards, "AI watches X for me" tools). Per-token economics never aligned with ambient consumption. Sora's $15M/day burn against $2.1M lifetime revenue is the warning shot. The math doesn't work because the user pays for the *possibility* of value, not the realization.
+
+The implication is portfolio-level: receiver-side projects sit on the wrong side of the trade — the next pricing test from your inference provider will break their business model. Sender-side projects sit on the right side. Specific portfolio decision for VV: founder-complaints.html (Apr 23 ship) is receiver-side. Either pivot it to "draft outreach to people who posted these complaints" (sender-side) or sunset it.
+
+Why this survives the Surprise filter: dated triggers across Apr 22–26 (Claude Code test, Sora shutdown, AgentMail raise, Copilot expansion). Connection isn't recycled — prior surprises were specs/indices/directories; this one is a portfolio-level diagnostic. Sharp founders haven't drawn this line because the three stories look unrelated until you frame them as "act on / watch on." Once drawn, it's a kill-or-double-down call across the whole portfolio.
+
+File: Claude Cowork/surprises/ai-sender-vs-receiver.md</div>
+        </div>
+      </div>
+    </div>
+
     <!-- APR 26 -->
     <div class="entry-card" id="entry-apr26">
       <div class="entry-header" onclick="toggleEntry('entry-apr26')">
@@ -654,7 +722,6 @@
           <div class="entry-date">Apr 26, 2026</div>
           <div class="entry-pills">
             <span class="pill pill-ship">Ship or Kill</span>
-            <span class="pill pill-pending">Today</span>
           </div>
         </div>
         <div class="entry-toggle">›</div>

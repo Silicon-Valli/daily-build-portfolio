@@ -240,6 +240,116 @@
     .copy-btn:hover { background: rgba(20, 184, 166, 0.22); }
     .copy-btn.copied { background: #14b8a6; color: #0b0b0e; }
 
+    /* Confidence badges */
+    .conf-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .conf-high { background: rgba(20, 184, 166, 0.15); color: #14b8a6; border: 1px solid rgba(20, 184, 166, 0.3); }
+    .conf-med { background: rgba(245, 158, 11, 0.12); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.28); }
+    .conf-low { background: rgba(248, 113, 113, 0.10); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.28); }
+
+    .conf-legend {
+      font-size: 11px;
+      color: #71717a;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* Profile Vault */
+    .vault-strip {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #0b0b0e;
+      border: 1px solid #1f1f2a;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #a1a1aa;
+    }
+    .vault-strip .vault-title {
+      font-weight: 700;
+      color: #d4d4d8;
+      margin-bottom: 6px;
+      font-size: 12px;
+    }
+    .vault-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .vault-slot {
+      padding: 5px 10px;
+      background: rgba(20, 184, 166, 0.10);
+      color: #14b8a6;
+      border: 1px solid rgba(20, 184, 166, 0.28);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+    .vault-slot:hover { background: rgba(20, 184, 166, 0.20); }
+    .vault-slot.empty {
+      background: transparent;
+      color: #52525b;
+      border-style: dashed;
+      border-color: #2a2a35;
+    }
+    .vault-slot.empty:hover { color: #a1a1aa; border-color: #71717a; background: transparent; }
+    .vault-action {
+      padding: 5px 10px;
+      background: transparent;
+      color: #71717a;
+      border: 1px solid #2a2a35;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .vault-action:hover { color: #f0f0f5; border-color: #14b8a6; }
+
+    /* Demo strip */
+    .demo-strip {
+      background: rgba(20, 184, 166, 0.06);
+      border: 1px dashed rgba(20, 184, 166, 0.32);
+      border-radius: 10px;
+      padding: 11px 14px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: #d4d4dc;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .demo-strip .demo-text { line-height: 1.5; }
+    .demo-strip strong { color: #14b8a6; font-weight: 700; }
+    .demo-btn {
+      padding: 7px 14px;
+      background: #14b8a6;
+      color: #0b0b0e;
+      border: none;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    .demo-btn:hover { background: #2dd4bf; }
+
     .copy-all-bar {
       display: flex;
       gap: 8px;
@@ -334,7 +444,12 @@
     </div>
 
     <div class="news-strip">
-      <span class="tag">New</span>Built off the Forms-50 benchmark research released April 24, 2026 — agents still struggle on real forms, so this is the dumb-but-reliable shortcut.
+      <span class="tag">v2</span>Now with per-field confidence scores, a Profile Vault that remembers up to 3 saved profiles, and a one-click demo. Built off the Forms-50 benchmark research released April 24, 2026.
+    </div>
+
+    <div class="demo-strip">
+      <div class="demo-text">First time here? <strong>Run the demo</strong> — it loads a sample profile, a sample form, and shows you the matched answers in one click.</div>
+      <button class="demo-btn" onclick="runDemo()">▶ Run example match</button>
     </div>
 
     <div class="workspace">
@@ -357,6 +472,15 @@
         <div class="panel-actions">
           <button class="btn-secondary" onclick="loadSample()">Load sample profile</button>
           <button class="btn-secondary" onclick="document.getElementById('profile').value=''">Clear</button>
+        </div>
+        <div class="vault-strip">
+          <div class="vault-title">Profile Vault — saved on this device only</div>
+          <div class="vault-row" id="vaultRow">
+            <span class="vault-slot empty" data-slot="0" onclick="vaultClick(0)">Slot 1 · empty</span>
+            <span class="vault-slot empty" data-slot="1" onclick="vaultClick(1)">Slot 2 · empty</span>
+            <span class="vault-slot empty" data-slot="2" onclick="vaultClick(2)">Slot 3 · empty</span>
+            <button class="vault-action" onclick="saveCurrentProfile()">Save current</button>
+          </div>
         </div>
       </div>
 
@@ -574,10 +698,23 @@ What are you working on right now?'></textarea>
 
       lastResults = fields.map(label => {
         const m = matchField(label, profile);
-        return { label, value: m ? m.value : '', via: m ? m.via : null };
+        return {
+          label,
+          value: m ? m.value : '',
+          via: m ? m.via : null,
+          score: m ? m.score : 0
+        };
       });
 
       renderResults(lastResults);
+    }
+
+    // Confidence tier from matcher score
+    function confTier(score) {
+      if (score >= 0.95) return { tier: 'high', label: 'High', cls: 'conf-high' };
+      if (score >= 0.85) return { tier: 'med', label: 'Medium', cls: 'conf-med' };
+      if (score > 0) return { tier: 'low', label: 'Low — verify', cls: 'conf-low' };
+      return null;
     }
 
     function renderResults(results) {
@@ -587,10 +724,25 @@ What are you working on right now?'></textarea>
       const matched = results.filter(r => r.value).length;
       const skipped = results.length - matched;
 
-      stats.innerHTML = `<span class="matched">${matched} matched</span> · <span class="skipped">${skipped} unfilled</span>`;
+      // Count by confidence tier for the stat line
+      let high = 0, med = 0, low = 0;
+      for (const r of results) {
+        if (!r.value) continue;
+        const t = confTier(r.score);
+        if (!t) continue;
+        if (t.tier === 'high') high++;
+        else if (t.tier === 'med') med++;
+        else if (t.tier === 'low') low++;
+      }
+
+      stats.innerHTML = `<span class="matched">${matched} matched</span> · <span class="skipped">${skipped} unfilled</span>` +
+        (matched > 0 ? ` · <span style="color:#14b8a6">${high} high</span> · <span style="color:#f59e0b">${med} medium</span> · <span style="color:#f87171">${low} low</span>` : '');
+
       rows.innerHTML = results.map((r, i) => {
+        const t = confTier(r.score);
+        const badge = (r.value && t) ? `<span class="conf-badge ${t.cls}">${t.label}</span>` : '';
         const valHtml = r.value
-          ? escapeHtml(r.value)
+          ? escapeHtml(r.value) + badge
           : '<span class="empty">no match — fill manually</span>';
         const cls = r.value ? '' : 'empty';
         return `
@@ -601,6 +753,18 @@ What are you working on right now?'></textarea>
           </div>
         `;
       }).join('');
+
+      // Confidence legend below the rows
+      let legend = document.getElementById('confLegend');
+      if (!legend) {
+        legend = document.createElement('div');
+        legend.id = 'confLegend';
+        legend.className = 'conf-legend';
+        rows.parentNode.insertBefore(legend, rows.nextSibling);
+      }
+      legend.innerHTML = matched > 0
+        ? `<span class="conf-badge conf-high">High</span> direct profile-key hit · <span class="conf-badge conf-med">Medium</span> synonym match · <span class="conf-badge conf-low">Low</span> token overlap — sanity-check before sending`
+        : '';
 
       wrap.classList.add('active');
       wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -708,6 +872,104 @@ What are you working on right now?'></textarea>
       confirm.style.color = '#14b8a6';
       confirm.textContent = "You're on the list. One email when Pro ships.";
     }
+
+    // -------- One-click demo --------
+    function runDemo() {
+      loadSample();
+      loadSampleFields();
+      runMatch();
+    }
+
+    // -------- Profile Vault (localStorage, up to 3 slots) --------
+    const VAULT_KEY = 'formdraft_vault_v1';
+
+    function loadVault() {
+      try { return JSON.parse(localStorage.getItem(VAULT_KEY) || '[]'); }
+      catch (e) { return []; }
+    }
+
+    function saveVault(v) {
+      try { localStorage.setItem(VAULT_KEY, JSON.stringify(v)); } catch (e) {}
+    }
+
+    function renderVault() {
+      const v = loadVault();
+      const slots = document.querySelectorAll('#vaultRow .vault-slot');
+      slots.forEach((el, i) => {
+        const entry = v[i];
+        if (entry && entry.label) {
+          el.classList.remove('empty');
+          el.textContent = entry.label;
+          el.title = 'Click to load · shift-click to delete';
+        } else {
+          el.classList.add('empty');
+          el.textContent = `Slot ${i + 1} · empty`;
+          el.title = '';
+        }
+      });
+    }
+
+    function vaultClick(idx) {
+      const v = loadVault();
+      const entry = v[idx];
+      if (!entry || !entry.label) {
+        // empty slot — prompt to save current
+        saveCurrentProfile(idx);
+        return;
+      }
+      if (event && event.shiftKey) {
+        if (confirm(`Delete saved profile "${entry.label}"?`)) {
+          v[idx] = null;
+          saveVault(v);
+          renderVault();
+        }
+        return;
+      }
+      document.getElementById('profile').value = entry.body;
+    }
+
+    function saveCurrentProfile(targetSlot) {
+      const body = document.getElementById('profile').value.trim();
+      if (!body) {
+        alert('Paste a profile in the left panel first, then save it.');
+        return;
+      }
+      const v = loadVault();
+      // Find first empty slot, or use the targetSlot if provided
+      let idx = (typeof targetSlot === 'number') ? targetSlot : v.findIndex(x => !x);
+      if (idx < 0 || idx > 2) {
+        // All full — overwrite slot 1 by convention
+        idx = 0;
+      }
+      // Ask for a label
+      const suggested = guessProfileLabel(body) || `Profile ${idx + 1}`;
+      const label = prompt('Name for this saved profile:', suggested);
+      if (!label) return;
+      // Pad array
+      while (v.length < 3) v.push(null);
+      v[idx] = { label: label.slice(0, 30), body, ts: Date.now() };
+      saveVault(v);
+      renderVault();
+    }
+
+    function guessProfileLabel(body) {
+      // Best-effort: pick the "name" or first key:value as the label
+      try {
+        const parsed = JSON.parse(body);
+        if (parsed && typeof parsed === 'object') {
+          if (parsed.name) return String(parsed.name);
+          if (parsed.email) return String(parsed.email);
+        }
+      } catch (e) { /* fall through */ }
+      const m = body.match(/^name\s*[:=]\s*(.+)$/im);
+      if (m) return m[1].trim();
+      const em = body.match(/[\w.+-]+@[\w-]+\.[\w.-]+/);
+      if (em) return em[0];
+      return null;
+    }
+
+    // Initial render
+    renderVault();
   </script>
 </body>
 </html>

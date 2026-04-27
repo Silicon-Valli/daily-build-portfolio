@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Switch Letter — Tell the world you're leaving an AI subscription</title>
+  <meta name="description" content="Pick the tool you're leaving, the one you're moving to, who needs to hear about it. Get a polished announcement in 30 seconds. Free, no signup, $9 lifetime for the full library.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, sans-serif;
+      background: #0a0a0c;
+      color: #e8e8ec;
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+      line-height: 1.55;
+    }
+
+    .container { max-width: 920px; margin: 0 auto; }
+
+    /* Header */
+    .header { text-align: center; margin-bottom: 28px; }
+    .logo {
+      display: inline-block;
+      font-size: 11px; font-weight: 800; color: #f59e0b;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      margin-bottom: 10px;
+      padding: 4px 10px;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 999px;
+    }
+    .headline { font-size: 32px; font-weight: 800; color: #f4f4f5; line-height: 1.15; margin-bottom: 12px; letter-spacing: -0.6px; }
+    .sub { font-size: 15px; color: #a1a1aa; line-height: 1.55; max-width: 580px; margin: 0 auto; }
+
+    /* News strip */
+    .news-strip {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(220, 38, 38, 0.04));
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      border-radius: 12px;
+      padding: 14px 18px;
+      margin: 26px auto 30px;
+      font-size: 13px;
+      color: #d4d4d8;
+      line-height: 1.6;
+      max-width: 780px;
+    }
+    .news-strip strong { color: #f59e0b; font-weight: 700; }
+    .news-strip .tag {
+      display: inline-block;
+      background: #f59e0b;
+      color: #0a0a0c;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* Form grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .field-block {
+      background: #131318;
+      border: 1px solid #232330;
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #f59e0b;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    select, input[type="text"], input[type="email"] {
+      width: 100%;
+      padding: 11px 12px;
+      background: #0a0a0c;
+      border: 1px solid #2a2a35;
+      border-radius: 8px;
+      color: #f4f4f5;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    select:focus, input:focus { border-color: #f59e0b; }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .pill {
+      padding: 7px 12px;
+      background: #0a0a0c;
+      color: #a1a1aa;
+      border: 1px solid #2a2a35;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.12s;
+    }
+    .pill:hover { border-color: #f59e0b; color: #f59e0b; }
+    .pill.active { background: #f59e0b; color: #0a0a0c; border-color: #f59e0b; }
+
+    .field-hint {
+      font-size: 11px;
+      color: #71717a;
+      margin-top: 6px;
+    }
+
+    /* Personalization row */
+    .personal-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .run-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      margin: 18px 0 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      padding: 14px 32px;
+      background: #f59e0b;
+      color: #0a0a0c;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .btn-primary:hover { background: #fbbf24; transform: translateY(-1px); }
+
+    .btn-secondary {
+      padding: 9px 14px;
+      background: #131318;
+      color: #d4d4d8;
+      border: 1px solid #2a2a35;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover { border-color: #f59e0b; color: #f59e0b; }
+
+    /* Output card */
+    .output-card {
+      background: #131318;
+      border: 1px solid #232330;
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 18px;
+      display: none;
+    }
+    .output-card.active { display: block; }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .output-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f59e0b;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .output-meta {
+      font-size: 11px;
+      color: #71717a;
+    }
+
+    .letter-body {
+      background: #0a0a0c;
+      border: 1px solid #232330;
+      border-radius: 10px;
+      padding: 22px 26px;
+      font-size: 15px;
+      color: #e8e8ec;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: -apple-system, 'Segoe UI', Helvetica, sans-serif;
+    }
+
+    .letter-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      padding: 9px 14px;
+      background: rgba(245, 158, 11, 0.12);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.32);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-action:hover { background: rgba(245, 158, 11, 0.22); }
+    .btn-action.copied { background: #f59e0b; color: #0a0a0c; }
+
+    /* Library teaser */
+    .library {
+      margin-top: 38px;
+      padding: 28px;
+      background: linear-gradient(135deg, #131318 0%, #181822 100%);
+      border: 1px solid #2a2a3a;
+      border-radius: 14px;
+    }
+    .library h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #f4f4f5;
+      margin-bottom: 8px;
+    }
+    .library p {
+      font-size: 13px;
+      color: #a1a1aa;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .library .price {
+      display: inline-block;
+      font-size: 22px;
+      font-weight: 800;
+      color: #f59e0b;
+      margin-right: 8px;
+    }
+    .library .price-note {
+      font-size: 12px;
+      color: #71717a;
+    }
+
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+      margin-bottom: 18px;
+    }
+    .library-pill {
+      background: #0a0a0c;
+      border: 1px solid #232330;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #a1a1aa;
+    }
+    .library-pill strong { color: #f4f4f5; display: block; font-size: 13px; margin-bottom: 2px; }
+
+    .library-cta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .confirm {
+      font-size: 12px;
+      color: #f59e0b;
+      margin-top: 10px;
+      min-height: 14px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 38px;
+      text-align: center;
+      font-size: 11px;
+      color: #52525b;
+      line-height: 1.7;
+    }
+    .footer a { color: #71717a; text-decoration: underline; }
+
+    /* Saved-link banner shown when ?s= is loaded */
+    .shared-banner {
+      background: rgba(245, 158, 11, 0.10);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 22px;
+      font-size: 13px;
+      color: #f4f4f5;
+      display: none;
+    }
+    .shared-banner.active { display: block; }
+    .shared-banner strong { color: #f59e0b; }
+
+    @media (max-width: 720px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .personal-row { grid-template-columns: 1fr; }
+      .headline { font-size: 24px; }
+      .letter-body { padding: 18px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="logo">Switch Letter</span>
+      <h1 class="headline">Tell the world you're leaving an AI subscription</h1>
+      <p class="sub">Pick the tool you're leaving, where you're going, who needs to hear about it. Get a polished announcement you can paste into Slack, X, your blog, or a customer email — in 30 seconds.</p>
+    </div>
+
+    <div class="news-strip">
+      <span class="tag">This week</span>
+      <strong>Claude Code</strong> tested a $100/mo paywall (Apr 22), <strong>Sora</strong> shut down (Apr 26), and <strong>DeepSeek V4</strong> dropped output cost ~10x (Apr 24). Whole stacks are getting reshuffled this week. Most people don't write the migration note because it's awkward. This drafts it for you.
+    </div>
+
+    <div class="shared-banner" id="sharedBanner">
+      <strong>Someone shared a Switch Letter with you.</strong> The form below is pre-filled with their picks — edit anything you'd like, then regenerate.
+    </div>
+
+    <div class="form-grid">
+      <div class="field-block">
+        <div class="field-label">Step 1 · Leaving</div>
+        <select id="fromTool">
+          <option value="claude-code">Claude Code</option>
+          <option value="cursor">Cursor</option>
+          <option value="chatgpt-plus">ChatGPT Plus</option>
+          <option value="github-copilot">GitHub Copilot</option>
+          <option value="sora">Sora</option>
+          <option value="midjourney">Midjourney</option>
+          <option value="runway">Runway</option>
+          <option value="other">Another AI tool</option>
+        </select>
+        <div class="field-hint">The product you're moving off of.</div>
+      </div>
+
+      <div class="field-block">
+        <div class="field-label">Step 2 · Moving to</div>
+        <select id="toTool">
+          <option value="opencode-glm">OpenCode + GLM-5.1</option>
+          <option value="codex-cli">OpenAI Codex CLI</option>
+          <option value="aider">Aider</option>
+          <option value="cursor">Cursor</option>
+          <option value="claude-pro">Claude Pro (downgrade)</option>
+          <option value="gemini-pro">Gemini Pro</option>
+          <option value="deepseek">DeepSeek (direct)</option>
+          <option value="local">Local model (Ollama)</option>
+          <option value="undecided">Still deciding</option>
+          <option value="other">Something else</option>
+        </select>
+        <div class="field-hint">Optional — say "still deciding" if it's open.</div>
+      </div>
+    </div>
+
+    <div class="field-block" style="margin-bottom: 14px;">
+      <div class="field-label">Step 3 · Why you're leaving</div>
+      <div class="pill-row" id="reasonPills">
+        <span class="pill active" data-reason="pricing">Pricing change</span>
+        <span class="pill" data-reason="deprecated">Feature deprecated / shut down</span>
+        <span class="pill" data-reason="cost-cut">Found cheaper alternative</span>
+        <span class="pill" data-reason="quality">Quality / capability gap</span>
+        <span class="pill" data-reason="reliability">Reliability / outages</span>
+        <span class="pill" data-reason="privacy">Privacy / security concerns</span>
+        <span class="pill" data-reason="vendor-trust">Vendor trust / direction</span>
+      </div>
+    </div>
+
+    <div class="field-block" style="margin-bottom: 14px;">
+      <div class="field-label">Step 4 · Audience</div>
+      <div class="pill-row" id="audiencePills">
+        <span class="pill active" data-audience="x">X / Twitter post</span>
+        <span class="pill" data-audience="slack">Internal Slack message</span>
+        <span class="pill" data-audience="email">Customer email</span>
+        <span class="pill" data-audience="readme">GitHub README change</span>
+        <span class="pill" data-audience="linkedin">LinkedIn post</span>
+        <span class="pill" data-audience="blog">Blog post / changelog</span>
+      </div>
+    </div>
+
+    <div class="field-block" style="margin-bottom: 18px;">
+      <div class="field-label">Step 5 · Tone</div>
+      <div class="pill-row" id="tonePills">
+        <span class="pill active" data-tone="professional">Professional</span>
+        <span class="pill" data-tone="direct">Direct</span>
+        <span class="pill" data-tone="spicy">Spicy</span>
+      </div>
+      <div class="field-hint" style="margin-top: 10px;">"Spicy" gets you the version you want to send but probably shouldn't.</div>
+    </div>
+
+    <div class="personal-row">
+      <div class="field-block">
+        <div class="field-label">Your name</div>
+        <input type="text" id="personName" placeholder="Alex">
+      </div>
+      <div class="field-block">
+        <div class="field-label">Monthly spend (optional)</div>
+        <input type="text" id="monthlySpend" placeholder="$20">
+      </div>
+      <div class="field-block">
+        <div class="field-label">Switch date</div>
+        <input type="text" id="switchDate" placeholder="this week">
+      </div>
+    </div>
+
+    <div class="run-bar">
+      <button class="btn-primary" onclick="generate()">Draft my announcement →</button>
+    </div>
+
+    <div class="output-card" id="output">
+      <div class="output-header">
+        <div class="output-title" id="outputTitle">Your switch letter</div>
+        <div class="output-meta" id="outputMeta"></div>
+      </div>
+      <div class="letter-body" id="letterBody"></div>
+      <div class="letter-actions">
+        <button class="btn-action" id="copyBtn" onclick="copyLetter()">Copy</button>
+        <a class="btn-action" id="tweetBtn" target="_blank" rel="noopener">Tweet this</a>
+        <button class="btn-action" onclick="copyShareLink(this)">Copy share link</button>
+        <button class="btn-action" onclick="rerollVariant()">Try a variant</button>
+      </div>
+    </div>
+
+    <div class="library">
+      <h2>Switch Letter Pro · the full template library</h2>
+      <p>The free version above covers the 8 most common reshuffles this week. Pro unlocks 200+ pre-written templates organized by tool × audience × reason — including the ones below — plus a follow-up generator that drafts the next message after the first one lands.</p>
+      <div class="library-grid">
+        <div class="library-pill"><strong>Board update</strong>"We're moving the team off [tool] — here's why and what it costs us"</div>
+        <div class="library-pill"><strong>Investor brief</strong>"Vendor risk note: [tool] just changed terms — our exposure"</div>
+        <div class="library-pill"><strong>Press statement</strong>"Public response to [tool's] pricing change"</div>
+        <div class="library-pill"><strong>Vendor reply</strong>"What we'd need to stay on [tool]"</div>
+        <div class="library-pill"><strong>Migration thread</strong>"Day 1–7 of switching from [A] to [B]"</div>
+        <div class="library-pill"><strong>Refund request</strong>"Polite but firm refund email"</div>
+      </div>
+      <div class="library-cta">
+        <span class="price">$9</span><span class="price-note">once · forever license · no subscription</span>
+      </div>
+      <div style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; max-width: 480px;">
+        <input type="email" id="proEmail" placeholder="you@example.com" style="flex:1; min-width: 200px;">
+        <button class="btn-primary" style="padding: 10px 18px; font-size: 13px;" onclick="captureEmail()">Notify me at launch</button>
+      </div>
+      <div class="confirm" id="proConfirm"></div>
+    </div>
+
+    <div class="footer">
+      Free, runs in your browser, no signup, no tracking. Templates are deterministic — same inputs always render the same letter.<br>
+      Built off this week's news cycle: <a href="https://www.theregister.com/2026/04/22/anthropic_removes_claude_code_pro/" target="_blank" rel="noopener">Claude Code pricing test</a>, <a href="https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation" target="_blank" rel="noopener">Sora discontinuation</a>, <a href="https://techcrunch.com/2026/03/29/why-openai-really-shut-down-sora/" target="_blank" rel="noopener">DeepSeek V4 cost cut</a>.
+    </div>
+  </div>
+
+  <script>
+    // ------------- Tool/Reason/Audience labels for pretty rendering -------------
+    const TOOL_LABEL = {
+      'claude-code': 'Claude Code',
+      'cursor': 'Cursor',
+      'chatgpt-plus': 'ChatGPT Plus',
+      'github-copilot': 'GitHub Copilot',
+      'sora': 'Sora',
+      'midjourney': 'Midjourney',
+      'runway': 'Runway',
+      'opencode-glm': 'OpenCode + GLM-5.1',
+      'codex-cli': 'OpenAI Codex CLI',
+      'aider': 'Aider',
+      'claude-pro': 'Claude Pro',
+      'gemini-pro': 'Gemini Pro',
+      'deepseek': 'DeepSeek',
+      'local': 'a local model (Ollama)',
+      'undecided': 'something else (still deciding)',
+      'other': 'a different tool'
+    };
+
+    const REASON_LABEL = {
+      'pricing': 'a pricing change',
+      'deprecated': 'a feature getting deprecated',
+      'cost-cut': 'a cheaper alternative',
+      'quality': 'a quality gap',
+      'reliability': 'reliability problems',
+      'privacy': 'privacy concerns',
+      'vendor-trust': 'vendor trust'
+    };
+
+    // ------------- Templates -------------
+    // Keys: audience::tone, plus reason fragments inserted dynamically.
+    // Each template uses {{from}} {{to}} {{reasonClause}} {{name}} {{spend}} {{date}}
+    const TEMPLATES = {
+      'x::professional': [
+        `Switching from {{from}} to {{to}} {{date}}.\n\nReason: {{reasonClause}}.\n\nNot a hot take on {{from}} — just the math stopped working for the way I use it. Will share notes from the migration as I go.`,
+        `Heads up: I'm moving off {{from}}. Going with {{to}}.\n\n{{reasonClause}} pushed it over the edge. Switch happens {{date}}.\n\nIf you've made the same move, I'd love to compare notes.`
+      ],
+      'x::direct': [
+        `Off {{from}}. Onto {{to}}. {{date}}.\n\nWhy: {{reasonClause}}.\n\n{{spendClause}}If you're holding off on the same call, this is your sign.`,
+        `Cancelling {{from}} {{date}}. Moving to {{to}}.\n\n{{reasonClause}} — that's the whole story. {{spendClause}}Ask me anything.`
+      ],
+      'x::spicy': [
+        `{{from}} just lost me.\n\n{{reasonClause}} is the kind of move that tells you exactly what kind of company you're paying. Onto {{to}} {{date}}.\n\n{{spendClause}}Tip jar accepting refunds.`,
+        `Funny how fast trust evaporates. {{reasonClause}} from {{from}} this week, and I'm out {{date}}.\n\n{{to}} from here. {{spendClause}}Don't @ me unless you're {{from}}'s CEO.`
+      ],
+      'slack::professional': [
+        `Team — quick heads up on a tooling change.\n\nWe're moving off {{from}} {{date}} and onto {{to}}. Driver: {{reasonClause}}.\n\n{{spendClause}}I'll set up the new accounts and post a migration checklist in #engineering by end of week. If anyone has workflows that depend on {{from}}-specific features, drop them in this thread so we don't break things.\n\n— {{name}}`,
+        `Hey all,\n\nMaking a call to switch our default AI assistant from {{from}} to {{to}} starting {{date}}.\n\nThe short version: {{reasonClause}}, and the cost-to-value ratio doesn't pencil out anymore. {{spendClause}}\n\nI'll handle provisioning and a one-page diff between the two. Reply here if this affects your daily workflow.\n\n— {{name}}`
+      ],
+      'slack::direct': [
+        `Heads up — switching us off {{from}} {{date}}.\n\nReplacement: {{to}}. Reason: {{reasonClause}}. {{spendClause}}\n\nNew accounts will be ready by EOD. Old logins die at the end of the billing cycle. Speak up if this breaks anything specific you're doing.\n\n— {{name}}`,
+        `Calling it: we're off {{from}} {{date}}. Going with {{to}}.\n\n{{reasonClause}} — done thinking about it. {{spendClause}}Migration doc in #engineering tomorrow morning. Questions in this thread.\n\n— {{name}}`
+      ],
+      'slack::spicy': [
+        `Team — we're off {{from}} {{date}}.\n\n{{reasonClause}} was the last straw. {{spendClause}}I'm not paying for vendor anxiety on top of inference. {{to}} from here.\n\nI'll write up the migration. If anyone has receipts on what {{from}} cost us in churn this quarter, send them my way.\n\n— {{name}}`
+      ],
+      'email::professional': [
+        `Subject: Update on our AI tooling — moving from {{from}} to {{to}}\n\nHi,\n\nI wanted to give you a heads up that we're transitioning off {{from}} and onto {{to}}, effective {{date}}. The decision was driven by {{reasonClause}}, and I want to be upfront about it before you notice the change in our workflow.\n\n{{spendClause}}\n\nIf you have any concerns about how this affects what we're building together, I'm happy to walk through the rationale. Otherwise, no action needed on your end.\n\nBest,\n{{name}}`
+      ],
+      'email::direct': [
+        `Subject: We're switching from {{from}} to {{to}}\n\nHi,\n\nQuick note: we're moving off {{from}} {{date}} and onto {{to}}. Reason: {{reasonClause}}.\n\n{{spendClause}}\n\nNothing changes for what we ship to you — just letting you know what's running under the hood. Reach out if you have questions.\n\n{{name}}`
+      ],
+      'email::spicy': [
+        `Subject: Why we're done with {{from}}\n\nHi,\n\nI want to be transparent: we're cancelling {{from}} {{date}} after {{reasonClause}}. Moving to {{to}} effective the same day.\n\n{{spendClause}}\n\nI'd rather you hear it from me than wonder why our setup changed. Happy to talk about the call if it's useful.\n\n{{name}}`
+      ],
+      'readme::professional': [
+        `## Tooling change — {{date}}\n\nThis project is migrating from \`{{from}}\` to \`{{to}}\`. Reason: {{reasonClause}}.\n\nIf you're a contributor and depended on {{from}}-specific configs, see the migration notes in \`/docs/migration.md\`. Old configs will be deprecated at the end of this billing cycle.\n\n{{spendClause}}`,
+        `## Heads up: switching to {{to}}\n\nAs of {{date}}, we're off \`{{from}}\` and onto \`{{to}}\`. Driver: {{reasonClause}}.\n\nIf you've been syncing local configs, pull the new \`.{{to}}rc\` template before your next commit.`
+      ],
+      'readme::direct': [
+        `### {{date}} — Tooling change\n\nMoved off \`{{from}}\`. Now using \`{{to}}\`. {{reasonClause}}. {{spendClause}}\n\nUpdate your local configs.`
+      ],
+      'readme::spicy': [
+        `### Why this repo no longer touches \`{{from}}\`\n\n{{reasonClause}} on {{date}}. We use \`{{to}}\` now. {{spendClause}}Don't open issues asking us to switch back.`
+      ],
+      'linkedin::professional': [
+        `Quick note for builders watching the AI tooling space:\n\nI'm moving off {{from}} and onto {{to}} {{date}}. The reason: {{reasonClause}}.\n\n{{spendClause}}\n\nI don't post about every tooling change, but this one feels worth flagging because the math has shifted enough that "stay or switch" stopped being a marginal call. If you're weighing the same move, happy to share what tipped me.\n\n— {{name}}`,
+        `On vendor lock-in.\n\nI just made the call to switch from {{from}} to {{to}} {{date}}. Driver: {{reasonClause}}.\n\nWhat I learned in the process: {{spendClause}}being able to leave is the actual moat. Lifetime licenses, deterministic outputs, and self-host paths are all worth more in 2026 than they were a year ago.\n\nWriting up the migration in detail. Let me know if you want the link.`
+      ],
+      'linkedin::direct': [
+        `Switched from {{from}} to {{to}} {{date}}.\n\n{{reasonClause}}. {{spendClause}}\n\nIf you're on the fence, my one-line take: don't subscribe to anything you'd be sad to walk away from this week.`
+      ],
+      'linkedin::spicy': [
+        `{{from}} just told me what kind of vendor they want to be.\n\n{{reasonClause}} {{date}}. I'm done. Moving to {{to}}.\n\n{{spendClause}}I'm writing up the full switch. The post will be longer than this one.`
+      ],
+      'blog::professional': [
+        `# Why we're moving from {{from}} to {{to}}\n\n## TL;DR\n\nWe're switching our default AI tool from {{from}} to {{to}} effective {{date}}. The driver was {{reasonClause}}, and the math no longer worked for our usage profile. {{spendClause}}\n\n## What changed\n\nThis week, {{reasonClause}} crossed a threshold for us. Up until that point, {{from}} had been a reasonable default — capable, fast, predictable. But the value-per-dollar shifted enough that staying out of inertia became the more expensive option than switching.\n\n## What we're trying next\n\n{{to}} gives us a different cost structure and a clearer answer to the question "what happens if our vendor changes terms again next quarter?" That alone is worth the migration cost.\n\n## What this means for you\n\nIf you're on the same fence we were, here's the honest read: the switching cost is real but smaller than the next price hike. We'll publish a follow-up with the actual migration steps in a week.\n\n— {{name}}`
+      ],
+      'blog::direct': [
+        `# Off {{from}}, onto {{to}} ({{date}})\n\n{{reasonClause}}. That's the whole story.\n\n{{spendClause}}\n\nIf you want the migration steps, I'll publish them next week. If you want the short version: don't pay for tools you'd be relieved to cancel.\n\n— {{name}}`
+      ],
+      'blog::spicy': [
+        `# {{from}} taught me a $0 lesson this week\n\n{{reasonClause}} on {{date}}. I'm out. {{to}} from here.\n\n{{spendClause}}\n\nA year ago I would have written 1,000 words about why this was complicated. It's not. Companies that quietly test paywalls on existing customers are telling you exactly how they'll behave at the next inflection. Believe them the first time.\n\n— {{name}}`
+      ]
+    };
+
+    // ------------- Reason clauses (rendered into {{reasonClause}}) -------------
+    const REASON_CLAUSE = {
+      'pricing': {
+        'claude-code': 'a quiet pricing test that pushed the entry tier from $20 to $100/mo',
+        'cursor': 'the pricing tier I rely on getting reshuffled out from under me',
+        'chatgpt-plus': 'a price-to-usage ratio that stopped making sense',
+        'github-copilot': 'a usage cap change that broke my workflow',
+        'sora': 'an enterprise price that never matched what I get back from it',
+        'midjourney': 'a pricing tier reshuffle',
+        'runway': 'a credit pricing change that made each video cost meaningfully more',
+        'other': 'a pricing change'
+      },
+      'deprecated': {
+        'sora': 'the discontinuation announcement (web/app shut down April 26)',
+        'claude-code': 'the Pro-tier removal (Claude Code yanked off the $20 plan in an A/B test)',
+        'github-copilot': 'a feature deprecation that broke a workflow I depended on',
+        'cursor': 'the version I depended on getting deprecated',
+        'chatgpt-plus': 'a deprecated feature I relied on',
+        'midjourney': 'a deprecated style I depended on',
+        'runway': 'a deprecated mode I built around',
+        'other': 'a deprecation that broke my workflow'
+      },
+      'cost-cut': {
+        'claude-code': 'DeepSeek V4 dropping output cost ~10x at near-equivalent quality',
+        'chatgpt-plus': 'a cheaper alternative with comparable output for my use case',
+        'cursor': 'a cheaper agentic CLI that handles 90% of what I used Cursor for',
+        'github-copilot': 'a cheaper completion model that gets me there',
+        'sora': 'a cheaper alternative with comparable output for my use case',
+        'midjourney': 'a cheaper alternative with comparable output for my use case',
+        'runway': 'a cheaper alternative with comparable output for my use case',
+        'other': 'a cheaper alternative that does what I need'
+      },
+      'quality': {
+        'claude-code': 'a model gap on the specific tasks I do daily',
+        'cursor': 'a quality gap on long-context refactors',
+        'chatgpt-plus': 'a capability gap on the work I actually do',
+        'github-copilot': 'a completion-quality gap that\'s widened over the past quarter',
+        'sora': 'output quality that didn\'t hold up against newer alternatives',
+        'midjourney': 'a stylistic gap on the work I produce now',
+        'runway': 'a generation-quality gap on the shots I need',
+        'other': 'a capability gap on the work I do'
+      },
+      'reliability': {
+        'claude-code': 'a string of agentic-task failures during peak hours',
+        'cursor': 'too many flaky sessions on long-running tasks',
+        'chatgpt-plus': 'rolling outages during work hours',
+        'github-copilot': 'completion latency that started bleeding into my flow',
+        'sora': 'render queues that ballooned past usable',
+        'midjourney': 'queue times during the hours I actually work',
+        'runway': 'render failures on multi-shot sequences',
+        'other': 'reliability problems I couldn\'t plan around'
+      },
+      'privacy': {
+        'claude-code': 'a data-retention change I\'m not willing to sign off on',
+        'cursor': 'a telemetry default I don\'t want my code touching',
+        'chatgpt-plus': 'a training-on-conversations change',
+        'github-copilot': 'a code-suggestion data path I can\'t justify to my team',
+        'sora': 'a content-policy change that conflicted with what I make',
+        'midjourney': 'a data-policy change',
+        'runway': 'a training-clause change in the new ToS',
+        'other': 'a privacy or data-handling change'
+      },
+      'vendor-trust': {
+        'claude-code': 'a quiet A/B test that yanked Claude Code off the $20 plan for a slice of new users without notice',
+        'cursor': 'a roadmap shift that broke my read on what they\'re building toward',
+        'chatgpt-plus': 'a series of unannounced product changes',
+        'github-copilot': 'a direction change I don\'t want to bet on',
+        'sora': 'the discontinuation playbook (~$15M/day burn, $2.1M lifetime revenue, Disney deal collapsed)',
+        'midjourney': 'a moderation-policy shift I can\'t plan around',
+        'runway': 'a leadership signal that gave me pause',
+        'other': 'a vendor signal that gave me pause'
+      }
+    };
+
+    function getReasonClause(reason, fromKey) {
+      const r = REASON_CLAUSE[reason] || {};
+      return r[fromKey] || r['other'] || 'a change I\'m not willing to absorb';
+    }
+
+    // ------------- Generation -------------
+    let currentVariantIdx = 0;
+
+    function pillSelected(containerId, attr) {
+      const el = document.querySelector('#' + containerId + ' .pill.active');
+      return el ? el.getAttribute('data-' + attr) : null;
+    }
+
+    function bindPills(containerId, attr) {
+      document.querySelectorAll('#' + containerId + ' .pill').forEach(p => {
+        p.addEventListener('click', () => {
+          document.querySelectorAll('#' + containerId + ' .pill').forEach(x => x.classList.remove('active'));
+          p.classList.add('active');
+        });
+      });
+    }
+    bindPills('reasonPills', 'reason');
+    bindPills('audiencePills', 'audience');
+    bindPills('tonePills', 'tone');
+
+    function getInputs() {
+      return {
+        from: document.getElementById('fromTool').value,
+        to: document.getElementById('toTool').value,
+        reason: pillSelected('reasonPills', 'reason'),
+        audience: pillSelected('audiencePills', 'audience'),
+        tone: pillSelected('tonePills', 'tone'),
+        name: (document.getElementById('personName').value || '').trim() || 'Alex',
+        spend: (document.getElementById('monthlySpend').value || '').trim(),
+        date: (document.getElementById('switchDate').value || '').trim() || 'this week'
+      };
+    }
+
+    function generate() {
+      currentVariantIdx = 0;
+      renderLetter();
+    }
+
+    function rerollVariant() {
+      currentVariantIdx++;
+      renderLetter();
+    }
+
+    function renderLetter() {
+      const inp = getInputs();
+      const key = inp.audience + '::' + inp.tone;
+      const variants = TEMPLATES[key] || TEMPLATES[inp.audience + '::professional'] || TEMPLATES['x::professional'];
+      const t = variants[currentVariantIdx % variants.length];
+
+      const reasonClause = getReasonClause(inp.reason, inp.from);
+      const spendClause = inp.spend ? `That's about ${inp.spend} I'm getting back. ` : '';
+
+      const filled = t
+        .replaceAll('{{from}}', TOOL_LABEL[inp.from] || inp.from)
+        .replaceAll('{{to}}', TOOL_LABEL[inp.to] || inp.to)
+        .replaceAll('{{reasonClause}}', reasonClause)
+        .replaceAll('{{name}}', inp.name)
+        .replaceAll('{{spendClause}}', spendClause)
+        .replaceAll('{{date}}', inp.date);
+
+      const out = document.getElementById('output');
+      const body = document.getElementById('letterBody');
+      const meta = document.getElementById('outputMeta');
+      const title = document.getElementById('outputTitle');
+
+      body.textContent = filled;
+
+      const audienceLabel = ({
+        'x': 'X / Twitter post',
+        'slack': 'Slack message',
+        'email': 'Customer email',
+        'readme': 'README change',
+        'linkedin': 'LinkedIn post',
+        'blog': 'Blog post'
+      })[inp.audience] || 'Announcement';
+
+      const toneLabel = inp.tone[0].toUpperCase() + inp.tone.slice(1);
+      title.textContent = audienceLabel + ' — ' + toneLabel;
+      meta.textContent = `Variant ${(currentVariantIdx % variants.length) + 1} of ${variants.length} · ${(TOOL_LABEL[inp.from]||'')} → ${(TOOL_LABEL[inp.to]||'')}`;
+
+      out.classList.add('active');
+      out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Set up Tweet button for X audience or always
+      const tweetBtn = document.getElementById('tweetBtn');
+      const previewLength = inp.audience === 'x' ? 270 : 270;
+      const tweetText = (inp.audience === 'x' ? filled : `Why I'm switching from ${TOOL_LABEL[inp.from]} to ${TOOL_LABEL[inp.to]}: ${reasonClause}.`).slice(0, previewLength);
+      tweetBtn.href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweetText) + '&url=' + encodeURIComponent(buildShareUrl(inp));
+
+      lastInputs = inp;
+    }
+
+    // ------------- Share URL -------------
+    function buildShareUrl(inp) {
+      const payload = {
+        f: inp.from, t: inp.to, r: inp.reason, a: inp.audience, n: inp.tone,
+        nm: inp.name, s: inp.spend, d: inp.date
+      };
+      const enc = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+      const base = window.location.origin + window.location.pathname;
+      return base + '?s=' + enc;
+    }
+
+    function copyShareLink(btn) {
+      if (!lastInputs) return;
+      const url = buildShareUrl(lastInputs);
+      copyText(url).then(() => flashCopied(btn));
+    }
+
+    function loadFromShareUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const s = params.get('s');
+      if (!s) return;
+      try {
+        const payload = JSON.parse(decodeURIComponent(escape(atob(s))));
+        if (payload.f) document.getElementById('fromTool').value = payload.f;
+        if (payload.t) document.getElementById('toTool').value = payload.t;
+        if (payload.r) selectPill('reasonPills', 'reason', payload.r);
+        if (payload.a) selectPill('audiencePills', 'audience', payload.a);
+        if (payload.n) selectPill('tonePills', 'tone', payload.n);
+        if (payload.nm) document.getElementById('personName').value = payload.nm;
+        if (payload.s) document.getElementById('monthlySpend').value = payload.s;
+        if (payload.d) document.getElementById('switchDate').value = payload.d;
+        document.getElementById('sharedBanner').classList.add('active');
+        generate();
+      } catch (e) {}
+    }
+
+    function selectPill(containerId, attr, val) {
+      document.querySelectorAll('#' + containerId + ' .pill').forEach(p => {
+        p.classList.toggle('active', p.getAttribute('data-' + attr) === val);
+      });
+    }
+
+    // ------------- Copy/clipboard -------------
+    let lastInputs = null;
+
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text);
+      }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      try { document.execCommand('copy'); } catch (e) {}
+      document.body.removeChild(ta);
+      return Promise.resolve();
+    }
+
+    function copyLetter() {
+      const text = document.getElementById('letterBody').textContent;
+      const btn = document.getElementById('copyBtn');
+      copyText(text).then(() => flashCopied(btn));
+    }
+
+    function flashCopied(btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+    }
+
+    // ------------- Email capture -------------
+    function captureEmail() {
+      const input = document.getElementById('proEmail');
+      const confirm = document.getElementById('proConfirm');
+      const email = (input.value || '').trim();
+      const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!valid) {
+        confirm.style.color = '#f87171';
+        confirm.textContent = 'Enter a valid email and try again.';
+        return;
+      }
+      try {
+        const list = JSON.parse(localStorage.getItem('switch_letter_pro_waitlist') || '[]');
+        list.push({ email, ts: Date.now() });
+        localStorage.setItem('switch_letter_pro_waitlist', JSON.stringify(list));
+      } catch (e) {}
+      input.value = '';
+      confirm.style.color = '#f59e0b';
+      confirm.textContent = "You're on the list. One email when Pro ships.";
+    }
+
+    // ------------- Boot -------------
+    loadFromShareUrl();
+  </script>
+</body>
+</html>
